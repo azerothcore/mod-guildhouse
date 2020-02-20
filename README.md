@@ -36,21 +36,8 @@ All guilds will get their own phasing system and then the guild master can purch
 ```
 1) Place the module under the `modules` directory of your AzerothCore source. 
 2) Import the SQL files manually to the right Database (auth, world or characters)
-3) Apply the guildhouse.patch to your source 
-4) Re-run cmake and launch a clean build of AzerothCore.
+3) Re-run cmake and launch a clean build of AzerothCore.
 ```
-
-## Patch Information (guildhouse.patch)
-
-The patch basically turns the selected area from a bitmask to a uint, this fixes the issues with the phasing on GM Island ONLY
-
-Before Patch :
-Guild 1 Can see phase 1
-Guild 2 Can see phase 2
-Guild 3 Can See Guild 1 & 2
-
-After Patch: 
-All guilds will now have a seperate phase for the area 876 (GM Island)
 
 ## Edit module configuration (optional)
 

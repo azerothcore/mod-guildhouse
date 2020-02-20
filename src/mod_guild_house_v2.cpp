@@ -695,10 +695,23 @@ public:
     }
 };
 
+class GuildHouseGlobal : public GlobalScript
+{
+public:
+    GuildHouseGlobal() : GlobalScript("GuildHouseGlobal") {}
+
+    void OnBeforeWorldObjectSetPhaseMask(WorldObject const* worldObject, uint32& /*oldPhaseMask*/, uint32& /*newPhaseMask*/, bool& useCombinedPhases, bool& /*update*/) override
+    {
+        if (worldObject->GetZoneId() == 876)
+            useCombinedPhases = false;
+    }
+};
+
 void AddGuildHouseV2Scripts() {
     new GuildHelper();
     new GuildHouseSeller();
     new GuildHouseV2PlayerScript();
     new GuildHouseCommand();
+    new GuildHouseGlobal();
 }
 
