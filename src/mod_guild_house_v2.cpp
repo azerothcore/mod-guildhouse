@@ -702,6 +702,8 @@ public:
     {
         if (worldObject->GetZoneId() == 876)
             useCombinedPhases = false;
+        else
+            useCombinedPhases = true;
     }
 };
 
