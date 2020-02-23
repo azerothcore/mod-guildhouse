@@ -465,7 +465,6 @@ public:
             guildData->posZ = fields[4].GetFloat();
 
             player->TeleportTo(map, guildData->posX, guildData->posY, guildData->posZ, player->GetOrientation());
-            player->SetPhaseMask(guildData->phase, true);
 
         } while (result->NextRow());
     }
@@ -665,7 +664,6 @@ public:
             guildData->posZ = fields[6].GetFloat();
 
             player->TeleportTo(map, guildData->posX, guildData->posY, guildData->posZ, player->GetOrientation());
-            player->SetPhaseMask(guildData->phase, true);
 
         } while (result->NextRow());
 
