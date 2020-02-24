@@ -579,7 +579,7 @@ public:
     {
         Player* player = handler->GetSession()->GetPlayer();
 
-        if (player->GetGuild()->GetLeaderGUID() != player->GetGUID()) {
+        if (!player->GetGuild() || (player->GetGuild()->GetLeaderGUID() != player->GetGUID())) {
             handler->SendSysMessage("You must be the Guild Master of a guild to use this command!");
             handler->SetSentErrorMessage(true);
             return false;
