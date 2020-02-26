@@ -3,6 +3,10 @@
 # Guild House Module
 
 
+## Important notes
+
+You have to use at least AzerothCore commit [8f5c628](https://github.com/azerothcore/azerothcore-wotlk/commit/8f5c628836f7446d8d876bee7f5bdff5a35aaa2f).
+
 ## Description
 
 This is a phased guild house system for AzerothCore, it allows players from the same guild to visit their guild house.
