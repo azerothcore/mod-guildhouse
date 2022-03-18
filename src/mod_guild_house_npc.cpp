@@ -162,7 +162,7 @@ public:
         case 26327: // Paladin
         case 26324: // Druid
         case 26325: // Hunter
-        case 26326: // Mage 
+        case 26326: // Mage
         case 26328: // Priest.
         case 26329: // Rogue
         case 26330: // Shaman
@@ -184,7 +184,7 @@ public:
         case 33616: // Herbalism
         case 33613: // Tailoring
         case 33619: // Cooking
-        case 33623: // Fishing 
+        case 33623: // Fishing
         case 33621: // First Aid
             cost = GuildHouseProf;
             SpawnNPC(action, player);
@@ -205,10 +205,10 @@ public:
             cost = GuildHouseMailBox;
             SpawnObject(action, player);
             break;
-        case 6491:  // spirit healer   
+        case 6491:  // spirit healer
             cost = GuildHouseSpirit;
             SpawnNPC(action, player);
-            break;               
+            break;
         case 1685:  // forge
         case 4087:  // Anvil
         case 187293: // Guild Vault
@@ -250,7 +250,7 @@ public:
         float posZ;
         float ori;
 
-        QueryResult result = WorldDatabase.PQuery("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = %u", entry);
+        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = %u", entry);
 
         if (!result)
             return;
@@ -258,33 +258,33 @@ public:
         do
         {
             Field* fields = result->Fetch();
-            posX = fields[0].GetFloat();
-            posY = fields[1].GetFloat();
-            posZ = fields[2].GetFloat();
-            ori = fields[3].GetFloat();
+            posX = fields[0].Get<float>();
+            posY = fields[1].Get<float>();
+            posZ = fields[2].Get<float>();
+            ori = fields[3].Get<float>();
 
         } while (result->NextRow());
 
         Creature* creature = new Creature();
 
-        if (!creature->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_UNIT), player->GetMap(), GetGuildPhase(player), entry, 0, posX,posY, posZ, ori))
+        if (!creature->Create(player->GetMap()->GenerateLowGuid<HighGuid::Unit>(), player->GetMap(), GetGuildPhase(player), entry, 0, posX,posY, posZ, ori))
         {
             delete creature;
             return;
         }
         creature->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), GetGuildPhase(player));
-        uint32 db_guid = creature->GetDBTableGUIDLow();
+        uint32 lowguid = creature->GetGUID().GetCounter();
 
         creature->CleanupsBeforeDelete();
         delete creature;
         creature = new Creature();
-        if (!creature->LoadCreatureFromDB(db_guid, player->GetMap()))
+        if (!creature->LoadCreatureFromDB(lowguid, player->GetMap()))
         {
             delete creature;
             return;
         }
 
-        sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));
+        sObjectMgr->AddCreatureToGrid(lowguid, sObjectMgr->GetCreatureData(lowguid));
         player->ModifyMoney(-cost);
         CloseGossipMenuFor(player);
     }
@@ -296,7 +296,7 @@ public:
         float posZ;
         float ori;
 
-        QueryResult result = WorldDatabase.PQuery("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = %u", entry);
+        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = %u", entry);
 
         if (!result)
             return;
@@ -304,10 +304,10 @@ public:
         do
         {
             Field* fields = result->Fetch();
-            posX = fields[0].GetFloat();
-            posY = fields[1].GetFloat();
-            posZ = fields[2].GetFloat();
-            ori = fields[3].GetFloat();
+            posX = fields[0].Get<float>();
+            posY = fields[1].Get<float>();
+            posZ = fields[2].Get<float>();
+            ori = fields[3].Get<float>();
 
         } while (result->NextRow());
 
@@ -331,7 +331,7 @@ public:
             return ;
 
         GameObject* object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
-        uint32 guidLow = sObjectMgr->GenerateLowGuid(HIGHGUID_GAMEOBJECT);
+        uint32 guidLow = object->GetGUID().GetCounter();
 
         if (!object->Create(guidLow, objectInfo->entry, player->GetMap(), GetGuildPhase(player), posX, posY, posZ, ori, G3D::Quat(), 0, GO_STATE_READY))
         {
