@@ -250,7 +250,7 @@ public:
         float posZ;
         float ori;
 
-        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = %u", entry);
+        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = {}", entry);
 
         if (!result)
             return;
@@ -296,7 +296,7 @@ public:
         float posZ;
         float ori;
 
-        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = %u", entry);
+        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = {}", entry);
 
         if (!result)
             return;
@@ -367,17 +367,17 @@ public:
 
     void OnBeforeConfigLoad(bool /*reload*/) override
     {
-        GuildHouseInnKeeper = sConfigMgr->GetIntDefault("GuildHouseInnKeeper", 1000000);
-        GuildHouseBank = sConfigMgr->GetIntDefault("GuildHouseBank", 1000000);
-        GuildHouseMailBox = sConfigMgr->GetIntDefault("GuildHouseMailbox", 500000);
-        GuildHouseAuctioneer = sConfigMgr->GetIntDefault("GuildHouseAuctioneer", 500000);
-        GuildHouseTrainer = sConfigMgr->GetIntDefault("GuildHouseTrainerCost", 1000000);
-        GuildHouseVendor = sConfigMgr->GetIntDefault("GuildHouseVendor", 500000);
-        GuildHouseObject = sConfigMgr->GetIntDefault("GuildHouseObject", 500000);
-        GuildHousePortal = sConfigMgr->GetIntDefault("GuildHousePortal", 500000);
-        GuildHouseProf = sConfigMgr->GetIntDefault("GuildHouseProf", 500000);
-        GuildHouseSpirit = sConfigMgr->GetIntDefault("GuildHouseSpirit", 100000);
-        GuildHouseBuyRank = sConfigMgr->GetIntDefault("GuildHouseBuyRank", 0);
+        GuildHouseInnKeeper = sConfigMgr->GetOption<int32>("GuildHouseInnKeeper", 1000000);
+        GuildHouseBank = sConfigMgr->GetOption<int32>("GuildHouseBank", 1000000);
+        GuildHouseMailBox = sConfigMgr->GetOption<int32>("GuildHouseMailbox", 500000);
+        GuildHouseAuctioneer = sConfigMgr->GetOption<int32>("GuildHouseAuctioneer", 500000);
+        GuildHouseTrainer = sConfigMgr->GetOption<int32>("GuildHouseTrainerCost", 1000000);
+        GuildHouseVendor = sConfigMgr->GetOption<int32>("GuildHouseVendor", 500000);
+        GuildHouseObject = sConfigMgr->GetOption<int32>("GuildHouseObject", 500000);
+        GuildHousePortal = sConfigMgr->GetOption<int32>("GuildHousePortal", 500000);
+        GuildHouseProf = sConfigMgr->GetOption<int32>("GuildHouseProf", 500000);
+        GuildHouseSpirit = sConfigMgr->GetOption<int32>("GuildHouseSpirit", 100000);
+        GuildHouseBuyRank = sConfigMgr->GetOption<int32>("GuildHouseBuyRank", 0);
     }
 };
 
