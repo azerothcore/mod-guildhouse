@@ -1,7 +1,7 @@
 void AddGuildHouseV2Scripts();
 void AddGuildHouseV2NPCScripts();
 
-void Addmod_GuildHouseScripts() {
+void Addmod-guildhouseScripts() {
     AddGuildHouseV2Scripts();
     AddGuildHouseV2NPCScripts();
 }
