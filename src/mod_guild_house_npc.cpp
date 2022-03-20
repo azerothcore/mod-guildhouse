@@ -273,7 +273,7 @@ public:
             return;
         }
         creature->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), GetGuildPhase(player));
-        uint32 db_guid = creature->GetDBTableGUIDLow();
+        uint32 db_guid = creature->GetSpawnId();
 
         creature->CleanupsBeforeDelete();
         delete creature;
@@ -331,7 +331,7 @@ public:
             return ;
 
         GameObject* object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
-        uint32 guidLow = sObjectMgr->GenerateLowGuid(HIGHGUID_GAMEOBJECT);
+        ObjectGuid::LowType guidLow = player->GetMap()->GenerateLowGuid<HighGuid::GameObject>();
 
         if (!object->Create(guidLow, objectInfo->entry, player->GetMap(), GetGuildPhase(player), posX, posY, posZ, ori, G3D::Quat(), 0, GO_STATE_READY))
         {
