@@ -273,18 +273,18 @@ public:
             return;
         }
         creature->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), GetGuildPhase(player));
-        uint32 lowguid = creature->GetGUID().GetCounter();
+        uint32 db_guid = creature->GetSpawnId();
 
         creature->CleanupsBeforeDelete();
         delete creature;
         creature = new Creature();
-        if (!creature->LoadCreatureFromDB(lowguid, player->GetMap()))
+        if (!creature->LoadCreatureFromDB(db_guid, player->GetMap()))
         {
             delete creature;
             return;
         }
 
-        sObjectMgr->AddCreatureToGrid(lowguid, sObjectMgr->GetCreatureData(lowguid));
+        sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));
         player->ModifyMoney(-cost);
         CloseGossipMenuFor(player);
     }
@@ -331,7 +331,8 @@ public:
             return ;
 
         GameObject* object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
-        uint32 guidLow = object->GetGUID().GetCounter();
+        ObjectGuid::LowType guidLow = player->GetMap()->GenerateLowGuid<HighGuid::GameObject>();
+        //uint32 guidLow = object->GetGUID().GetCounter();
 
         if (!object->Create(guidLow, objectInfo->entry, player->GetMap(), GetGuildPhase(player), posX, posY, posZ, ori, G3D::Quat(), 0, GO_STATE_READY))
         {

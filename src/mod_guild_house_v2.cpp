@@ -229,7 +229,7 @@ public:
     }
 
     uint32 GetGuildPhase(Player* player) {
-        return player->GetGuildId() + 10;
+        return player->GetGuildId()  + 10;
     }
 
 
@@ -295,99 +295,101 @@ public:
     }
 
     void SpawnStarterPortal(Player* player)
-    {
+       {
 
-        uint32 entry = 0;
-        float posX;
-        float posY;
-        float posZ;
-        float ori;
+           uint32 entry = 0;
+           float posX;
+           float posY;
+           float posZ;
+           float ori;
 
-        Map* map = sMapMgr->FindMap(1, 0);
+           Map* map = sMapMgr->FindMap(1, 0);
 
-        if (player->GetTeamId() == TEAM_ALLIANCE)
-        {
-            // Portal to Stormwind
-            entry = 183325;
-        }
-        else {
-            // Portal to Orgrimmar
-            entry = 183323;
-        }
-
-
-        if (entry == 0) { LOG_INFO("modules", "Error with SpawnStarterPortal in GuildHouse Module!"); return; }
-
-        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = {}", entry);
-
-        if (!result)
-        {
-            LOG_INFO("modules", "GUILDHOUSE: Unable to find data on portal for entry: {}", entry);
-            return;
-        }
-
-        do
-        {
-            Field* fields = result->Fetch();
-            posX = fields[0].Get<float>();
-            posY = fields[1].Get<float>();
-            posZ = fields[2].Get<float>();
-            ori = fields[3].Get<float>();
-
-        } while (result->NextRow());
+           if (player->GetTeamId() == TEAM_ALLIANCE)
+           {
+               // Portal to Stormwind
+               entry = 183325;
+           }
+           else {
+               // Portal to Orgrimmar
+               entry = 183323;
+           }
 
 
-        uint32 objectId = entry;
-        if (!objectId)
-        {
-            LOG_INFO("modules", "GUILDHOUSE: objectId IS NULL, should be '{}'", entry);
-            return;
-        }
+           if (entry == 0) { LOG_INFO("modules", "Error with SpawnStarterPortal in GuildHouse Module!"); return; }
 
-        const GameObjectTemplate* objectInfo = sObjectMgr->GetGameObjectTemplate(objectId);
+           QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = {}", entry);
 
-        if (!objectInfo)
-        {
-            LOG_INFO("modules", "GUILDHOUSE: objectInfo is NULL!");
-            return;
-        }
+           if (!result)
+           {
+               LOG_INFO("modules", "GUILDHOUSE: Unable to find data on portal for entry: {}", entry);
+               return;
+           }
 
-        if (objectInfo->displayId && !sGameObjectDisplayInfoStore.LookupEntry(objectInfo->displayId))
-        {
-            LOG_INFO("modules", "GUILDHOUSE: Unable to find displayId??");
-            return;
-        }
+           do
+           {
+               Field* fields = result->Fetch();
+               posX = fields[0].Get<float>();
+               posY = fields[1].Get<float>();
+               posZ = fields[2].Get<float>();
+               ori = fields[3].Get<float>();
 
-        GameObject* object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
-        uint32 guidLow = object->GetGUID().GetCounter();
+           } while (result->NextRow());
 
 
-        if (!object->Create(guidLow, objectInfo->entry, map, GetGuildPhase(player), posX, posY, posZ, ori, G3D::Quat(), 0, GO_STATE_READY))
-        {
-            delete object;
-            LOG_INFO("modules", "GUILDHOUSE: Unable to create object!!");
-            return;
-        }
+           uint32 objectId = entry;
+           if (!objectId)
+           {
+               LOG_INFO("modules", "GUILDHOUSE: objectId IS NULL, should be '{}'", entry);
+               return;
+           }
+
+           const GameObjectTemplate* objectInfo = sObjectMgr->GetGameObjectTemplate(objectId);
+
+           if (!objectInfo)
+           {
+               LOG_INFO("modules", "GUILDHOUSE: objectInfo is NULL!");
+               return;
+           }
+
+           if (objectInfo->displayId && !sGameObjectDisplayInfoStore.LookupEntry(objectInfo->displayId))
+           {
+               LOG_INFO("modules", "GUILDHOUSE: Unable to find displayId??");
+               return;
+           }
+
+           GameObject* object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
+           ObjectGuid::LowType guidLow = player->GetMap()->GenerateLowGuid<HighGuid::GameObject>();
+           //uint32 guidLow = object->GetGUID().GetCounter();
 
 
-        // fill the gameobject data and save to the db
-        object->SaveToDB(sMapMgr->FindMap(1, 0)->GetId(), (1 << sMapMgr->FindMap(1, 0)->GetSpawnMode()), GetGuildPhase(player));
-        // delete the old object and do a clean load from DB with a fresh new GameObject instance.
-        // this is required to avoid weird behavior and memory leaks
-        delete object;
 
-        object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
-        // this will generate a new guid if the object is in an instance
-        if (!object->LoadGameObjectFromDB(guidLow, sMapMgr->FindMap(1, 0)))
-        {
-            delete object;
-            return;
-        }
+           if (!object->Create(guidLow, objectInfo->entry, map, GetGuildPhase(player), posX, posY, posZ, ori, G3D::Quat(), 0, GO_STATE_READY))
+           {
+               delete object;
+               LOG_INFO("modules", "GUILDHOUSE: Unable to create object!!");
+               return;
+           }
 
-        // TODO: is it really necessary to add both the real and DB table guid here ?
-        sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
-        CloseGossipMenuFor(player);
-    }
+
+           // fill the gameobject data and save to the db
+           object->SaveToDB(sMapMgr->FindMap(1, 0)->GetId(), (1 << sMapMgr->FindMap(1, 0)->GetSpawnMode()), GetGuildPhase(player));
+           // delete the old object and do a clean load from DB with a fresh new GameObject instance.
+           // this is required to avoid weird behavior and memory leaks
+           delete object;
+
+           object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
+           // this will generate a new guid if the object is in an instance
+           if (!object->LoadGameObjectFromDB(guidLow, sMapMgr->FindMap(1, 0)))
+           {
+               delete object;
+               return;
+           }
+
+           // TODO: is it really necessary to add both the real and DB table guid here ?
+           sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
+           CloseGossipMenuFor(player);
+       }
 
     void SpawnAssistantNPC(Player* player)
     {
@@ -405,18 +407,18 @@ public:
             return;
         }
         creature->SaveToDB(sMapMgr->FindMap(1, 0)->GetId(), (1 << sMapMgr->FindMap(1, 0)->GetSpawnMode()), GetGuildPhase(player));
-        uint32 db_guid = creature->GetGUID().GetCounter();
+        uint32 lowguid = creature->GetGUID().GetCounter();
 
         creature->CleanupsBeforeDelete();
         delete creature;
         creature = new Creature();
-        if (!creature->LoadCreatureFromDB(db_guid, sMapMgr->FindMap(1, 0)))
+        if (!creature->LoadCreatureFromDB(lowguid, sMapMgr->FindMap(1, 0)))
         {
             delete creature;
             return;
         }
 
-        sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));
+        sObjectMgr->AddCreatureToGrid(lowguid, sObjectMgr->GetCreatureData(lowguid));
         return;
     }
 
@@ -619,12 +621,12 @@ public:
             return false;
         }
         creature->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), GetGuildPhase(player));
-        uint32 db_guid = creature->GetGUID().GetCounter();
+        uint32 lowguid = creature->GetGUID().GetCounter();
 
         creature->CleanupsBeforeDelete();
         delete creature;
         creature = new Creature();
-        if (!creature->LoadCreatureFromDB(db_guid, player->GetMap()))
+        if (!creature->LoadCreatureFromDB(lowguid, player->GetMap()))
         {
             handler->SendSysMessage("Something went wrong when adding the NPC.");
             handler->SetSentErrorMessage(true);
@@ -632,7 +634,7 @@ public:
             return false;
         }
 
-        sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));
+        sObjectMgr->AddCreatureToGrid(lowguid, sObjectMgr->GetCreatureData(lowguid));
         return true;
     }
 
