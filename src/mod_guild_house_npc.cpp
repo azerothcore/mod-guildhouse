@@ -348,7 +348,7 @@ public:
 
         object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
         // this will generate a new guid if the object is in an instance
-        if (!object->LoadGameObjectFromDB(guidLow, player->GetMap()))
+        if (!object->LoadGameObjectFromDB(guidLow, player->GetMap(), true))
         {
             delete object;
             return;

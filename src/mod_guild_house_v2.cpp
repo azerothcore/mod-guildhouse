@@ -403,19 +403,19 @@ public:
 
         if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, player->GetPhaseMaskForSpawn(), entry, 0, posX, posY, posZ, ori))
         {
-            delete creature;
-            return;
+            //delete creature;
+            //return;
         }
         creature->SaveToDB(sMapMgr->FindMap(1, 0)->GetId(), (1 << sMapMgr->FindMap(1, 0)->GetSpawnMode()), GetGuildPhase(player));
-        uint32 lowguid = creature->GetGUID().GetCounter();
+        uint32 lowguid = creature->GetSpawnId();
 
-        creature->CleanupsBeforeDelete();
-        delete creature;
+        //creature->CleanupsBeforeDelete();
+        //delete creature;
         creature = new Creature();
         if (!creature->LoadCreatureFromDB(lowguid, sMapMgr->FindMap(1, 0)))
         {
-            delete creature;
-            return;
+            //delete creature;
+            //return;
         }
 
         sObjectMgr->AddCreatureToGrid(lowguid, sObjectMgr->GetCreatureData(lowguid));
@@ -621,7 +621,7 @@ public:
             return false;
         }
         creature->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), GetGuildPhase(player));
-        uint32 lowguid = creature->GetGUID().GetCounter();
+        uint32 lowguid = creature->GetSpawnId();
 
         creature->CleanupsBeforeDelete();
         delete creature;
@@ -664,8 +664,8 @@ public:
         do {
 
             Field* fields = result->Fetch();
-            //uint32 id = fields[0].GetUInt32();        // fix for travis
-            //uint32 guild = fields[1].GetUInt32();     // fix for travis
+            uint32 id = fields[0].Get<uint32>();        // fix for travis
+            uint32 guild = fields[1].Get<uint32>();     // fix for travis
             guildData->phase = fields[2].Get<uint32>();
             uint32 map = fields[3].Get<uint32>();
             guildData->posX = fields[4].Get<float>();
