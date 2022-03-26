@@ -273,18 +273,18 @@ public:
             return;
         }
         creature->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), GetGuildPhase(player));
-        uint32 lowguid = creature->GetGUID().GetCounter();
+        uint32 db_guid = creature->GetSpawnId();
 
         creature->CleanupsBeforeDelete();
         delete creature;
         creature = new Creature();
-        if (!creature->LoadCreatureFromDB(lowguid, player->GetMap()))
+        if (!creature->LoadCreatureFromDB(db_guid, player->GetMap()))
         {
             delete creature;
             return;
         }
 
-        sObjectMgr->AddCreatureToGrid(lowguid, sObjectMgr->GetCreatureData(lowguid));
+        sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));
         player->ModifyMoney(-cost);
         CloseGossipMenuFor(player);
     }
@@ -331,7 +331,7 @@ public:
             return ;
 
         GameObject* object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
-        uint32 guidLow = object->GetGUID().GetCounter();
+        ObjectGuid::LowType guidLow = player->GetMap()->GenerateLowGuid<HighGuid::GameObject>();
 
         if (!object->Create(guidLow, objectInfo->entry, player->GetMap(), GetGuildPhase(player), posX, posY, posZ, ori, G3D::Quat(), 0, GO_STATE_READY))
         {
@@ -341,20 +341,21 @@ public:
 
         // fill the gameobject data and save to the db
         object->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), GetGuildPhase(player));
+
         // delete the old object and do a clean load from DB with a fresh new GameObject instance.
         // this is required to avoid weird behavior and memory leaks
         delete object;
 
         object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
         // this will generate a new guid if the object is in an instance
-        if (!object->LoadGameObjectFromDB(guidLow, player->GetMap()))
+        if (!object->LoadGameObjectFromDB(guidLow, player->GetMap(), true))
         {
-            delete object;
+            //delete object;
             return;
         }
 
         // TODO: is it really necessary to add both the real and DB table guid here ?
-        sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
+        //sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
         player->ModifyMoney(-cost);
         CloseGossipMenuFor(player);
     }
