@@ -341,7 +341,7 @@ public:
 
         // fill the gameobject data and save to the db
         object->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), GetGuildPhase(player));
-
+        guidLow = object->GetSpawnId();
         // delete the old object and do a clean load from DB with a fresh new GameObject instance.
         // this is required to avoid weird behavior and memory leaks
         delete object;
@@ -350,12 +350,12 @@ public:
         // this will generate a new guid if the object is in an instance
         if (!object->LoadGameObjectFromDB(guidLow, player->GetMap(), true))
         {
-            //delete object;
+            delete object;
             return;
         }
 
         // TODO: is it really necessary to add both the real and DB table guid here ?
-        //sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
+        sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
         player->ModifyMoney(-cost);
         CloseGossipMenuFor(player);
     }

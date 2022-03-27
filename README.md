@@ -5,7 +5,7 @@
 
 ## Important notes
 
-You have to use at least AzerothCore commit [8f5c628](https://github.com/azerothcore/azerothcore-wotlk/commit/8f5c628836f7446d8d876bee7f5bdff5a35aaa2f).
+You have to use at least AzerothCore commit [77f1363](https://github.com/azerothcore/azerothcore-wotlk/commit/77f13636b75f9b25fc1290e297cd002e7df3c89b).
 
 ## Description
 
@@ -32,14 +32,10 @@ All guilds will get their own phasing system and then the guild master can purch
 4) Speak with the Guild House Assistant to begin purchasing additions to your Guild House!
 5) Players in guild with proper rank will be able to spawn the Assistant with chat commands `.guildhouse buter` or `.gh butler`
 
-## Requirements
-
-- AzerothCore v4.X +
-
 ## Installation
 
 ```
-1) Place the module under the `modules` directory of your AzerothCore source. 
+1) Place the module under the `modules` directory of your AzerothCore source.
 2) Import the SQL files manually to the right Database (auth, world or characters)
 3) Re-run cmake and launch a clean build of AzerothCore.
 ```

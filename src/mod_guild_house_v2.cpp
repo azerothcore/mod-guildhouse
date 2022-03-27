@@ -266,7 +266,6 @@ public:
                 Field* fields = GameobjResult->Fetch();
                 uint32 lowguid = fields[0].Get<int32>();
                 if (GameObjectData const* go_data = sObjectMgr->GetGOData(lowguid)) {
-                    //if (GameObject* gobject = ObjectAccessor::GetObjectInWorld(lowguid, (GameObject*)NULL))
                     if(GameObject * gobject = map->GetGameObject(ObjectGuid::Create<HighGuid::GameObject>(go_data->id, lowguid)))
                     {
                         gobject->SetRespawnTime(0);
@@ -364,7 +363,7 @@ public:
 
         // fill the gameobject data and save to the db
         object->SaveToDB(sMapMgr->FindMap(1, 0)->GetId(), (1 << sMapMgr->FindMap(1, 0)->GetSpawnMode()), GetGuildPhase(player));
-
+        guidLow = object->GetSpawnId();
         // delete the old object and do a clean load from DB with a fresh new GameObject instance.
         // this is required to avoid weird behavior and memory leaks
         delete object;
@@ -378,7 +377,7 @@ public:
         }
 
         // TODO: is it really necessary to add both the real and DB table guid here ?
-        //sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
+        sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
         CloseGossipMenuFor(player);
     }
 
