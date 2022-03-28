@@ -63,7 +63,7 @@ public:
         CreatureResult = WorldDatabase.Query("SELECT `guid` FROM `creature` WHERE `map` = 1 AND `phaseMask` = '{}'", guildPhase);
 
         Map* map = sMapMgr->FindMap(1, 0);
-        // remove creatures from the deleted guild house map
+        // Remove creatures from the deleted guild house map
         if (CreatureResult) {
             do
             {
@@ -81,7 +81,7 @@ public:
         }
 
 
-        // remove gameobjects from the deleted guild house map
+        // Remove gameobjects from the deleted guild house map
         if (GameobjResult) {
             do
             {
@@ -300,10 +300,10 @@ public:
         if (player->GetTeamId() == TEAM_ALLIANCE)
         {
             // Portal to Stormwind
-            entry = 183325;
+            entry = 176296;
         } else {
             // Portal to Orgrimmar
-            entry = 183323;
+            entry = 176499;
         }
 
 

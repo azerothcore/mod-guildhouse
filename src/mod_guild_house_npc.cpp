@@ -97,24 +97,24 @@ public:
 				// ALLIANCE players get these options:
 
                 // Commenting out as we are auto-creating Stormwind portal upon guild purchase
-                //AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Stormwind", GOSSIP_SENDER_MAIN, 183325, "Add Stormwind Portal?", GuildHousePortal, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Ironforge", GOSSIP_SENDER_MAIN, 183322, "Add Ironforge Portal?", GuildHousePortal, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Darnassus", GOSSIP_SENDER_MAIN, 183317, "Add Darnassus Portal?", GuildHousePortal, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Exodar", GOSSIP_SENDER_MAIN, 183321, "Add Exodar Portal?", GuildHousePortal, false);
+                //AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Stormwind", GOSSIP_SENDER_MAIN, 176296, "Add Stormwind Portal?", GuildHousePortal, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Ironforge", GOSSIP_SENDER_MAIN, 176497, "Add Ironforge Portal?", GuildHousePortal, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Darnassus", GOSSIP_SENDER_MAIN, 176498, "Add Darnassus Portal?", GuildHousePortal, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Exodar", GOSSIP_SENDER_MAIN, 182351, "Add Exodar Portal?", GuildHousePortal, false);
             }
             else
             {
 				// HORDE players get these options:
 
                 // Commenting out as we are auto-creating Orgrimmar portal upon guild purchase
-                //AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Orgrimmar", GOSSIP_SENDER_MAIN, 183323, "Add Orgrimmar Portal?", GuildHousePortal,  false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Undercity", GOSSIP_SENDER_MAIN, 183327, "Add Undercity Portal?", GuildHousePortal,  false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Thunderbluff", GOSSIP_SENDER_MAIN, 183326, "Add Thunderbuff Portal?", GuildHousePortal,  false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Silvermoon", GOSSIP_SENDER_MAIN, 183324, "Add Silvermoon Portal?", GuildHousePortal,  false);
+                //AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Orgrimmar", GOSSIP_SENDER_MAIN, 176499, "Add Orgrimmar Portal?", GuildHousePortal,  false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Undercity", GOSSIP_SENDER_MAIN, 176501, "Add Undercity Portal?", GuildHousePortal,  false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Thunderbluff", GOSSIP_SENDER_MAIN, 176500, "Add Thunderbuff Portal?", GuildHousePortal,  false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Silvermoon", GOSSIP_SENDER_MAIN, 182352, "Add Silvermoon Portal?", GuildHousePortal,  false);
             }
 			// These two portals work for either Team
-            AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Shattrath", GOSSIP_SENDER_MAIN, 191013, "Add Shattrath Portal?", GuildHousePortal, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Dalaran", GOSSIP_SENDER_MAIN, 195682, "Add Dalaran Portal?", GuildHousePortal, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Shattrath", GOSSIP_SENDER_MAIN, 183384, "Add Shattrath Portal?", GuildHousePortal, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Dalaran", GOSSIP_SENDER_MAIN, 191164, "Add Dalaran Portal?", GuildHousePortal, false);
 
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
@@ -220,15 +220,14 @@ public:
             cost = GuildHouseObject;
             SpawnObject(action, player);
             break;
-        case 183322: // Ironforge Portal
-        case 183327: // Undercity Portal
-        case 183317: // Darnassus Portal
-        case 183326: // Thunder Bluff Portal
-        case 183324: // Silvermoon Portal
-        case 183321: // Exodar Portal
-        case 191013: // Shattrath Portal:Alliance
-        case 191014: // Shattrath Portal:Horde
-        case 195682: // Dalaran Portal
+        case 176497: // Ironforge Portal
+        case 176501: // Undercity Portal
+        case 176498: // Darnassus Portal
+        case 176500: // Thunder Bluff Portal
+        case 182352: // Silvermoon Portal
+        case 182351: // Exodar Portal
+        case 183384: // Shattrath Portal
+        case 191164: // Dalaran Portal
             cost = GuildHousePortal;
             SpawnObject(action, player);
             break;
@@ -295,6 +294,13 @@ public:
 
     void SpawnObject(uint32 entry, Player* player)
     {
+        if (player->FindNearestGameObject(entry, VISIBLE_RANGE))
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("You already have this object!");
+            CloseGossipMenuFor(player);
+            return;
+        }
+
         float posX;
         float posY;
         float posZ;
@@ -314,13 +320,6 @@ public:
             ori = fields[3].Get<float>();
 
         } while (result->NextRow());
-
-        if (player->FindNearestGameObject(entry, VISIBLE_RANGE))
-        {
-            ChatHandler(player->GetSession()).PSendSysMessage("You already have this object!");
-            CloseGossipMenuFor(player);
-            return;
-        }
 
         uint32 objectId = entry;
         if (!objectId)
