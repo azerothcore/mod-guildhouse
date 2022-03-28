@@ -40,14 +40,14 @@ public:
         }
 
         ClearGossipMenuFor(player);
-        AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Innkeeper", GOSSIP_SENDER_MAIN, 18649, "Add an Innkeeper?", GuildHouseInnKeeper, false);
-        AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Mailbox", GOSSIP_SENDER_MAIN, 184137, "Spawn a mailbox?", GuildHouseMailBox, false);
+        AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Innkeeper", GOSSIP_SENDER_MAIN, 190022, "Add an Innkeeper?", GuildHouseInnKeeper, false);
+        AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Mailbox", GOSSIP_SENDER_MAIN, 184137, "Spawn a Mailbox?", GuildHouseMailBox, false);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Stable Master", GOSSIP_SENDER_MAIN, 28690, "Spawn a Stable Master?", GuildHouseVendor, false);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Class Trainer", GOSSIP_SENDER_MAIN, 2);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Vendor", GOSSIP_SENDER_MAIN, 3);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn City Portals / Objects", GOSSIP_SENDER_MAIN, 4);
-        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Spawn Bank", GOSSIP_SENDER_MAIN, 30605, "Spawn a banker?", GuildHouseBank, false);
-        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Spawn Auctioneer", GOSSIP_SENDER_MAIN, 6, "Spawn an auctioneer", GuildHouseAuctioneer, false);
+        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Spawn Bank", GOSSIP_SENDER_MAIN, 30605, "Spawn a Banker?", GuildHouseBank, false);
+        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Spawn Auctioneer", GOSSIP_SENDER_MAIN, 6, "Spawn an Auctioneer", GuildHouseAuctioneer, false);
         AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Spawn Primary Profession Trainers", GOSSIP_SENDER_MAIN, 7);
         AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Spawn Secondry Profession Trainers", GOSSIP_SENDER_MAIN, 8);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Sprirt Healer", GOSSIP_SENDER_MAIN, 6491, "Spawn a Spirit Healer?", GuildHouseSpirit, false);
@@ -60,9 +60,9 @@ public:
 
         switch (action)
         {
-        case 2: // spawn class trainer
+        case 2: // Spawn Class Trainer
             ClearGossipMenuFor(player);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Death Knight", GOSSIP_SENDER_MAIN, 33251, "Spawn Death Knight Trainer?", GuildHouseTrainer, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Death Knight", GOSSIP_SENDER_MAIN, 190025, "Spawn Death Knight Trainer?", GuildHouseTrainer, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Druid", GOSSIP_SENDER_MAIN, 26324, "Spawn Druid Trainer?", GuildHouseTrainer, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Hunter", GOSSIP_SENDER_MAIN, 26325, "Spawn Hunter Trainer?", GuildHouseTrainer, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mage", GOSSIP_SENDER_MAIN, 26326, "Spawn Mage Trainer?", GuildHouseTrainer, false);
@@ -79,36 +79,40 @@ public:
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Trade Supplies", GOSSIP_SENDER_MAIN, 28692, "Spawn Trade Supplies?", GuildHouseVendor, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Tabard Vendor", GOSSIP_SENDER_MAIN, 28776, "Spawn Tabard Vendor?", GuildHouseVendor, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TALK, "Food & Drink", GOSSIP_SENDER_MAIN, 70103, "Spawn Food & Drink?", GuildHouseVendor, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TALK, "Food & Drink", GOSSIP_SENDER_MAIN, 190024, "Spawn Food & Drink?", GuildHouseVendor, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Reagent Vendor", GOSSIP_SENDER_MAIN, 29636, "Spawn Reagent Vendor?", GuildHouseVendor, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TALK, "Ammo & Repair Vendor", GOSSIP_SENDER_MAIN, 70104, "Spawn Ammo & Repair Vendor?", GuildHouseVendor, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TALK, "Ammo & Repair Vendor", GOSSIP_SENDER_MAIN, 190023, "Spawn Ammo & Repair Vendor?", GuildHouseVendor, false);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
             break;
-        case 4: //objects / portals
+        case 4: // Objects & Portals
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Forge", GOSSIP_SENDER_MAIN, 1685, "Add a forge?", GuildHouseObject, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Anvil", GOSSIP_SENDER_MAIN, 4087, "Add an Anvil?", GuildHouseObject, false);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Guild Vault", GOSSIP_SENDER_MAIN, 187293, "Add Guild Vault?", GuildHouseObject,  false);
             AddGossipItemFor(player, GOSSIP_ICON_INTERACT_1, "Barber Chair", GOSSIP_SENDER_MAIN, 191028, "Add a Barber Chair?", GuildHouseObject,  false);
 
-            if (player->GetTeamId() == TEAM_ALLIANCE)   // ALLIANCE players get these options
+            if (player->GetTeamId() == TEAM_ALLIANCE)
             {
+				// ALLIANCE players get these options:
+
                 // Commenting out as we are auto-creating Stormwind portal upon guild purchase
                 //AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Stormwind", GOSSIP_SENDER_MAIN, 183325, "Add Stormwind Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Ironforge", GOSSIP_SENDER_MAIN, 183322, "Add Ironforge Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Darnassus", GOSSIP_SENDER_MAIN, 183317, "Add Darnassus Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Exodar", GOSSIP_SENDER_MAIN, 183321, "Add Exodar Portal?", GuildHousePortal, false);
             }
-            else    // HORDE players get these options:
+            else
             {
+				// HORDE players get these options:
+
                 // Commenting out as we are auto-creating Orgrimmar portal upon guild purchase
                 //AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Orgrimmar", GOSSIP_SENDER_MAIN, 183323, "Add Orgrimmar Portal?", GuildHousePortal,  false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Undercity", GOSSIP_SENDER_MAIN, 183327, "Add Undercity Portal?", GuildHousePortal,  false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Thunderbluff", GOSSIP_SENDER_MAIN, 183326, "Add Thunderbuff Portal?", GuildHousePortal,  false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Silvermoon", GOSSIP_SENDER_MAIN, 183324, "Add Silvermoon Portal?", GuildHousePortal,  false);
             }
-                    // These two portals work for either Team
+			// These two portals work for either Team
             AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Shattrath", GOSSIP_SENDER_MAIN, 191013, "Add Shattrath Portal?", GuildHousePortal, false);
             AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Dalaran", GOSSIP_SENDER_MAIN, 195682, "Add Dalaran Portal?", GuildHousePortal, false);
 
@@ -122,7 +126,7 @@ public:
             SpawnNPC(auctioneer, player);
             break;
         }
-        case 7: // spawn profession trainers
+        case 7: // Spawn Profession Trainers
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Alchemy Trainer", GOSSIP_SENDER_MAIN, 33608, "Spawn Alchemy Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Blacksmithing Trainer", GOSSIP_SENDER_MAIN, 33609, "Spawn Blacksmithing Trainer?", GuildHouseProf,  false);
@@ -138,7 +142,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
             break;
-        case 8: // secondry prof trainers
+        case 8: // Secondary Profession Trainers
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "First Aid Trainer", GOSSIP_SENDER_MAIN, 33621, "Spawn Fist Aid Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Fishing Trainer", GOSSIP_SENDER_MAIN, 33623, "Spawn Fishing Trainer?", GuildHouseProf,  false);
@@ -146,16 +150,16 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
             break;
-        case 9: // go back!
+        case 9: // Go back!
             OnGossipHello(player, m_creature);
             break;
-        case 10: //PVP toggle
+        case 10: // PVP toggle
             break;
         case 30605: // Banker
             cost = GuildHouseBank;
             SpawnNPC(action, player);
             break;
-        case 18649: // Innkeeper
+        case 190022: // Innkeeper
             cost = GuildHouseInnKeeper;
             SpawnNPC(action, player);
             break;
@@ -163,12 +167,12 @@ public:
         case 26324: // Druid
         case 26325: // Hunter
         case 26326: // Mage
-        case 26328: // Priest.
+        case 26328: // Priest
         case 26329: // Rogue
         case 26330: // Shaman
         case 26331: // Warlock
         case 26332: // Warrior
-        case 33251: // Death Knight
+        case 190025: // Death Knight
             cost = GuildHouseTrainer;
             SpawnNPC(action, player);
             break;
@@ -189,11 +193,11 @@ public:
             cost = GuildHouseProf;
             SpawnNPC(action, player);
             break;
-        case 28692: // Trade supplies
+        case 28692: // Trade Supplies
         case 28776: // Tabard Vendor
-        case 70103: // Food & Drink
+        case 190024: // Food & Drink Vendor
         case 29636: // Reagent Vendor
-        case 70104: // Ammo & Repair Vendor
+        case 190023: // Ammo & Repair Vendor
         case 28690: // Stable Master
             cost = GuildHouseVendor;
             SpawnNPC(action, player);
@@ -201,15 +205,15 @@ public:
         //
         // Objects
         //
-        case 184137: // mailbox
+        case 184137: // Mailbox
             cost = GuildHouseMailBox;
             SpawnObject(action, player);
             break;
-        case 6491:  // spirit healer
+        case 6491:  // Spirit Healer
             cost = GuildHouseSpirit;
             SpawnNPC(action, player);
             break;
-        case 1685:  // forge
+        case 1685:  // Forge
         case 4087:  // Anvil
         case 187293: // Guild Vault
         case 191028: // Barber Chair
@@ -219,7 +223,7 @@ public:
         case 183322: // Ironforge Portal
         case 183327: // Undercity Portal
         case 183317: // Darnassus Portal
-        case 183326: // Thunder bluff portal
+        case 183326: // Thunder Bluff Portal
         case 183324: // Silvermoon Portal
         case 183321: // Exodar Portal
         case 191013: // Shattrath Portal:Alliance
