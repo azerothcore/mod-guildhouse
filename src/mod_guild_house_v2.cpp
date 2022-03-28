@@ -397,13 +397,13 @@ public:
             delete creature;
             return;
         }
-        creature->SaveToDB(sMapMgr->map->GetId(), (1 << sMapMgr->map->GetSpawnMode()), GetGuildPhase(player));
+        creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), GetGuildPhase(player));
         uint32 lowguid = creature->GetSpawnId();
 
         creature->CleanupsBeforeDelete();
         delete creature;
         creature = new Creature();
-        if (!creature->LoadCreatureFromDB(lowguid, sMapMgr->map))
+        if (!creature->LoadCreatureFromDB(lowguid, map))
         {
             delete creature;
             return;
