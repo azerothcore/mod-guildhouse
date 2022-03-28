@@ -388,6 +388,7 @@ public:
         float posY = 16255.916992f;
         float posZ = 21.160221f;
         float ori = 6.195375f;
+
         Map* map = sMapMgr->FindMap(1, 0);
         Creature* creature = new Creature();
 
@@ -396,13 +397,13 @@ public:
             delete creature;
             return;
         }
-        creature->SaveToDB(sMapMgr->FindMap(1, 0)->GetId(), (1 << sMapMgr->FindMap(1, 0)->GetSpawnMode()), GetGuildPhase(player));
+        creature->SaveToDB(sMapMgr->map->GetId(), (1 << sMapMgr->map->GetSpawnMode()), GetGuildPhase(player));
         uint32 lowguid = creature->GetSpawnId();
 
         creature->CleanupsBeforeDelete();
         delete creature;
         creature = new Creature();
-        if (!creature->LoadCreatureFromDB(lowguid, sMapMgr->FindMap(1, 0)))
+        if (!creature->LoadCreatureFromDB(lowguid, sMapMgr->map))
         {
             delete creature;
             return;
