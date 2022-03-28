@@ -246,7 +246,7 @@ public:
             do
             {
                 Field* fields = CreatureResult->Fetch();
-                uint32 lowguid = fields[0].Get<int32>();
+                uint32 lowguid = fields[0].Get<uint32>();
                 if (CreatureData const* cr_data = sObjectMgr->GetCreatureData(lowguid)) {
                     if (Creature* creature = map->GetCreature(ObjectGuid::Create<HighGuid::Unit>(cr_data->id1, lowguid)))
                     {
@@ -264,7 +264,7 @@ public:
             do
             {
                 Field* fields = GameobjResult->Fetch();
-                uint32 lowguid = fields[0].Get<int32>();
+                uint32 lowguid = fields[0].Get<uint32>();
                 if (GameObjectData const* go_data = sObjectMgr->GetGOData(lowguid)) {
                     if(GameObject * gobject = map->GetGameObject(ObjectGuid::Create<HighGuid::GameObject>(go_data->id, lowguid)))
                     {
