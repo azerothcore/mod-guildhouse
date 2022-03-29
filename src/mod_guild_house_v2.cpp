@@ -300,10 +300,10 @@ public:
         if (player->GetTeamId() == TEAM_ALLIANCE)
         {
             // Portal to Stormwind
-            entry = 176296;
+            entry = 500000;
         } else {
             // Portal to Orgrimmar
-            entry = 176499;
+            entry = 500004;
         }
 
 
