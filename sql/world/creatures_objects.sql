@@ -1,13 +1,12 @@
 -- !!! NOTE: set these before running the queries in order to avoid conflicts !!!
-SET @C_TEMPLATE = 500030; -- 6 slots
+SET @C_TEMPLATE = 500030; -- 5 slots
 
 DELETE FROM `creature_template` WHERE `entry` IN (
 	@C_TEMPLATE + 0,
 	@C_TEMPLATE + 1,
 	@C_TEMPLATE + 2,
 	@C_TEMPLATE + 3,
-	@C_TEMPLATE + 4,
-	@C_TEMPLATE + 5
+	@C_TEMPLATE + 4
 );
 
 INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `speed_walk`, `speed_run`, `speed_swim`, `speed_flight`, `detection_range`, `scale`, `rank`, `dmgschool`, `DamageModifier`, `BaseAttackTime`, `RangeAttackTime`, `BaseVariance`, `RangeVariance`, `unit_class`, `unit_flags`, `unit_flags2`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `HoverHeight`, `HealthModifier`, `ManaModifier`, `ArmorModifier`, `ExperienceModifier`, `RacialLeader`, `movementId`, `RegenHealth`, `mechanic_immune_mask`, `spell_school_immune_mask`, `flags_extra`, `ScriptName`, `VerifiedBuild`) VALUES
