@@ -94,24 +94,19 @@ public:
 
             if (player->GetTeamId() == TEAM_ALLIANCE)
             {
-				// ALLIANCE players get these options:
-
-                // Commenting out as we are auto-creating Stormwind portal upon guild purchase
-                //AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Stormwind", GOSSIP_SENDER_MAIN, 500000, "Add Stormwind Portal?", GuildHousePortal, false);
+				// ALLIANCE players get these options
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Ironforge", GOSSIP_SENDER_MAIN, 500003, "Add Ironforge Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Darnassus", GOSSIP_SENDER_MAIN, 500001, "Add Darnassus Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Exodar", GOSSIP_SENDER_MAIN, 500002, "Add Exodar Portal?", GuildHousePortal, false);
             }
             else
             {
-				// HORDE players get these options:
-
-                // Commenting out as we are auto-creating Orgrimmar portal upon guild purchase
-                //AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Orgrimmar", GOSSIP_SENDER_MAIN, 500004, "Add Orgrimmar Portal?", GuildHousePortal,  false);
+				// HORDE players get these options
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Undercity", GOSSIP_SENDER_MAIN, 500007, "Add Undercity Portal?", GuildHousePortal,  false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Thunderbluff", GOSSIP_SENDER_MAIN, 500006, "Add Thunderbuff Portal?", GuildHousePortal,  false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Silvermoon", GOSSIP_SENDER_MAIN, 500005, "Add Silvermoon Portal?", GuildHousePortal,  false);
             }
+
 			// These two portals work for either Team
             AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Shattrath", GOSSIP_SENDER_MAIN, 500008, "Add Shattrath Portal?", GuildHousePortal, false);
             AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Dalaran", GOSSIP_SENDER_MAIN, 500009, "Add Dalaran Portal?", GuildHousePortal, false);
@@ -130,7 +125,6 @@ public:
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Alchemy Trainer", GOSSIP_SENDER_MAIN, 2837, "Spawn Alchemy Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Blacksmithing Trainer", GOSSIP_SENDER_MAIN, 2836, "Spawn Blacksmithing Trainer?", GuildHouseProf,  false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 33610, "Spawn Enchanting Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Engineering Trainer", GOSSIP_SENDER_MAIN, 8736, "Spawn Engineering Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Tailoring Trainer", GOSSIP_SENDER_MAIN, 2627, "Spawn Tailoring Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Leatherworking Trainer", GOSSIP_SENDER_MAIN, 33612, "Spawn Leatherworking Trainer?", GuildHouseProf,  false);
@@ -139,6 +133,18 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Skinning Trainer", GOSSIP_SENDER_MAIN, 33618, "Spawn Skinning Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mining Trainer", GOSSIP_SENDER_MAIN, 8128, "Spawn Mining Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Herbalism Trainer", GOSSIP_SENDER_MAIN, 908, "Spawn Herbalism Trainer?", GuildHouseProf,  false);
+
+            if (player->GetTeamId() == TEAM_ALLIANCE)
+            {
+				// ALLIANCE players get these options
+				AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 18773, "Spawn Enchanting Trainer?", GuildHouseProf,  false);
+			}
+            else
+            {
+				// HORDE players get these options
+				AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 18753, "Spawn Enchanting Trainer?", GuildHouseProf,  false);
+			}
+
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
             break;
@@ -180,7 +186,8 @@ public:
         case 8128: // Mining
         case 8736: // Engineering
         case 33614: // Jewelcrafting
-        case 33610: // Enchanting
+        case 18773: // Enchanting (Alliance)
+		case 18753: // Enchanting (Horde)
         case 33615: // Inscription
         case 33612: // Leatherworking
         case 33618: // Skinning
