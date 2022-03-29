@@ -128,8 +128,6 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Engineering Trainer", GOSSIP_SENDER_MAIN, 8736, "Spawn Engineering Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Tailoring Trainer", GOSSIP_SENDER_MAIN, 2627, "Spawn Tailoring Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Leatherworking Trainer", GOSSIP_SENDER_MAIN, 33612, "Spawn Leatherworking Trainer?", GuildHouseProf,  false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 33614, "Spawn Jewelcrafting Trainer?", GuildHouseProf,  false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 33615, "Spawn Inscription Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Skinning Trainer", GOSSIP_SENDER_MAIN, 33618, "Spawn Skinning Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mining Trainer", GOSSIP_SENDER_MAIN, 8128, "Spawn Mining Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Herbalism Trainer", GOSSIP_SENDER_MAIN, 908, "Spawn Herbalism Trainer?", GuildHouseProf,  false);
@@ -138,11 +136,15 @@ public:
             {
 				// ALLIANCE players get these options
 				AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 18773, "Spawn Enchanting Trainer?", GuildHouseProf,  false);
+				AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 18774, "Spawn Jewelcrafting Trainer?", GuildHouseProf,  false);
+				AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 30721, "Spawn Inscription Trainer?", GuildHouseProf, false);
 			}
             else
             {
 				// HORDE players get these options
 				AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 18753, "Spawn Enchanting Trainer?", GuildHouseProf,  false);
+				AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 18751, "Spawn Jewelcrafting Trainer?", GuildHouseProf,  false);
+				AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 30722, "Spawn Inscription Trainer?", GuildHouseProf, false);
 			}
 
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
@@ -185,10 +187,12 @@ public:
         case 2836: // Blacksmithing
         case 8128: // Mining
         case 8736: // Engineering
-        case 33614: // Jewelcrafting
+        case 18774: // Jewelcrafting (Alliance)
+        case 18751: // Jewelcrafting (Horde)
         case 18773: // Enchanting (Alliance)
 		case 18753: // Enchanting (Horde)
-        case 33615: // Inscription
+        case 30721: // Inscription (Alliance)
+        case 30722: // Inscription (Horde)
         case 33612: // Leatherworking
         case 33618: // Skinning
         case 2837: // Alchemy
