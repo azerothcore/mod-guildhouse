@@ -159,7 +159,7 @@ public:
 
         switch (action)
         {
-        case 100: // gmsiland
+        case 100: // GM Island
             map = 1;
             posX = 16226.117f;
             posY = 16258.046f;
@@ -241,7 +241,7 @@ public:
         CreatureResult = WorldDatabase.Query("SELECT `guid` FROM `creature` WHERE `map` = 1 AND `phaseMask` = '{}'", guildPhase);
 
 
-        // remove creatures from the deleted guild house map
+        // Remove creatures from the deleted guild house map
         if (CreatureResult) {
             do
             {
@@ -259,7 +259,7 @@ public:
         }
 
 
-        // remove gameobjects from the deleted guild house map
+        // Remove gameobjects from the deleted guild house map
         if (GameobjResult) {
             do
             {
@@ -383,7 +383,7 @@ public:
 
     void SpawnAssistantNPC(Player* player)
     {
-        uint32 entry = 190021;
+        uint32 entry = 500031;
         float posX = 16202.185547f;
         float posY = 16255.916992f;
         float posZ = 21.160221f;
@@ -593,7 +593,7 @@ public:
             return false;
         }
 
-        if (player->FindNearestCreature(190021, VISIBLE_RANGE, true)) {
+        if (player->FindNearestCreature(500031, VISIBLE_RANGE, true)) {
             handler->SendSysMessage("You already have the Guild House Assistant!");
             handler->SetSentErrorMessage(true);
             return false;
@@ -605,7 +605,7 @@ public:
         float ori = 6.195375f;
 
         Creature* creature = new Creature();
-        if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, GetGuildPhase(player), 190021, 0, posX, posY, posZ, ori))
+        if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, GetGuildPhase(player), 500031, 0, posX, posY, posZ, ori))
         {
             handler->SendSysMessage("You already have the Guild House Assistant!");
             handler->SetSentErrorMessage(true);
