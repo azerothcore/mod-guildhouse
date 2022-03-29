@@ -68,7 +68,7 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 	(19, 18753, 16227.5, 16292.3, 13.1839, 1.49691, 'Enchanting Trainer (Horde)'),
 	(20, 30721, 16231.6, 16301, 13.1757, 3.07372, 'Inscription Trainer (Alliance)'),
 	(21, 30722, 16231.6, 16301, 13.1757, 3.07372, 'Inscription Trainer (Horde)'),
-	(22, 33612, 16231.2, 16295, 13.1761, 3.06574, 'Leatherworking Trainer'),
+	(22, 19187, 16231.2, 16295, 13.1761, 3.06574, 'Leatherworking Trainer'),
 	(23, 33618, 16228.9, 16304.7, 13.1819, 4.64831, 'Skinning Trainer'),
 	(24, 2837, 16218.1, 16281.8, 13.1756, 6.1975, 'Alchemy Trainer'),
 	(25, 908, 16218.3, 16284.3, 13.1756, 6.1975, 'Herbalism Trainer'),
