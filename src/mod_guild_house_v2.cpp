@@ -33,7 +33,7 @@ public:
 
     void OnCreate(Guild*, Player* leader, const std::string&)
     {
-        ChatHandler(leader->GetSession()).PSendSysMessage("You now own a guild. You can purchase a guild house!");
+        ChatHandler(leader->GetSession()).PSendSysMessage("You now own a guild. You can purchase a Guild House!");
     }
 
     uint32 GetGuildPhase(Guild* guild) {
@@ -45,8 +45,8 @@ public:
 
         if (RemoveGuildHouse(guild))
         {
-            LOG_INFO("modules", "GUILDHOUSE: Deleting guild house data due to disbanding of guild...");
-        }else { LOG_INFO("modules", "GUILDHOUSE: Error deleting guild house data during disbanding of guild!!"); }
+            LOG_INFO("modules", "GUILDHOUSE: Deleting Guild House data due to disbanding of guild...");
+        }else { LOG_INFO("modules", "GUILDHOUSE: Error deleting Guild House data during disbanding of guild!!"); }
 
     }
 
@@ -137,7 +137,7 @@ public:
             // Only show "Sell" option if they have a guild house & are guild leader
             if (has_gh)
             {
-                AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Sell Guild House!", GOSSIP_SENDER_MAIN, 3, "Are you sure you want to sell your Guild house?", 0, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Sell Guild House!", GOSSIP_SENDER_MAIN, 3, "Are you sure you want to sell your Guild House?", 0, false);
             }
             else {
             // Only leader of the guild can buy guild house & only if they don't already have a guild house
@@ -184,13 +184,13 @@ public:
             // Calculate total gold returned: 1) cost of guildhouse and cost of each purchase made.
             if (RemoveGuildHouse(player))
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("You have successfully sold your guild house.");
-                player->GetGuild()->BroadcastToGuild(player->GetSession(), false, "We just sold our guild house.", LANG_UNIVERSAL);
+                ChatHandler(player->GetSession()).PSendSysMessage("You have successfully sold your Guild House.");
+                player->GetGuild()->BroadcastToGuild(player->GetSession(), false, "We just sold our Guild House.", LANG_UNIVERSAL);
                 player->ModifyMoney(+(sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000) / 2));
-                LOG_INFO("modules", "GUILDHOUSE: Successfully returned money and sold guildhouse");
+                LOG_INFO("modules", "GUILDHOUSE: Successfully returned money and sold Guild House");
                 CloseGossipMenuFor(player);
             } else {
-                ChatHandler(player->GetSession()).PSendSysMessage("There was an error selling your guild house.");
+                ChatHandler(player->GetSession()).PSendSysMessage("There was an error selling your Guild House.");
                 CloseGossipMenuFor(player);
                 }
             break;
@@ -209,7 +209,7 @@ public:
                 player->GetGuildId(), GetGuildPhase(player), map, posX, posY, posZ);
             player->ModifyMoney(-(sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000)));
             // Msg to purchaser and Msg Guild as purchaser
-            ChatHandler(player->GetSession()).PSendSysMessage("You have successfully purchased a guild house");
+            ChatHandler(player->GetSession()).PSendSysMessage("You have successfully purchased a Guild House");
             player->GetGuild()->BroadcastToGuild(player->GetSession(), false, "We now have a Guild House!", LANG_UNIVERSAL);
             player->GetGuild()->BroadcastToGuild(player->GetSession(), false, "In chat, type `.guildhouse teleport` or `.gh teleport` to meet me there!", LANG_UNIVERSAL);
             LOG_INFO("modules", "GUILDHOUSE: GuildId: '{}' has purchased a guildhouse", player->GetGuildId());
@@ -445,13 +445,13 @@ public:
             {
                 // Only leader of the guild can buy / sell guild house
                 AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Buy Guild House!", GOSSIP_SENDER_MAIN, 2);
-                AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Sell Guild House!", GOSSIP_SENDER_MAIN, 3, "Are you sure you want to sell your Guild house?", 0, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Sell Guild House!", GOSSIP_SENDER_MAIN, 3, "Are you sure you want to sell your Guild House?", 0, false);
             }
 
             AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Teleport to Guild House", GOSSIP_SENDER_MAIN, 1);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Close", GOSSIP_SENDER_MAIN, 5);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
-            ChatHandler(player->GetSession()).PSendSysMessage("Your Guild does not own a guild house");
+            ChatHandler(player->GetSession()).PSendSysMessage("Your Guild does not own a Guild House");
             return;
         }
 
@@ -529,7 +529,7 @@ public:
 
             if (!result || !player->GetGuild())
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("Your Guild does not own a guild house.");
+                ChatHandler(player->GetSession()).PSendSysMessage("Your guild does not own a Guild House.");
                 teleport(player);
                 return;
             }
@@ -648,7 +648,7 @@ public:
 
         if (!result)
         {
-            handler->SendSysMessage("Your Guild does not own a guild house!");
+            handler->SendSysMessage("Your guild does not own a Guild House!");
             handler->SetSentErrorMessage(true);
             return false;
         }
