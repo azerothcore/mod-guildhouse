@@ -511,10 +511,10 @@ public:
             do {
                                                             // commented out due to travis, but keeping for future expansion into other areas
                 Field* fields = result->Fetch();
-                //uint32 id = fields[0].GetUInt32();        // fix for travis
-                //uint32 guild = fields[1].GetUInt32();     // fix for travis
+                //uint32 id = fields[0].Get<uint32>();        // fix for travis
+                //uint32 guild = fields[1].Get<uint32>();     // fix for travis
                 guildData->phase = fields[2].Get<uint32>();
-                //uint32 map = fields[3].GetUInt32();       // fix for travis
+                //uint32 map = fields[3].Get<uint32>();       // fix for travis
                 //guildData->posX = fields[4].Get<float>();   // fix for travis
                 //guildData->posY = fields[5].Get<float>();   // fix for travis
                 //guildData->posZ = fields[6].Get<float>();   // fix for travis
@@ -656,8 +656,8 @@ public:
         do {
 
             Field* fields = result->Fetch();
-            //uint32 id = fields[0].GetUInt32();        // fix for travis
-            //uint32 guild = fields[1].GetUInt32();     // fix for travis
+            //uint32 id = fields[0].Get<uint32>();        // fix for travis
+            //uint32 guild = fields[1].Get<uint32>();     // fix for travis
             guildData->phase = fields[2].Get<uint32>();
             uint32 map = fields[3].Get<uint32>();
             guildData->posX = fields[4].Get<float>();
