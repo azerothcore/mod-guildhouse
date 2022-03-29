@@ -128,7 +128,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Engineering Trainer", GOSSIP_SENDER_MAIN, 8736, "Spawn Engineering Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Tailoring Trainer", GOSSIP_SENDER_MAIN, 2627, "Spawn Tailoring Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Leatherworking Trainer", GOSSIP_SENDER_MAIN, 19187, "Spawn Leatherworking Trainer?", GuildHouseProf,  false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Skinning Trainer", GOSSIP_SENDER_MAIN, 33618, "Spawn Skinning Trainer?", GuildHouseProf,  false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Skinning Trainer", GOSSIP_SENDER_MAIN, 19180, "Spawn Skinning Trainer?", GuildHouseProf,  false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mining Trainer", GOSSIP_SENDER_MAIN, 8128, "Spawn Mining Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Herbalism Trainer", GOSSIP_SENDER_MAIN, 908, "Spawn Herbalism Trainer?", GuildHouseProf,  false);
 
@@ -194,7 +194,7 @@ public:
         case 30721: // Inscription (Alliance)
         case 30722: // Inscription (Horde)
         case 19187: // Leatherworking
-        case 33618: // Skinning
+        case 19180: // Skinning
         case 2837: // Alchemy
         case 908: // Herbalism
         case 2627: // Tailoring
