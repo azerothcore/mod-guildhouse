@@ -61,7 +61,7 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 	(12, 500034, 16252.3, 16284.9, 20.9324, 1.79537, 'Death Knight Trainer'),
 	(13, 2836, 16220.5, 16302.3, 13.176, 6.14647, 'Blacksmithing Trainer'),
 	(14, 33617, 16220.2, 16299.6, 13.178, 6.22894, 'Mining Trainer'),
-	(15, 33611, 16219.8, 16296.9, 13.1746, 6.24465, 'Engineering Trainer'),
+	(15, 8736, 16219.8, 16296.9, 13.1746, 6.24465, 'Engineering Trainer'),
 	(16, 33614, 16222.4, 16293, 13.1813, 1.51263, 'Jewelcrafting Trainer'),
 	(17, 33610, 16227.5, 16292.3, 13.1839, 1.49691, 'Enchanting Trainer'),
 	(18, 33615, 16231.6, 16301, 13.1757, 3.07372, 'Inscription Trainer'),
