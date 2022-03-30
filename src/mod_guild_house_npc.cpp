@@ -116,10 +116,12 @@ public:
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
             break;
         case 6: // Auctioneer
+		{
             uint32 auctioneer = 0;
             auctioneer = player->GetTeamId() == TEAM_ALLIANCE ? 8719 : 9856;
             SpawnNPC(auctioneer, player);
             break;
+		}
 		case 9858: // Neutral Auctioneer
             cost = GuildHouseAuctioneer;
             SpawnNPC(action, player);
