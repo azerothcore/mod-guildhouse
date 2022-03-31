@@ -220,9 +220,9 @@ public:
             player->GetGuild()->BroadcastToGuild(player->GetSession(), false, "In chat, type `.guildhouse teleport` or `.gh tele` to meet me there!", LANG_UNIVERSAL);
             LOG_INFO("modules", "GUILDHOUSE: GuildId: '{}' has purchased a guildhouse", player->GetGuildId());
 
-            // Spawn a portal and the guild assistant automatically as part of purchase.
+            // Spawn a portal and the guild house butler automatically as part of purchase.
             SpawnStarterPortal(player);
-            SpawnAssistantNPC(player);
+            SpawnButlerNPC(player);
             CloseGossipMenuFor(player);
         }
 
@@ -387,7 +387,7 @@ public:
         CloseGossipMenuFor(player);
     }
 
-    void SpawnAssistantNPC(Player* player)
+    void SpawnButlerNPC(Player* player)
     {
         uint32 entry = 500031;
         float posX = 16202.185547f;
@@ -600,7 +600,7 @@ public:
         }
 
         if (player->FindNearestCreature(500031, VISIBLE_RANGE, true)) {
-            handler->SendSysMessage("You already have the Guild House Assistant!");
+            handler->SendSysMessage("You already have the Guild House Butler!");
             handler->SetSentErrorMessage(true);
             return false;
         }
@@ -613,7 +613,7 @@ public:
         Creature* creature = new Creature();
         if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, GetGuildPhase(player), 500031, 0, posX, posY, posZ, ori))
         {
-            handler->SendSysMessage("You already have the Guild House Assistant!");
+            handler->SendSysMessage("You already have the Guild House Butler!");
             handler->SetSentErrorMessage(true);
             delete creature;
             return false;
