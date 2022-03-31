@@ -100,7 +100,8 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
     (51, 29636, 16233.2, 16315.9, 20.8454, 4.64365, 'Reagent Vendor'),
     (52, 500033, 16242.8, 16302.1, 13.174, 4.6153, 'Ammo & Repair Vendor'),
     (53, 28690, 16226.97, 16267.9, 13.15, 4.6533, 'Stable Master'),
-	(54, 9858, 16238.2, 16291.8, 22.9306, 1.55386, 'Neutral Auctioneer');
+	(54, 9858, 16238.2, 16291.8, 22.9306, 1.55386, 'Neutral Auctioneer'),
+	(55, 2622, 16242.8, 16302.1, 13.176, 4.55570, 'Poisons Vendor');
 	
 /*!40000 ALTER TABLE `guild_house_spawns` ENABLE KEYS */;
 
