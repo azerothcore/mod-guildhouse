@@ -173,6 +173,8 @@ public:
             break;
         case 3: // sell back guild house
         {
+            Guild* guild = sGuildMgr->GetGuildById(player->GetGuildId());
+            Guild::Member const* memberMe = guild->GetMember(player->GetGUID());
             if (!memberMe->IsRankNotLower(GuildHouseSellRank))
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("You are not authorized to sell the Guild House.");
