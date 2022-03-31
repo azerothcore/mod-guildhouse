@@ -126,24 +126,27 @@ public:
 
         QueryResult has_gh = CharacterDatabase.Query("SELECT id, `guild` FROM `guild_house` WHERE guild = {}", player->GetGuildId());
 
-        // Only show Teleport option if guild owns a guildhouse
-        if (has_gh)
-        {
-            AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Teleport to Guild House", GOSSIP_SENDER_MAIN, 1);
-        }
+		// Only show Teleport option if guild owns a guildhouse
+		if (has_gh)
+		{
+			AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Teleport to Guild House", GOSSIP_SENDER_MAIN, 1);
 
-        if (player->GetGuild()->GetLeaderGUID() == player->GetGUID())
-        {
-            // Only show "Sell" option if they have a guild house & are guild leader
-            if (has_gh)
-            {
-                AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Sell Guild House!", GOSSIP_SENDER_MAIN, 3, "Are you sure you want to sell your Guild House?", 0, false);
-            }
-            else {
-				// Only leader of the guild can buy guild house & only if they don't already have a guild house
+			// Only show "Sell" option if they have a guild house & have permission to sell it
+			Guild* guild = sGuildMgr->GetGuildById(player->GetGuildId());
+			Guild::Member const* memberMe = guild->GetMember(player->GetGUID());
+			if (!memberMe->IsRankNotLower(sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0)))
+			{
+				AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Sell Guild House!", GOSSIP_SENDER_MAIN, 3, "Are you sure you want to sell your Guild House?", 0, false);
+			}
+		}
+		else
+		{
+			// Only leader of the guild can buy guild house & only if they don't already have a guild house
+			if (player->GetGuild()->GetLeaderGUID() == player->GetGUID())
+			{
 				AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Buy Guild House!", GOSSIP_SENDER_MAIN, 2);
-            }
-        }
+			}
+		}
 
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Close", GOSSIP_SENDER_MAIN, 5);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
