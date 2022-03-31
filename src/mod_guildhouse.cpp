@@ -175,7 +175,7 @@ public:
         {
             Guild* guild = sGuildMgr->GetGuildById(player->GetGuildId());
             Guild::Member const* memberMe = guild->GetMember(player->GetGUID());
-            if (!memberMe->IsRankNotLower(GuildHouseSellRank))
+            if (!memberMe->IsRankNotLower(sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0)))
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("You are not authorized to sell the Guild House.");
                 CloseGossipMenuFor(player);
