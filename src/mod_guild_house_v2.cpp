@@ -140,8 +140,8 @@ public:
                 AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Sell Guild House!", GOSSIP_SENDER_MAIN, 3, "Are you sure you want to sell your Guild House?", 0, false);
             }
             else {
-            // Only leader of the guild can buy guild house & only if they don't already have a guild house
-            AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Buy Guild House!", GOSSIP_SENDER_MAIN, 2);
+				// Only leader of the guild can buy guild house & only if they don't already have a guild house
+				AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Buy Guild House!", GOSSIP_SENDER_MAIN, 2);
             }
         }
 
@@ -171,7 +171,7 @@ public:
         case 4: // --- MORE TO COME ---
             BuyGuildHouse(player->GetGuild(), player, m_creature);
             break;
-        case 3: // Sell back guild house
+        case 3: // sell back guild house
         {
             QueryResult has_gh = CharacterDatabase.Query("SELECT id, `guild` FROM `guild_house` WHERE guild = {}", player->GetGuildId());
             if (!has_gh)
@@ -181,7 +181,7 @@ public:
                 return false;
             }
 
-            // Calculate total gold returned: 1) cost of guildhouse and cost of each purchase made.
+            // calculate total gold returned: 1) cost of guildhouse and cost of each purchase made
             if (RemoveGuildHouse(player))
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("You have successfully sold your Guild House.");
@@ -530,7 +530,7 @@ public:
             if (!result || !player->GetGuild())
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("Your guild does not own a Guild House.");
-                teleport(player);
+                teleportToDefault(player);
                 return;
             }
             player->SetPhaseMask(guildData->phase, true);
@@ -539,7 +539,7 @@ public:
             player->SetPhaseMask(GetNormalPhase(player), true);
     }
 
-    void teleport(Player* player)
+    void teleportToDefault(Player* player)
     {
         if (player->GetTeamId() == TEAM_ALLIANCE)
             player->TeleportTo(0, -8833.379883f, 628.627991f, 94.006599f, 1.0f);
