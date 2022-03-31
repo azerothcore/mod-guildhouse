@@ -13,7 +13,7 @@
 #include "Transport.h"
 #include "CreatureAI.h"
 
-int cost, GuildHouseInnKeeper, GuildHouseBank, GuildHouseMailBox, GuildHouseAuctioneer, GuildHouseTrainer, GuildHouseVendor, GuildHouseObject, GuildHousePortal, GuildHouseSpirit, GuildHouseProf, GuildHouseBuyRank;
+int cost, GuildHouseInnKeeper, GuildHouseBank, GuildHouseMailBox, GuildHouseAuctioneer, GuildHouseTrainer, GuildHouseVendor, GuildHouseObject, GuildHousePortal, GuildHouseSpirit, GuildHouseProf, GuildHouseBuyRank, GuildHouseSellRank;
 
 class GuildHouseSpawner : public CreatureScript {
 
@@ -399,7 +399,8 @@ public:
         GuildHousePortal = sConfigMgr->GetOption<int32>("GuildHousePortal", 500000);
         GuildHouseProf = sConfigMgr->GetOption<int32>("GuildHouseProf", 500000);
         GuildHouseSpirit = sConfigMgr->GetOption<int32>("GuildHouseSpirit", 100000);
-        GuildHouseBuyRank = sConfigMgr->GetOption<int32>("GuildHouseBuyRank", 0);
+        GuildHouseBuyRank = sConfigMgr->GetOption<int32>("GuildHouseBuyRank", 4);
+        GuildHouseSellRank = sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0);
     }
 };
 

@@ -173,6 +173,13 @@ public:
             break;
         case 3: // sell back guild house
         {
+            if (!memberMe->IsRankNotLower(GuildHouseSellRank))
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("You are not authorized to sell the Guild House.");
+                CloseGossipMenuFor(player);
+                return false;
+            }
+
             QueryResult has_gh = CharacterDatabase.Query("SELECT id, `guild` FROM `guild_house` WHERE guild = {}", player->GetGuildId());
             if (!has_gh)
             {
@@ -205,8 +212,7 @@ public:
 
         if (action >= 100)
         {
-            CharacterDatabase.Query("INSERT INTO `guild_house` (guild, phase, map, positionX, positionY, positionZ) VALUES ({}, {}, {}, {}, {}, {})",
-                player->GetGuildId(), GetGuildPhase(player), map, posX, posY, posZ);
+            CharacterDatabase.Query("INSERT INTO `guild_house` (guild, phase, map, positionX, positionY, positionZ) VALUES ({}, {}, {}, {}, {}, {})", player->GetGuildId(), GetGuildPhase(player), map, posX, posY, posZ);
             player->ModifyMoney(-(sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000)));
             // Msg to purchaser and Msg Guild as purchaser
             ChatHandler(player->GetSession()).PSendSysMessage("You have successfully purchased a Guild House");
