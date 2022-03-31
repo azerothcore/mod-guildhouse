@@ -477,10 +477,10 @@ public:
 
 };
 
-class GuildHouseV2PlayerScript : public PlayerScript
+class GuildHousePlayerScript : public PlayerScript
 {
 public:
-    GuildHouseV2PlayerScript() : PlayerScript("GuildHouseV2PlayerScript") { }
+    GuildHousePlayerScript() : PlayerScript("GuildHousePlayerScript") { }
 
     void OnLogin(Player* player)
     {
@@ -692,10 +692,10 @@ public:
     }
 };
 
-void AddGuildHouseV2Scripts() {
+void AddGuildHouseScripts() {
     new GuildHelper();
     new GuildHouseSeller();
-    new GuildHouseV2PlayerScript();
+    new GuildHousePlayerScript();
     new GuildHouseCommand();
     new GuildHouseGlobal();
 }

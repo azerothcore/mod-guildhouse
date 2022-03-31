@@ -404,7 +404,7 @@ public:
     }
 };
 
-void AddGuildHouseV2NPCScripts()
+void AddGuildHouseNPCScripts()
 {
     new GuildHouseSpawner();
     new GuildHouseNPCConf();

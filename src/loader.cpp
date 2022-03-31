@@ -1,7 +1,7 @@
-void AddGuildHouseV2Scripts();
-void AddGuildHouseV2NPCScripts();
+void AddGuildHouseScripts();
+void AddGuildHouseNPCScripts();
 
 void Addmod_guildhouseScripts() {
-    AddGuildHouseV2Scripts();
-    AddGuildHouseV2NPCScripts();
+    AddGuildHouseScripts();
+    AddGuildHouseNPCScripts();
 }
