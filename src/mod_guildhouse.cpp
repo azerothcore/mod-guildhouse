@@ -134,7 +134,7 @@ public:
 			// Only show "Sell" option if they have a guild house & have permission to sell it
 			Guild* guild = sGuildMgr->GetGuildById(player->GetGuildId());
 			Guild::Member const* memberMe = guild->GetMember(player->GetGUID());
-			ChatHandler(player->GetSession()).PSendSysMessage("Sell rank: {}", sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0));  // Testing
+			ChatHandler(player->GetSession()).PSendSysMessage("Sell rank: %s", std::to_string(sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0)));  // Testing
 			if (!memberMe->IsRankNotLower(sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0)))
 			{
 				ChatHandler(player->GetSession()).PSendSysMessage("Allowed.");  // Testing
