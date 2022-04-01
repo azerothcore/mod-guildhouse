@@ -578,7 +578,7 @@ public:
         return player->GetGuildId() + 10;
     }
 
-    static bool HandleSpawnNPCCommand(ChatHandler* handler, char const* /*args*/)
+    static bool HandleSpawnNPCCommand(ChatHandler* handler)
     {
         Player* player = handler->GetSession()->GetPlayer();
         Map* map = player->GetMap();
@@ -631,7 +631,7 @@ public:
         return true;
     }
 
-    static bool HandleGuildHouseTeleCommand(ChatHandler* handler, char const* /*args*/)
+    static bool HandleGuildHouseTeleCommand(ChatHandler* handler)
     {
         Player* player = handler->GetSession()->GetPlayer();
 
