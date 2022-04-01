@@ -134,7 +134,7 @@ public:
 			// Only show "Sell" option if they have a guild house & have permission to sell it
 			Guild* guild = sGuildMgr->GetGuildById(player->GetGuildId());
 			Guild::Member const* memberMe = guild->GetMember(player->GetGUID());
-			if (!memberMe->IsRankNotLower(sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0)))
+			if (memberMe->IsRankNotLower(sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0)))
 			{
 				AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Sell Guild House!", GOSSIP_SENDER_MAIN, 3, "Are you sure you want to sell your Guild House?", 0, false);
 			}
