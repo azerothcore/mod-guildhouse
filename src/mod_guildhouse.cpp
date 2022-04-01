@@ -126,7 +126,7 @@ public:
 
         QueryResult has_gh = CharacterDatabase.Query("SELECT id, `guild` FROM `guild_house` WHERE guild = {}", player->GetGuildId());
 
-		// Only show Teleport option if guild owns a guildhouse
+		// Only show Teleport option if guild owns a guild house
 		if (has_gh)
 		{
 			AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Teleport to Guild House", GOSSIP_SENDER_MAIN, 1);
@@ -134,9 +134,15 @@ public:
 			// Only show "Sell" option if they have a guild house & have permission to sell it
 			Guild* guild = sGuildMgr->GetGuildById(player->GetGuildId());
 			Guild::Member const* memberMe = guild->GetMember(player->GetGUID());
+			ChatHandler(player->GetSession()).PSendSysMessage("Sell rank: " + sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0));  // Testing
 			if (!memberMe->IsRankNotLower(sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0)))
 			{
+				ChatHandler(player->GetSession()).PSendSysMessage("Allowed.");  // Testing
 				AddGossipItemFor(player, GOSSIP_ICON_TABARD, "Sell Guild House!", GOSSIP_SENDER_MAIN, 3, "Are you sure you want to sell your Guild House?", 0, false);
+			}
+			else
+			{
+				ChatHandler(player->GetSession()).PSendSysMessage("Not allowed!");  // Testing
 			}
 		}
 		else
@@ -176,15 +182,6 @@ public:
             break;
         case 3: // sell back guild house
         {
-            Guild* guild = sGuildMgr->GetGuildById(player->GetGuildId());
-            Guild::Member const* memberMe = guild->GetMember(player->GetGUID());
-            if (!memberMe->IsRankNotLower(sConfigMgr->GetOption<int32>("GuildHouseSellRank", 0)))
-            {
-                ChatHandler(player->GetSession()).PSendSysMessage("You are not authorized to sell the Guild House.");
-                CloseGossipMenuFor(player);
-                return false;
-            }
-
             QueryResult has_gh = CharacterDatabase.Query("SELECT id, `guild` FROM `guild_house` WHERE guild = {}", player->GetGuildId());
             if (!has_gh)
             {
@@ -193,7 +190,7 @@ public:
                 return false;
             }
 
-            // calculate total gold returned: 1) cost of guildhouse and cost of each purchase made
+            // calculate total gold returned: 1) cost of guild house and cost of each purchase made
             if (RemoveGuildHouse(player))
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("You have successfully sold your Guild House.");
