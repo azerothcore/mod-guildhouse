@@ -555,21 +555,18 @@ class GuildHouseCommand : public CommandScript
 public:
     GuildHouseCommand() : CommandScript("GuildHouseCommand") { }
 
-    std::vector<ChatCommand> GetCommands() const override
+    ChatCommandTable GetCommands() const override
     {
-        static std::vector<ChatCommand> GuildHouseCommandTable =
+        static ChatCommandTable GuildHouseCommandTable =
         {
-            // View Command
-            { "Teleport", SEC_PLAYER, false, &HandleGuildHouseTeleCommand, "" },
-            { "Home", SEC_PLAYER, false, &HandleGuildHouseTeleCommand, "" },
-            // Set Command
-            { "Butler", SEC_PLAYER, false, &HandleSpawnNPCCommand, "" },
+            { "teleport", HandleGuildHouseTeleCommand, SEC_PLAYER, "" },
+            { "butler", HandleSpawnNPCCommand, SEC_PLAYER, "" },
         };
 
-        static std::vector<ChatCommand> GuildHouseCommandBaseTable =
+        static ChatCommandTable GuildHouseCommandBaseTable =
         {
-            { "Guildhouse", SEC_PLAYER, false, nullptr, "", GuildHouseCommandTable },
-            { "gh", SEC_PLAYER, false, nullptr, "", GuildHouseCommandTable }
+            { "guildhouse", GuildHouseCommandTable },
+            { "gh", GuildHouseCommandTable }
         };
 
         return GuildHouseCommandBaseTable;
