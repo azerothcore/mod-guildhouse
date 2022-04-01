@@ -550,6 +550,8 @@ public:
     }
 };
 
+using namespace Acore::ChatCommands;
+
 class GuildHouseCommand : public CommandScript
 {
 public:
