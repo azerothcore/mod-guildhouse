@@ -561,8 +561,8 @@ public:
     {
         static ChatCommandTable GuildHouseCommandTable =
         {
-            { "teleport", HandleGuildHouseTeleCommand, SEC_PLAYER, "" },
-            { "butler", HandleSpawnNPCCommand, SEC_PLAYER, "" },
+            { "teleport", HandleGuildHouseTeleCommand, SEC_PLAYER, Console::Yes },
+            { "butler", HandleSpawnNPCCommand, SEC_PLAYER, Console::Yes },
         };
 
         static ChatCommandTable GuildHouseCommandBaseTable =
