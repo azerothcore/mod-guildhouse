@@ -1,5 +1,5 @@
 -- !!! NOTE: set these before running the queries in order to avoid conflicts !!!
-SET @C_TEMPLATE = 500030; -- 3 slots
+SET @C_TEMPLATE = 500030;
 
 DELETE FROM `creature_template` WHERE `entry` IN (
 	@C_TEMPLATE + 0,
@@ -13,7 +13,7 @@ INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entr
 	(@C_TEMPLATE + 2, 0, 0, 0, 0, 0, 18234, 0, 0, 0, 'Innkeeper Monica', NULL, NULL, 0, 1, 2, 0, 35, 65537, 0.8, 0.28571, 1, 1, 20, 1, 0, 0, 4.6, 2000, 1900, 1, 1, 1, 0, 2048, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, '', 1, 1, 1, 1, 1, 1, 0, 70, 1, 0, 0, 2, 'npc_innkeeper', 12340);
 
 -- !!! NOTE: set these before running the queries in order to avoid conflicts !!!
-SET @GO_TEMPLATE = 500000; -- 10 slots
+SET @GO_TEMPLATE = 500000;
 
 DELETE FROM `gameobject_template` WHERE `entry` IN (
     @GO_TEMPLATE + 0,

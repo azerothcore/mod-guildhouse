@@ -1,37 +1,3 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.6.28 - MySQL Community Server (GPL)
--- Server OS:                    Win64
--- HeidiSQL Version:             9.4.0.5125
--- --------------------------------------------------------
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-
--- Dumping structure for table acore_char.guild_house
-CREATE TABLE IF NOT EXISTS `guild_house` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `guild` int(11) NOT NULL DEFAULT '0',
-  `phase` int(11) NOT NULL,
-  `map` int(11) NOT NULL DEFAULT '0',
-  `positionX` float NOT NULL DEFAULT '0',
-  `positionY` float NOT NULL DEFAULT '0',
-  `positionZ` float NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `guild` (`guild`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
-
--- Dumping data for table acore_char.guild_house: ~2 rows (approximately)
-/*!40000 ALTER TABLE `guild_house` DISABLE KEYS */;
-REPLACE INTO `guild_house` (`id`, `guild`, `phase`, `map`, `positionX`, `positionY`, `positionZ`) VALUES
-	(19, 1, 1, 1, 16226.1, 16258, 13.2576),
-	(23, 2, 2, 1, 16226.1, 16258, 13.2576);
-/*!40000 ALTER TABLE `guild_house` ENABLE KEYS */;
-
--- Dumping structure for table acore_world.guild_house_spawns
 CREATE TABLE IF NOT EXISTS `guild_house_spawns` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entry` int(11) NOT NULL DEFAULT '0',
@@ -44,8 +10,6 @@ CREATE TABLE IF NOT EXISTS `guild_house_spawns` (
   UNIQUE KEY `entry` (`entry`)
 ) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
 
--- Dumping data for table acore_world.guild_house_spawns: ~50 rows (approximately)
-/*!40000 ALTER TABLE `guild_house_spawns` DISABLE KEYS */;
 REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orientation`, `comment`) VALUES
 	(1, 26327, 16216.5, 16279.4, 20.9306, 0.552869, 'Paladin Trainer'),
 	(2, 26324, 16221.3, 16275.7, 20.9285, 1.37363, 'Druid Trainer'),
@@ -102,9 +66,3 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
     (53, 28690, 16226.97, 16267.9, 13.15, 4.6533, 'Stable Master'),
 	(54, 9858, 16238.2, 16291.8, 22.9306, 1.55386, 'Neutral Auctioneer'),
 	(55, 2622, 16242.8, 16302.1, 13.176, 4.55570, 'Poisons Vendor');
-	
-/*!40000 ALTER TABLE `guild_house_spawns` ENABLE KEYS */;
-
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
