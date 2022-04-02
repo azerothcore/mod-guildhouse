@@ -18,11 +18,12 @@ class GuildData : public DataMap::Base
 {
 public:
     GuildData() {}
-    GuildData(uint32 phase, float posX, float posY, float posZ) : phase(phase), posX(posX), posY(posY), posZ(posZ) {}
+    GuildData(uint32 phase, float posX, float posY, float posZ, float ori) : phase(phase), posX(posX), posY(posY), posZ(posZ), ori(ori) {}
     uint32 phase;
     float posX;
     float posY;
     float posZ;
+	float ori;
 };
 
 class GuildHelper : public GuildScript {
@@ -159,14 +160,16 @@ public:
         float posX;
         float posY;
         float posZ;
+		float ori;
 
         switch (action)
         {
         case 100: // GM Island
             map = 1;
-            posX = 16226.117f;
-            posY = 16258.046f;
-            posZ = 13.257628f;
+            posX = 16222.972f;
+            posY = 16267.802f;
+            posZ = 13.136777f;
+			ori = 1.461173f;
             break;
         case 5: // close
             CloseGossipMenuFor(player);
@@ -208,7 +211,7 @@ public:
 
         if (action >= 100)
         {
-            CharacterDatabase.Query("INSERT INTO `guild_house` (guild, phase, map, positionX, positionY, positionZ) VALUES ({}, {}, {}, {}, {}, {})", player->GetGuildId(), GetGuildPhase(player), map, posX, posY, posZ);
+            CharacterDatabase.Query("INSERT INTO `guild_house` (guild, phase, map, positionX, positionY, positionZ, orientation) VALUES ({}, {}, {}, {}, {}, {}, {})", player->GetGuildId(), GetGuildPhase(player), map, posX, posY, posZ, ori);
             player->ModifyMoney(-(sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000)));
             // Msg to purchaser and Msg Guild as purchaser
             ChatHandler(player->GetSession()).PSendSysMessage("You have successfully purchased a Guild House");
@@ -228,7 +231,6 @@ public:
     uint32 GetGuildPhase(Player* player) {
         return player->GetGuildId() + 10;
     }
-
 
     bool RemoveGuildHouse(Player* player)
     {
@@ -438,7 +440,7 @@ public:
     void TeleportGuildHouse(Guild* guild, Player* player, Creature* creature)
     {
         GuildData* guildData = player->CustomData.GetDefault<GuildData>("phase");
-        QueryResult result = CharacterDatabase.Query("SELECT `phase`, `map`,`positionX`, `positionY`, `positionZ` FROM guild_house WHERE `guild` = {}", guild->GetId());
+        QueryResult result = CharacterDatabase.Query("SELECT `phase`, `map`,`positionX`, `positionY`, `positionZ`, `orientation` FROM guild_house WHERE `guild` = {}", guild->GetId());
 
         if (!result)
         {
@@ -465,8 +467,9 @@ public:
             guildData->posX = fields[2].Get<float>();
             guildData->posY = fields[3].Get<float>();
             guildData->posZ = fields[4].Get<float>();
+            guildData->ori = fields[5].Get<float>();
 
-            player->TeleportTo(map, guildData->posX, guildData->posY, guildData->posZ, player->GetOrientation());
+            player->TeleportTo(map, guildData->posX, guildData->posY, guildData->posZ, guildData->ori);
 
         } while (result->NextRow());
     }
@@ -506,7 +509,7 @@ public:
     void CheckPlayer(Player* player)
     {
         GuildData* guildData = player->CustomData.GetDefault<GuildData>("phase");
-        QueryResult result = CharacterDatabase.Query("SELECT `id`, `guild`, `phase`, `map`,`positionX`, `positionY`, `positionZ` FROM guild_house WHERE `guild` = {}", player->GetGuildId());
+        QueryResult result = CharacterDatabase.Query("SELECT `id`, `guild`, `phase`, `map`,`positionX`, `positionY`, `positionZ`, `orientation` FROM guild_house WHERE `guild` = {}", player->GetGuildId());
 
         if (result)
         {
@@ -520,6 +523,7 @@ public:
                 //guildData->posX = fields[4].Get<float>();   // fix for travis
                 //guildData->posY = fields[5].Get<float>();   // fix for travis
                 //guildData->posZ = fields[6].Get<float>();   // fix for travis
+                //guildData->ori = fields[7].Get<float>();   // fix for travis
 
             } while (result->NextRow());
         }
@@ -645,7 +649,7 @@ public:
         }
 
         GuildData* guildData = player->CustomData.GetDefault<GuildData>("phase");
-        QueryResult result = CharacterDatabase.Query("SELECT `id`, `guild`, `phase`, `map`,`positionX`, `positionY`, `positionZ` FROM guild_house WHERE `guild` = {}", player->GetGuildId());
+        QueryResult result = CharacterDatabase.Query("SELECT `id`, `guild`, `phase`, `map`,`positionX`, `positionY`, `positionZ`, `orientation` FROM guild_house WHERE `guild` = {}", player->GetGuildId());
 
         if (!result)
         {
@@ -664,8 +668,9 @@ public:
             guildData->posX = fields[4].Get<float>();
             guildData->posY = fields[5].Get<float>();
             guildData->posZ = fields[6].Get<float>();
+            guildData->ori = fields[7].Get<float>();
 
-            player->TeleportTo(map, guildData->posX, guildData->posY, guildData->posZ, player->GetOrientation());
+            player->TeleportTo(map, guildData->posX, guildData->posY, guildData->posZ, guildData->ori);
 
         } while (result->NextRow());
 
