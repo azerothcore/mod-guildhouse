@@ -566,7 +566,7 @@ public:
         static ChatCommandTable GuildHouseCommandTable =
         {
             { "teleport", HandleGuildHouseTeleCommand, SEC_PLAYER, Console::Yes },
-            { "butler", HandleSpawnNPCCommand, SEC_PLAYER, Console::Yes },
+            { "butler", HandleSpawnButlerCommand, SEC_PLAYER, Console::Yes },
         };
 
         static ChatCommandTable GuildHouseCommandBaseTable =
@@ -582,7 +582,7 @@ public:
         return player->GetGuildId() + 10;
     }
 
-    static bool HandleSpawnNPCCommand(ChatHandler* handler)
+    static bool HandleSpawnButlerCommand(ChatHandler* handler)
     {
         Player* player = handler->GetSession()->GetPlayer();
         Map* map = player->GetMap();
@@ -625,7 +625,7 @@ public:
         creature = new Creature();
         if (!creature->LoadCreatureFromDB(lowguid, player->GetMap()))
         {
-            handler->SendSysMessage("Something went wrong when adding the NPC.");
+            handler->SendSysMessage("Something went wrong when adding the Butler.");
             handler->SetSentErrorMessage(true);
             delete creature;
             return false;

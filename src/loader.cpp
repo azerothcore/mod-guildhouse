@@ -1,7 +1,7 @@
 void AddGuildHouseScripts();
-void AddGuildHouseNPCScripts();
+void AddGuildHouseButlerScripts();
 
 void Addmod_guildhouseScripts() {
     AddGuildHouseScripts();
-    AddGuildHouseNPCScripts();
+    AddGuildHouseButlerScripts();
 }

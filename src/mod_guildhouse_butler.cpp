@@ -382,10 +382,10 @@ public:
     }
 };
 
-class GuildHouseNPCConf : public WorldScript
+class GuildHouseButlerConf : public WorldScript
 {
 public:
-    GuildHouseNPCConf() : WorldScript("GuildHouseNPCConf") {}
+    GuildHouseButlerConf() : WorldScript("GuildHouseButlerConf") {}
 
     void OnBeforeConfigLoad(bool /*reload*/) override
     {
@@ -403,8 +403,8 @@ public:
     }
 };
 
-void AddGuildHouseNPCScripts()
+void AddGuildHouseButlerScripts()
 {
     new GuildHouseSpawner();
-    new GuildHouseNPCConf();
+    new GuildHouseButlerConf();
 }
