@@ -141,7 +141,7 @@ public:
         return new GuildHouseSellerAI(creature);
     }
 
-    bool OnGossipHello(Player *player, Creature *creature)
+    bool OnGossipHello(Player *player, Creature *creature) override
     {
         if (!player->GetGuild())
         {
@@ -179,7 +179,7 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player *player, Creature *m_creature, uint32, uint32 action)
+    bool OnGossipSelect(Player *player, Creature *m_creature, uint32, uint32 action) override
     {
         uint32 map;
         float posX;
