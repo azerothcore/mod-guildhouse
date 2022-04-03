@@ -49,5 +49,7 @@ If you need to change the module configuration, go to your server configuration 
 * [Talamortis](https://github.com/talamortis) (Original author of the module)
 * [Rochet2](https://github.com/Rochet2/): Thanks for the help with the phasing situation & General support
 * [rbedfordpro](https://github.com/rbedfordpro) & [WiZZy](https://github.com/wizzymore)
+* [Nelnamara - Porkserver](https://github.com/Porkserver) & [SoulSeekkor](https://github.com/SoulSeekkor) 2022 rework, crash fixes and new additions
+* [Bogir](https://github.com/Bogir) For being amazing and forever helpful
 
 AzerothCore: [repository](https://github.com/azerothcore) - [website](http://azerothcore.org/) - [discord chat community](https://discord.gg/64FH6Y8)
