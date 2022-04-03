@@ -38,8 +38,7 @@ public:
         return new GuildHouseSpawnerAI(creature);
     }
 
-    bool
-    OnGossipHello(Player *player, Creature *creature)
+    bool OnGossipHello(Player *player, Creature *creature) override
     {
 
         if (player->GetGuild())
@@ -75,7 +74,7 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player *player, Creature *m_creature, uint32, uint32 action)
+    bool OnGossipSelect(Player *player, Creature *m_creature, uint32, uint32 action) override
     {
 
         switch (action)
