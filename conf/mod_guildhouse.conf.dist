@@ -80,6 +80,19 @@ GuildHouseSpirit = 100000
 # GuildHouseBuyRank
 #
 # Minimum GuildRank able to make purchases in guild house
+# default = 4 (Initiate)
+# GR_GUILDMASTER  = 0
+# GR_OFFICER      = 1
+# GR_VETERAN      = 2
+# GR_MEMBER       = 3
+# GR_INITIATE     = 4
+#
+GuildHouseBuyRank = 4
+
+
+# GuildHouseSellRank
+#
+# Minimum GuildRank able to sell the guild house
 # default = 0 (Guild Master)
 # GR_GUILDMASTER  = 0
 # GR_OFFICER      = 1
@@ -87,5 +100,4 @@ GuildHouseSpirit = 100000
 # GR_MEMBER       = 3
 # GR_INITIATE     = 4
 #
-GuildHouseBuyRank = 0
-
+GuildHouseSellRank = 0

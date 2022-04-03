@@ -26,11 +26,11 @@ All guilds will get their own phasing system and then the guild master can purch
 
 ## How to use ingame
 
-1) After installation, as GM you will need to: `.npc add 70101` -> somewhere public and accessible by other players.
+1) After installation, as GM you will need to: `.npc add 500030` -> somewhere public and accessible by other players.
 2) Players can purchase a guild house from the added NPC, then either teleport to the guildhouse via the NPC or chat: `.guildhouse tele` or `.gh tele`
 3) Each new Guild House starts with a portal to either Orgrimmar or Stormwind, based on Team (ALLIANCE / HORDE), and the Guild House Assistant.
 4) Speak with the Guild House Assistant to begin purchasing additions to your Guild House!
-5) Players in guild with proper rank will be able to spawn the Assistant with chat commands `.guildhouse buter` or `.gh butler`
+5) Players in guild with proper rank will be able to spawn the Assistant with chat commands `.guildhouse butler` or `.gh butler`
 
 ## Installation
 
