@@ -562,7 +562,7 @@ public:
         if (player->GetZoneId() == 876 && player->GetAreaId() == 876) // GM Island
         {
 			// Set the guild house as a rested area
-			SetPlayerFlag(PLAYER_FLAGS_RESTING);
+			player->SetPlayerFlag(PLAYER_FLAGS_RESTING);
 			
             // If player is not in a guild he doesnt have a guild house teleport away
             // TODO: What if they are in a guild, but somehow are in the wrong phaseMask and seeing someone else's area?
