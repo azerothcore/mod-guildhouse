@@ -528,8 +528,6 @@ public:
 	{
         if (player->GetZoneId() == 876 && player->GetAreaId() == 876) // GM Island
 		{
-            ChatHandler(player->GetSession()).PSendSysMessage("Removing rested state...");  // Testing
-			
 			// Remove the rested state when teleporting from the guild house
 			player->RemoveRestState();
 		}
