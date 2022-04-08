@@ -526,6 +526,14 @@ public:
 
     bool OnBeforeTeleport(Player *player, uint32 mapid, float x, float y, float z, float orientation, uint32 options, Unit *target)
 	{
+		(void)mapid;
+		(void)x;
+		(void)y;
+		(void)z;
+		(void)orientation;
+		(void)options;
+		(void)target;
+
         if (player->GetZoneId() == 876 && player->GetAreaId() == 876) // GM Island
 		{
 			// Remove the rested state when teleporting from the guild house
