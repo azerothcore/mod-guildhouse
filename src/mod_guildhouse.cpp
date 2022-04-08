@@ -524,7 +524,7 @@ public:
             player->SetPhaseMask(GetNormalPhase(player), true);
     }
 
-    void OnBeforeTeleport(Player *player, uint32 mapid, float x, float y, float z, float orientation, uint32 options, Unit *target)
+    bool OnBeforeTeleport(Player *player, uint32 mapid, float x, float y, float z, float orientation, uint32 options, Unit *target)
 	{
         if (player->GetZoneId() == 876 && player->GetAreaId() == 876) // GM Island
 		{
@@ -533,8 +533,10 @@ public:
 			// Remove the rested state when teleporting from the guild house
 			player->RemoveRestState();
 		}
+		
+		return true;
 	}
-	
+
     uint32 GetNormalPhase(Player *player) const
     {
         if (player->IsGameMaster())
