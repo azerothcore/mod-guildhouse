@@ -17,11 +17,11 @@ All guilds will get their own phasing system and then the guild master can purch
 * Class Trainers (all available in Wrath)
 * Primary Profession Trainers (all available in Wrath)
 * Secondary Profession Trainers (all available in Wrath)
-* Vendors: Reagents Vendor, Food & Water, Trade Goods, and Repairs/Ammo Vendor
+* Vendors: Reagents Vendor, Food & Drink, Trade Goods, Ammo & Repair Vendor, and Poisons Vendor
 * Portals to Neutral, Horde and Alliance cities
 * Spirit Healer
 * Guild Bank and Personal Bank access
-* Auctioneer
+* Auctioneer/Neutral Auctioneer
 * Stable Master
 
 ## How to use ingame
@@ -42,7 +42,7 @@ All guilds will get their own phasing system and then the guild master can purch
 
 ## Edit module configuration (optional)
 
-If you need to change the module configuration, go to your server configuration folder (where your `worldserver` or `worldserver.exe` is), copy `mod_guild_house_v2.conf.dist` to `mod_guild_house_v2.conf` and edit that new file.
+If you need to change the module configuration, go to your server configuration folder (where your `worldserver` or `worldserver.exe` is), copy `mod_guildhouse.conf.dist` to `mod_guildhouse.conf` and edit that new file.
 
 ## Credits
 
