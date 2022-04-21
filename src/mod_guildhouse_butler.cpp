@@ -153,7 +153,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Tailoring Trainer", GOSSIP_SENDER_MAIN, 2627, "Spawn Tailoring Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Leatherworking Trainer", GOSSIP_SENDER_MAIN, 19187, "Spawn Leatherworking Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Skinning Trainer", GOSSIP_SENDER_MAIN, 19180, "Spawn Skinning Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mining Trainer", GOSSIP_SENDER_MAIN, 8128, "Spawn Mining Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mining Trainer", GOSSIP_SENDER_MAIN, 28698, "Spawn Mining Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Herbalism Trainer", GOSSIP_SENDER_MAIN, 28704, "Spawn Herbalism Trainer?", GuildHouseProf, false);
 			AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 28693, "Spawn Enchanting Trainer?", GuildHouseProf, false);
 			AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 28701, "Spawn Jewelcrafting Trainer?", GuildHouseProf, false);
@@ -196,7 +196,7 @@ public:
             SpawnNPC(action, player);
             break;
         case 28694: // Blacksmithing
-        case 8128:  // Mining
+        case 28698: // Mining
         case 8736:  // Engineering
         case 28701: // Jewelcrafting
         case 28693: // Enchanting

@@ -24,7 +24,7 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 	(11, 30605, 16228.0, 16280.5, 13.1761, 2.98877, 'Banker'),
 	(12, 29195, 16252.3, 16284.9, 20.9324, 1.79537, 'Death Knight Trainer'),
 	(13, 28694, 16220.5, 16302.3, 13.176, 6.14647, 'Blacksmithing Trainer'),
-	(14, 8128, 16220.2, 16299.6, 13.178, 6.22894, 'Mining Trainer'),
+	(14, 28698, 16220.2, 16299.6, 13.178, 6.22894, 'Mining Trainer'),
 	(15, 8736, 16219.8, 16296.9, 13.1746, 6.24465, 'Engineering Trainer'),
 	(16, 28701, 16222.4, 16293, 13.1813, 1.51263, 'Jewelcrafting Trainer'),
 	(17, 18751, 16222.4, 16293, 13.1813, 1.51263, '<unused>'),
@@ -71,22 +71,25 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 -- Updates existing creatures to the new creatures.
 -- Replace <world> and <characters> with your database names!
 
---First Aid trainer
+-- First Aid trainer
 UPDATE <world>.creature SET id1 = 28706 WHERE id1 = 19184 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
 
---Enchanting trainers
+-- Enchanting trainers
 UPDATE <world>.creature SET id1 = 28693 WHERE id1 IN (18773,18753) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
 
---Jewelcrafting trainers
+-- Jewelcrafting trainers
 UPDATE <world>.creature SET id1 = 28701 WHERE id1 IN (18774,18751) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
 
---Inscription trainers
+-- Inscription trainers
 UPDATE <world>.creature SET id1 = 28702 WHERE id1 IN (30721,30722) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
 
---Herbalism trainer
+-- Herbalism trainer
 UPDATE <world>.creature SET id1 = 28704 WHERE id1 = 908 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
 
---Blacksmithing trainer
+-- Blacksmithing trainer
 UPDATE <world>.creature SET id1 = 28694 WHERE id1 = 2836 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+
+-- Mining trainer
+UPDATE <world>.creature SET id1 = 28698 WHERE id1 = 8128 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
 
 */
