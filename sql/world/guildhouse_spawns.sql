@@ -71,6 +71,8 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 -- Updates existing creatures to the new creatures.
 -- Replace <world> and <characters> with your database names!
 
+-- The following only needs to be ran if you used this module before 4-21-2022.
+
 -- First Aid trainer
 UPDATE <world>.creature SET id1 = 28706 WHERE id1 = 19184 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
