@@ -33,7 +33,7 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 	(20, 28702, 16231.6, 16301, 13.1757, 3.07372, 'Inscription Trainer'),
 	(21, 30722, 16231.6, 16301, 13.1757, 3.07372, '<unused>'),
 	(22, 19187, 16231.2, 16295, 13.1761, 3.06574, 'Leatherworking Trainer'),
-	(23, 19180, 16228.9, 16304.7, 13.1819, 4.64831, 'Skinning Trainer'),
+	(23, 28696, 16228.9, 16304.7, 13.1819, 4.64831, 'Skinning Trainer'),
 	(24, 28703, 16218.1, 16281.8, 13.1756, 6.1975, 'Alchemy Trainer'),
 	(25, 28704, 16218.3, 16284.3, 13.1756, 6.1975, 'Herbalism Trainer'),
 	(26, 2627, 16220.4, 16278.7, 13.1756, 1.46157, 'Tailoring Trainer'),
@@ -94,5 +94,8 @@ UPDATE <world>.creature SET id1 = 28698 WHERE id1 = 8128 AND EXISTS (SELECT * FR
 
 -- Alchemy trainer
 UPDATE <world>.creature SET id1 = 28703 WHERE id1 = 19052 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+
+-- Skinning trainer
+UPDATE <world>.creature SET id1 = 28696 WHERE id1 = 19180 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
 
 */
