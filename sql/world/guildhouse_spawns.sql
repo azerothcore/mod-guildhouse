@@ -37,7 +37,7 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 	(24, 19052, 16218.1, 16281.8, 13.1756, 6.1975, 'Alchemy Trainer'),
 	(25, 908, 16218.3, 16284.3, 13.1756, 6.1975, 'Herbalism Trainer'),
 	(26, 2627, 16220.4, 16278.7, 13.1756, 1.46157, 'Tailoring Trainer'),
-	(27, 19184, 16225, 16310.9, 29.262, 6.22119, 'First Aid Trainer'),
+	(27, 28706, 16225, 16310.9, 29.262, 6.22119, 'First Aid Trainer'),
 	(28, 2834, 16225.3, 16313.9, 29.262, 6.28231, 'Fishing Trainer'),
 	(29, 19185, 16227, 16278, 13.1762, 1.4872, 'Cooking Trainer'),
 	(30, 8719, 16242, 16291.6, 22.9311, 1.52061, 'Alliance Auctioneer'),
