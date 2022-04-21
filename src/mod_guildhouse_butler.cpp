@@ -154,7 +154,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Leatherworking Trainer", GOSSIP_SENDER_MAIN, 19187, "Spawn Leatherworking Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Skinning Trainer", GOSSIP_SENDER_MAIN, 19180, "Spawn Skinning Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mining Trainer", GOSSIP_SENDER_MAIN, 8128, "Spawn Mining Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Herbalism Trainer", GOSSIP_SENDER_MAIN, 908, "Spawn Herbalism Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Herbalism Trainer", GOSSIP_SENDER_MAIN, 28704, "Spawn Herbalism Trainer?", GuildHouseProf, false);
 			AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 28693, "Spawn Enchanting Trainer?", GuildHouseProf, false);
 			AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 28701, "Spawn Jewelcrafting Trainer?", GuildHouseProf, false);
 			AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 28702, "Spawn Inscription Trainer?", GuildHouseProf, false);
@@ -204,7 +204,7 @@ public:
         case 19187: // Leatherworking
         case 19180: // Skinning
         case 19052: // Alchemy
-        case 908:   // Herbalism
+        case 28704:   // Herbalism
         case 2627:  // Tailoring
         case 19185: // Cooking
         case 2834:  // Fishing
