@@ -148,7 +148,7 @@ public:
         case 7: // Spawn Profession Trainers
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Alchemy Trainer", GOSSIP_SENDER_MAIN, 19052, "Spawn Alchemy Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Blacksmithing Trainer", GOSSIP_SENDER_MAIN, 2836, "Spawn Blacksmithing Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Blacksmithing Trainer", GOSSIP_SENDER_MAIN, 28694, "Spawn Blacksmithing Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Engineering Trainer", GOSSIP_SENDER_MAIN, 8736, "Spawn Engineering Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Tailoring Trainer", GOSSIP_SENDER_MAIN, 2627, "Spawn Tailoring Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Leatherworking Trainer", GOSSIP_SENDER_MAIN, 19187, "Spawn Leatherworking Trainer?", GuildHouseProf, false);
@@ -195,7 +195,7 @@ public:
             cost = GuildHouseTrainer;
             SpawnNPC(action, player);
             break;
-        case 2836:  // Blacksmithing
+        case 28694: // Blacksmithing
         case 8128:  // Mining
         case 8736:  // Engineering
         case 28701: // Jewelcrafting
@@ -204,7 +204,7 @@ public:
         case 19187: // Leatherworking
         case 19180: // Skinning
         case 19052: // Alchemy
-        case 28704:   // Herbalism
+        case 28704: // Herbalism
         case 2627:  // Tailoring
         case 19185: // Cooking
         case 2834:  // Fishing
