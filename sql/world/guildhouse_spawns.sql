@@ -66,3 +66,11 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
     (53, 28690, 16226.97, 16267.9, 13.15, 4.6533, 'Stable Master'),
 	(54, 9858, 16238.2, 16291.8, 22.9306, 1.55386, 'Neutral Auctioneer'),
 	(55, 2622, 16242.8, 16302.1, 13.176, 4.55570, 'Poisons Vendor');
+
+/*
+-- Updates existing creatures to the new creatures.
+-- Replace <world> and <characters> with your database names!
+
+--First Aid trainer
+UPDATE <world>.creature SET id1 = 28706 WHERE id1 = 19184 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+*/
