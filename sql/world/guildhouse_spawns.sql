@@ -30,8 +30,8 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 	(17, 18751, 16222.4, 16293, 13.1813, 1.51263, 'Jewelcrafting Trainer (Horde)'),
 	(18, 28693, 16227.5, 16292.3, 13.1839, 1.49691, 'Enchanting Trainer'),
 	(19, 18753, 16227.5, 16292.3, 13.1839, 1.49691, '<unused>'),
-	(20, 30721, 16231.6, 16301, 13.1757, 3.07372, 'Inscription Trainer (Alliance)'),
-	(21, 30722, 16231.6, 16301, 13.1757, 3.07372, 'Inscription Trainer (Horde)'),
+	(20, 28702, 16231.6, 16301, 13.1757, 3.07372, 'Inscription Trainer'),
+	(21, 30722, 16231.6, 16301, 13.1757, 3.07372, '<unused>'),
 	(22, 19187, 16231.2, 16295, 13.1761, 3.06574, 'Leatherworking Trainer'),
 	(23, 19180, 16228.9, 16304.7, 13.1819, 4.64831, 'Skinning Trainer'),
 	(24, 19052, 16218.1, 16281.8, 13.1756, 6.1975, 'Alchemy Trainer'),
@@ -76,4 +76,7 @@ UPDATE <world>.creature SET id1 = 28706 WHERE id1 = 19184 AND EXISTS (SELECT * F
 
 --Enchanting trainers
 UPDATE <world>.creature SET id1 = 28693 WHERE id1 IN (18773,18753) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+
+--Inscription trainers
+UPDATE <world>.creature SET id1 = 28702 WHERE id1 IN (30721,30722) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
 */

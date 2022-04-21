@@ -156,18 +156,17 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mining Trainer", GOSSIP_SENDER_MAIN, 8128, "Spawn Mining Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Herbalism Trainer", GOSSIP_SENDER_MAIN, 908, "Spawn Herbalism Trainer?", GuildHouseProf, false);
 			AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 28693, "Spawn Enchanting Trainer?", GuildHouseProf, false);
+			AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 28702, "Spawn Inscription Trainer?", GuildHouseProf, false);
 
             if (player->GetTeamId() == TEAM_ALLIANCE)
             {
                 // ALLIANCE players get these options
                 AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 18774, "Spawn Jewelcrafting Trainer?", GuildHouseProf, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 30721, "Spawn Inscription Trainer?", GuildHouseProf, false);
             }
             else
             {
                 // HORDE players get these options
                 AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 18751, "Spawn Jewelcrafting Trainer?", GuildHouseProf, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 30722, "Spawn Inscription Trainer?", GuildHouseProf, false);
             }
 
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
@@ -214,8 +213,8 @@ public:
         case 18751: // Jewelcrafting (Horde)
         case 28693: // Enchanting
         case 18753: // <unused>
-        case 30721: // Inscription (Alliance)
-        case 30722: // Inscription (Horde)
+        case 28702: // Inscription
+        case 30722: // <unused>
         case 19187: // Leatherworking
         case 19180: // Skinning
         case 19052: // Alchemy
