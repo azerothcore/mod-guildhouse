@@ -72,42 +72,42 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 -- Replace <world> and <characters> with your database names!
 
 -- First Aid trainer
-UPDATE <world>.creature SET id1 = 28706 WHERE id1 = 19184 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28706 WHERE id1 = 19184 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Fishing trainer
-UPDATE <world>.creature SET id1 = 28742 WHERE id1 = 2834 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28742 WHERE id1 = 2834 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Enchanting trainers
-UPDATE <world>.creature SET id1 = 28693 WHERE id1 IN (18773,18753) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28693 WHERE id1 IN (18773,18753) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Jewelcrafting trainers
-UPDATE <world>.creature SET id1 = 28701 WHERE id1 IN (18774,18751) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28701 WHERE id1 IN (18774,18751) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Inscription trainers
-UPDATE <world>.creature SET id1 = 28702 WHERE id1 IN (30721,30722) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28702 WHERE id1 IN (30721,30722) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Herbalism trainer
-UPDATE <world>.creature SET id1 = 28704 WHERE id1 = 908 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28704 WHERE id1 = 908 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Blacksmithing trainer
-UPDATE <world>.creature SET id1 = 28694 WHERE id1 = 2836 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28694 WHERE id1 = 2836 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Mining trainer
-UPDATE <world>.creature SET id1 = 28698 WHERE id1 = 8128 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28698 WHERE id1 = 8128 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Alchemy trainer
-UPDATE <world>.creature SET id1 = 28703 WHERE id1 = 19052 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28703 WHERE id1 = 19052 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Skinning trainer
-UPDATE <world>.creature SET id1 = 28696 WHERE id1 = 19180 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28696 WHERE id1 = 19180 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Leatherworking trainer
-UPDATE <world>.creature SET id1 = 28700 WHERE id1 = 19187 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28700 WHERE id1 = 19187 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Tailoring trainer
-UPDATE <world>.creature SET id1 = 28699 WHERE id1 = 2627 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28699 WHERE id1 = 2627 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Engineering trainer
-UPDATE <world>.creature SET id1 = 28697 WHERE id1 = 8736 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask)
+UPDATE <world>.creature SET id1 = 28697 WHERE id1 = 8736 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 */
