@@ -164,7 +164,7 @@ public:
         case 8: // Secondary Profession Trainers
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "First Aid Trainer", GOSSIP_SENDER_MAIN, 28706, "Spawn First Aid Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Fishing Trainer", GOSSIP_SENDER_MAIN, 2834, "Spawn Fishing Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Fishing Trainer", GOSSIP_SENDER_MAIN, 28742, "Spawn Fishing Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Cooking Trainer", GOSSIP_SENDER_MAIN, 19185, "Spawn Cooking Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
@@ -207,7 +207,7 @@ public:
         case 28704: // Herbalism
         case 28699: // Tailoring
         case 19185: // Cooking
-        case 2834:  // Fishing
+        case 28742: // Fishing
         case 28706: // First Aid
             cost = GuildHouseProf;
             SpawnNPC(action, player);
