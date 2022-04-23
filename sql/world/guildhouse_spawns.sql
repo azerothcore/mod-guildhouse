@@ -39,7 +39,7 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 	(26, 28699, 16220.4, 16278.7, 13.1756, 1.46157, 'Tailoring Trainer'),
 	(27, 28706, 16225, 16310.9, 29.262, 6.22119, 'First Aid Trainer'),
 	(28, 28742, 16225.3, 16313.9, 29.262, 6.28231, 'Fishing Trainer'),
-	(29, 19185, 16227, 16278, 13.1762, 1.4872, 'Cooking Trainer'),
+	(29, 33587, 16227, 16278, 13.1762, 1.4872, 'Cooking Trainer'),
 	(30, 8719, 16242, 16291.6, 22.9311, 1.52061, 'Alliance Auctioneer'),
 	(31, 9856, 16242, 16291.6, 22.9311, 1.52061, 'Horde Auctioneer'),
 	(32, 184137, 16220.3, 16272, 12.9736, 4.45592, 'Mailbox (Object)'),
@@ -111,5 +111,8 @@ UPDATE <world>.creature SET id1 = 28699 WHERE id1 = 2627 AND EXISTS (SELECT * FR
 
 -- Engineering trainer
 UPDATE <world>.creature SET id1 = 28697 WHERE id1 = 8736 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+
+-- Cooking trainer
+UPDATE <world>.creature SET id1 = 33587 WHERE id1 = 19185 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 */

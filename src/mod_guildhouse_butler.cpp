@@ -165,7 +165,7 @@ public:
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "First Aid Trainer", GOSSIP_SENDER_MAIN, 28706, "Spawn First Aid Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Fishing Trainer", GOSSIP_SENDER_MAIN, 28742, "Spawn Fishing Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Cooking Trainer", GOSSIP_SENDER_MAIN, 19185, "Spawn Cooking Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Cooking Trainer", GOSSIP_SENDER_MAIN, 33587, "Spawn Cooking Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
             break;
@@ -206,7 +206,7 @@ public:
         case 28703: // Alchemy
         case 28704: // Herbalism
         case 28699: // Tailoring
-        case 19185: // Cooking
+        case 33587: // Cooking
         case 28742: // Fishing
         case 28706: // First Aid
             cost = GuildHouseProf;
