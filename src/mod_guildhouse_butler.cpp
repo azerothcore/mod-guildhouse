@@ -109,6 +109,7 @@ public:
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Forge", GOSSIP_SENDER_MAIN, 1685, "Add a Forge?", GuildHouseObject, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Anvil", GOSSIP_SENDER_MAIN, 4087, "Add an Anvil?", GuildHouseObject, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TALK, "Stove", GOSSIP_SENDER_MAIN, 223742, "Add a Stove?", GuildHouseObject, false);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Guild Vault", GOSSIP_SENDER_MAIN, 187293, "Add Guild Vault?", GuildHouseObject, false);
             AddGossipItemFor(player, GOSSIP_ICON_INTERACT_1, "Barber Chair", GOSSIP_SENDER_MAIN, 191028, "Add a Barber Chair?", GuildHouseObject, false);
 
@@ -235,6 +236,7 @@ public:
             break;
         case 1685:   // Forge
         case 4087:   // Anvil
+        case 223742: // Stove
         case 187293: // Guild Vault
         case 191028: // Barber Chair
             cost = GuildHouseObject;
