@@ -44,8 +44,8 @@ INSERT INTO `guild_house_spawns` (`entry`, `posX`, `posY`, `posZ`, `orientation`
 	(184137, 16220.3, 16272, 12.9736, 4.45592, 'Mailbox (Object)'),
 	(187293, 16230.5, 16283.5, 13.9061, 3, 'Guild Vault (Object)'),
     (191028, 16255.5, 16304.9, 20.9785, 2.97516, 'Barber Chair (Object)'),
-	(1685, 16253.8, 16294.3, 13.1758, 6.11938, 'Forge (Object)'),
-	(4087, 16254.4, 16298.7, 13.1758, 3.36027, 'Anvil (Object)'),
+	(1685, 16257.3, 16298.8, 13.1758, 3.14050, 'Forge (Object)'),
+	(4087, 16254.5, 16299.8, 13.1758, 6.19537, 'Anvil (Object)'),
 	(59853, 16257.6, 16293.0, 13.17508, 2.989519, 'Stove (Object)'),
 	(500000, 16232.9, 16264.1, 13.55570, 3.028813, 'Portal: Stormwind (Object)'),
 	(500001, 16232.8, 16257.1, 13.93456, 3.028813, 'Portal: Darnassus (Object)'),
@@ -112,5 +112,11 @@ UPDATE <world>.creature SET id1 = 28697 WHERE id1 = 8736 AND EXISTS (SELECT * FR
 
 -- Cooking trainer
 UPDATE <world>.creature SET id1 = 33587, position_x = 16256.3, position_y = 16291.7, position_z = 13.174, orientation = 2.22426 WHERE id1 = 19185 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+
+-- Forge object
+UPDATE <world>.gameobject SET position_x = 16256.3, position_y = 16291.7, position_z = 13.174, orientation = 2.22426 WHERE id = 1685 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.gameobject.phaseMask);
+
+-- Anvil object
+UPDATE <world>.gameobject SET position_x = 16254.5, position_y = 16299.8, position_z = 13.174, orientation = 6.19537 WHERE id = 4087 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.gameobject.phaseMask);
 
 */
