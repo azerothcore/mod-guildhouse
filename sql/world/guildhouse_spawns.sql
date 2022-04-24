@@ -114,10 +114,10 @@ UPDATE <world>.creature SET id1 = 28697 WHERE id1 = 8736 AND EXISTS (SELECT * FR
 UPDATE <world>.creature SET id1 = 33587, position_x = 16256.3, position_y = 16291.7, position_z = 13.174, orientation = 2.22426 WHERE id1 IN (19185,33587) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Forge object
-UPDATE <world>.gameobject SET position_x = 16256.3, position_y = 16291.7, position_z = 13.174, orientation = 2.22426 WHERE id = 1685 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.gameobject.phaseMask);
+UPDATE <world>.gameobject SET position_x = 16257.3, position_y = 16298.8, position_z = 13.1758, orientation = 3.14050 WHERE id = 1685 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.gameobject.phaseMask);
 
 -- Anvil object
-UPDATE <world>.gameobject SET position_x = 16254.5, position_y = 16299.8, position_z = 13.174, orientation = 6.19537 WHERE id = 4087 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.gameobject.phaseMask);
+UPDATE <world>.gameobject SET position_x = 16254.5, position_y = 16299.8, position_z = 13.1758, orientation = 6.19537 WHERE id = 4087 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.gameobject.phaseMask);
 
 -- Neutral auctioneer
 UPDATE <world>.creature SET position_x = 16240.5, position_y = 16291.5, position_z = 22.9318, orientation = 1.47417 WHERE id1 = 9858 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
