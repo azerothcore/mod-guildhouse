@@ -65,7 +65,8 @@ public:
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Vendor", GOSSIP_SENDER_MAIN, 3);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn City Portals / Objects", GOSSIP_SENDER_MAIN, 4);
         AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Spawn Bank", GOSSIP_SENDER_MAIN, 30605, "Spawn a Banker?", GuildHouseBank, false);
-        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Spawn Auctioneer", GOSSIP_SENDER_MAIN, 6, "Spawn an Auctioneer?", GuildHouseAuctioneer, false);
+        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Spawn Alliance Auctioneer", GOSSIP_SENDER_MAIN, 8719, "Spawn an Alliance Auctioneer?", GuildHouseAuctioneer, false);
+        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Spawn Horde Auctioneer", GOSSIP_SENDER_MAIN, 9856, "Spawn a Horde Auctioneer?", GuildHouseAuctioneer, false);
         AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Spawn Neutral Auctioneer", GOSSIP_SENDER_MAIN, 9858, "Spawn a Neutral Auctioneer?", GuildHouseAuctioneer, false);
         AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Spawn Primary Profession Trainers", GOSSIP_SENDER_MAIN, 7);
         AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Spawn Secondary Profession Trainers", GOSSIP_SENDER_MAIN, 8);
@@ -135,13 +136,8 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
             break;
-        case 6: // Auctioneer
-        {
-            uint32 auctioneer = 0;
-            auctioneer = player->GetTeamId() == TEAM_ALLIANCE ? 8719 : 9856;
-            SpawnNPC(auctioneer, player);
-            break;
-        }
+		case 8719: // Alliance Auctioneer
+		case 9856: // Horde Auctioneer
         case 9858: // Neutral Auctioneer
             cost = GuildHouseAuctioneer;
             SpawnNPC(action, player);

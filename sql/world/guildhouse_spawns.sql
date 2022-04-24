@@ -38,9 +38,9 @@ INSERT INTO `guild_house_spawns` (`entry`, `posX`, `posY`, `posZ`, `orientation`
     (6491, 16319.937, 16242.404, 24.4747, 2.206830, 'Spirit Healer'),
 	(500032, 16218.9, 16284.5, 13.1761, 6.18533, 'Innkeeper'),
 	(30605, 16228.0, 16280.5, 13.1761, 2.98877, 'Banker'),
-	(8719, 16242, 16291.6, 22.9311, 1.52061, 'Alliance Auctioneer'),
-	(9856, 16242, 16291.6, 22.9311, 1.52061, 'Horde Auctioneer'),
-	(9858, 16238.2, 16291.8, 22.9306, 1.55386, 'Neutral Auctioneer'),
+	(8719, 16238.1, 16291.9, 22.9303, 1.46240, 'Alliance Auctioneer'),
+	(9856, 16242.7, 16291.3, 22.9318, 1.45454, 'Horde Auctioneer'),
+	(9858, 16240.5, 16291.5, 22.9318, 1.47417, 'Neutral Auctioneer'),
 	(184137, 16220.3, 16272, 12.9736, 4.45592, 'Mailbox (Object)'),
 	(187293, 16230.5, 16283.5, 13.9061, 3, 'Guild Vault (Object)'),
     (191028, 16255.5, 16304.9, 20.9785, 2.97516, 'Barber Chair (Object)'),
@@ -118,5 +118,14 @@ UPDATE <world>.gameobject SET position_x = 16256.3, position_y = 16291.7, positi
 
 -- Anvil object
 UPDATE <world>.gameobject SET position_x = 16254.5, position_y = 16299.8, position_z = 13.174, orientation = 6.19537 WHERE id = 4087 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.gameobject.phaseMask);
+
+-- Neutral auctioneer
+UPDATE <world>.creature SET position_x = 16240.5, position_y = 16291.5, position_z = 22.9318, orientation = 1.47417 WHERE id1 = 9858 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+
+-- Horde auctioneer
+UPDATE <world>.creature SET position_x = 16242.7, position_y = 16291.3, position_z = 22.9318, orientation = 1.45454 WHERE id1 = 9856 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+
+-- Alliance auctioneer
+UPDATE <world>.creature SET position_x = 16238.1, position_y = 16291.9, position_z = 22.9303, orientation = 1.46240 WHERE id1 = 8719 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 */
