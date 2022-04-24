@@ -37,7 +37,7 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 	(24, 28699, 16220.4, 16278.7, 13.1756, 1.46157, 'Tailoring Trainer'),
 	(25, 28706, 16225, 16310.9, 29.262, 6.22119, 'First Aid Trainer'),
 	(26, 28742, 16225.3, 16313.9, 29.262, 6.28231, 'Fishing Trainer'),
-	(27, 33587, 16227, 16278, 13.1762, 1.4872, 'Cooking Trainer'),
+	(27, 33587, 16256.3, 16291.7, 13.174, 2.22426, 'Cooking Trainer'),
 	(28, 8719, 16242, 16291.6, 22.9311, 1.52061, 'Alliance Auctioneer'),
 	(29, 9856, 16242, 16291.6, 22.9311, 1.52061, 'Horde Auctioneer'),
 	(30, 184137, 16220.3, 16272, 12.9736, 4.45592, 'Mailbox (Object)'),
@@ -71,7 +71,7 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
 -- Updates existing creatures to the new creatures.
 -- Replace <world> and <characters> with your database names!
 
--- The following only needs to be ran if you used this module before 4-21-2022.
+-- The following only needs to be ran if you used this module before 4-23-2022.
 
 -- First Aid trainer
 UPDATE <world>.creature SET id1 = 28706 WHERE id1 = 19184 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
@@ -113,6 +113,6 @@ UPDATE <world>.creature SET id1 = 28699 WHERE id1 = 2627 AND EXISTS (SELECT * FR
 UPDATE <world>.creature SET id1 = 28697 WHERE id1 = 8736 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Cooking trainer
-UPDATE <world>.creature SET id1 = 33587 WHERE id1 = 19185 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+UPDATE <world>.creature SET id1 = 33587, position_x = 16256.3, position_y = 16291.7, position_z = 13.174, orientation = 2.22426 WHERE id1 = 19185 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 */
