@@ -111,7 +111,7 @@ UPDATE <world>.creature SET id1 = 28699, position_x = 16220.2, position_y = 1629
 UPDATE <world>.creature SET id1 = 28697 WHERE id1 = 8736 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Cooking trainer
-UPDATE <world>.creature SET id1 = 33587, position_x = 16256.3, position_y = 16291.7, position_z = 13.174, orientation = 2.22426 WHERE id1 = 19185 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+UPDATE <world>.creature SET id1 = 33587, position_x = 16256.3, position_y = 16291.7, position_z = 13.174, orientation = 2.22426 WHERE id1 IN (19185,33587) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Forge object
 UPDATE <world>.gameobject SET position_x = 16256.3, position_y = 16291.7, position_z = 13.174, orientation = 2.22426 WHERE id = 1685 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.gameobject.phaseMask);
