@@ -22,7 +22,7 @@ INSERT INTO `guild_house_spawns` (`entry`, `posX`, `posY`, `posZ`, `orientation`
 	(26332, 16246.6, 16284.5, 20.9301, 1.68975, 'Warrior Trainer'),
 	(29195, 16252.3, 16284.9, 20.9324, 1.79537, 'Death Knight Trainer'),
 	(28694, 16252.3, 16300.4, 13.175, 4.60370, 'Blacksmithing Trainer'),
-	(28698, 16220.2, 16299.6, 13.178, 6.22894, 'Mining Trainer'),
+	(28698, 16256.8, 16296.5, 13.176, 3.06334, 'Mining Trainer'),
 	(28697, 16219.8, 16296.9, 13.1746, 6.24465, 'Engineering Trainer'),
 	(28701, 16222.4, 16293, 13.1813, 1.51263, 'Jewelcrafting Trainer'),
 	(28693, 16227.5, 16292.3, 13.1839, 1.49691, 'Enchanting Trainer'),
@@ -93,7 +93,7 @@ UPDATE <world>.creature SET id1 = 28704 WHERE id1 = 908 AND EXISTS (SELECT * FRO
 UPDATE <world>.creature SET id1 = 28694, position_x = 16252.3, position_y = 16300.4, position_z = 13.175, orientation = 4.60370 WHERE id1 IN (2836,28694) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Mining trainer
-UPDATE <world>.creature SET id1 = 28698 WHERE id1 = 8128 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+UPDATE <world>.creature SET id1 = 28698, position_x = 16256.8, position_y = 16296.5, position_z = 13.176, orientation = 3.06334 WHERE id1 IN (8128,28698) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Alchemy trainer
 UPDATE <world>.creature SET id1 = 28703 WHERE id1 = 19052 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
