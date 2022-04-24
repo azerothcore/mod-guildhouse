@@ -57,7 +57,7 @@ INSERT INTO `guild_house_spawns` (`entry`, `posX`, `posY`, `posZ`, `orientation`
 	(500007, 16232.8, 16257.1, 13.93456, 3.028813, 'Portal: Undercity (Object)'),
     (500008, 16211.1, 16266.9, 13.7458, 5.6724, 'Portal: Shattrath (Object)'),
 	(500009, 16213.9, 16270.5, 13.1378, 5.4996, 'Portal: Dalaran (Object)'),
-    (28690, 16226.97, 16267.9, 13.15, 4.6533, 'Stable Master'),
+    (28690, 16226.8, 16269.4, 13.0858, 3.88255, 'Stable Master'),
 	(28692, 16236.2, 16315.7, 20.8454, 4.64365, 'Trade Supplies'),
 	(28776, 16223.7, 16297.9, 20.8454, 6.17044, 'Tabard Vendor'),
 	(4255, 16230.2, 16316.1, 20.8455, 4.64365, 'Food & Drink Vendor'),
@@ -127,5 +127,8 @@ UPDATE <world>.creature SET position_x = 16242.7, position_y = 16291.3, position
 
 -- Alliance auctioneer
 UPDATE <world>.creature SET position_x = 16238.1, position_y = 16291.9, position_z = 22.9303, orientation = 1.46240 WHERE id1 = 8719 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+
+-- Stable master
+UPDATE <world>.creature SET position_x = 16226.8, position_y = 16269.4, position_z = 13.0858, orientation = 3.88255 WHERE id1 = 28690 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 */
