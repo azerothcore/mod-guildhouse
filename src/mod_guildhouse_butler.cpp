@@ -116,6 +116,7 @@ public:
             if (player->GetTeamId() == TEAM_ALLIANCE)
             {
                 // ALLIANCE players get these options
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Stormwind", GOSSIP_SENDER_MAIN, 500000, "Add Stormwind Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Ironforge", GOSSIP_SENDER_MAIN, 500003, "Add Ironforge Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Darnassus", GOSSIP_SENDER_MAIN, 500001, "Add Darnassus Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Exodar", GOSSIP_SENDER_MAIN, 500002, "Add Exodar Portal?", GuildHousePortal, false);
@@ -123,6 +124,7 @@ public:
             else
             {
                 // HORDE players get these options
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Orgrimmar", GOSSIP_SENDER_MAIN, 500004, "Add Orgrimmar Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Undercity", GOSSIP_SENDER_MAIN, 500007, "Add Undercity Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Thunderbluff", GOSSIP_SENDER_MAIN, 500006, "Add Thunderbuff Portal?", GuildHousePortal, false);
                 AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Silvermoon", GOSSIP_SENDER_MAIN, 500005, "Add Silvermoon Portal?", GuildHousePortal, false);
@@ -254,15 +256,23 @@ public:
             cost = GuildHouseObject;
             SpawnObject(action, player);
             break;
+		case 500000: // Stormwind Portal
         case 500001: // Darnassus Portal
         case 500002: // Exodar Portal
         case 500003: // Ironforge Portal
+		case 500004: // Orgrimmar Portal
         case 500005: // Silvermoon Portal
         case 500006: // Thunder Bluff Portal
         case 500007: // Undercity Portal
         case 500008: // Shattrath Portal
         case 500009: // Dalaran Portal
             cost = GuildHousePortal;
+			
+			if (action == 500000 || action == 500004)
+			{
+				cost = 0;
+			}
+			
             SpawnObject(action, player);
             break;
         }
