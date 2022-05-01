@@ -508,9 +508,13 @@ public:
     void OnUpdateZone(Player *player, uint32 newZone, uint32 /*newArea*/)
     {
         if (newZone == 876)
-            CheckPlayer(player);
+		{
+			CheckPlayer(player);
+		}
         else
-            player->SetPhaseMask(GetNormalPhase(player), true);
+		{
+			player->SetPhaseMask(GetNormalPhase(player), true);
+		}
     }
 
     bool OnBeforeTeleport(Player *player, uint32 mapid, float x, float y, float z, float orientation, uint32 options, Unit *target)
@@ -535,13 +539,19 @@ public:
     uint32 GetNormalPhase(Player *player) const
     {
         if (player->IsGameMaster())
-            return PHASEMASK_ANYWHERE;
+		{
+			return PHASEMASK_ANYWHERE;
+		}
 
         uint32 phase = player->GetPhaseByAuras();
         if (!phase)
-            return PHASEMASK_NORMAL;
+		{
+			return PHASEMASK_NORMAL;
+		}
         else
-            return phase;
+		{
+			return phase;
+		}
     }
 
     void CheckPlayer(Player *player)
@@ -584,15 +594,21 @@ public:
             player->SetPhaseMask(guildData->phase, true);
         }
         else
-            player->SetPhaseMask(GetNormalPhase(player), true);
+		{
+			player->SetPhaseMask(GetNormalPhase(player), true);
+		}
     }
 
     void teleportToDefault(Player *player)
     {
         if (player->GetTeamId() == TEAM_ALLIANCE)
-            player->TeleportTo(0, -8833.379883f, 628.627991f, 94.006599f, 1.0f);
+		{
+			player->TeleportTo(0, -8833.379883f, 628.627991f, 94.006599f, 1.0f);
+		}
         else
-            player->TeleportTo(1, 1486.048340f, -4415.140625f, 24.187496f, 0.13f);
+		{
+			player->TeleportTo(1, 1486.048340f, -4415.140625f, 24.187496f, 0.13f);
+		}
     }
 };
 
@@ -685,7 +701,9 @@ public:
         Player *player = handler->GetSession()->GetPlayer();
 
         if (!player)
-            return false;
+		{
+			return false;
+		}
 
         if (player->IsInCombat())
         {
@@ -733,9 +751,13 @@ public:
     void OnBeforeWorldObjectSetPhaseMask(WorldObject const *worldObject, uint32 & /*oldPhaseMask*/, uint32 & /*newPhaseMask*/, bool &useCombinedPhases, bool & /*update*/) override
     {
         if (worldObject->GetZoneId() == 876)
-            useCombinedPhases = false;
+		{
+			useCombinedPhases = false;
+		}
         else
-            useCombinedPhases = true;
+		{
+			useCombinedPhases = true;
+		}
     }
 };
 

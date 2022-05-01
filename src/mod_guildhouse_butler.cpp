@@ -207,7 +207,26 @@ public:
         case 28742: // Fishing
         case 28706: // First Aid
             cost = GuildHouseProf;
-            SpawnNPC(action, player);
+			SpawnNPC(action, player);
+
+			// Check if we need multiple trainers, a few require this otherwise
+			// you can't learn it soley in the guild house (Master is needed)
+			if (action == 28693)
+			{
+				// Enchanting
+				SpawnNPC(19540, player);
+			}
+			else if (action == 28700)
+			{
+				// Leatherworking
+				SpawnNPC(19187, player);
+			}
+			else if (action == 28703)
+			{
+				// Alchemy
+				SpawnNPC(19052, player);
+			}
+			
             break;
         case 28692: // Trade Supplies
         case 28776: // Tabard Vendor
