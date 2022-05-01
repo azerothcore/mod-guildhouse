@@ -39,7 +39,6 @@ INSERT INTO `guild_house_spawns` (`entry`, `posX`, `posY`, `posZ`, `orientation`
 	(28742, 16225.3, 16313.9, 29.262, 6.28231, 'Fishing Trainer (Grand Master)'),
 	(33587, 16256.3, 16291.7, 13.174, 2.22426, 'Cooking Trainer (Grand Master)'),
     (6491, 16319.937, 16242.404, 24.4747, 2.206830, 'Spirit Healer'),
-	(500032, 16218.9, 16284.5, 13.1761, 6.18533, 'Innkeeper'),
 	(30605, 16228.0, 16280.5, 13.1761, 2.98877, 'Banker'),
 	(8719, 16238.1, 16291.9, 22.9303, 1.46240, 'Alliance Auctioneer'),
 	(9856, 16242.7, 16291.3, 22.9318, 1.45454, 'Horde Auctioneer'),
@@ -133,5 +132,8 @@ UPDATE <world>.creature SET position_x = 16238.1, position_y = 16291.9, position
 
 -- Stable master
 UPDATE <world>.creature SET position_x = 16226.8, position_y = 16269.4, position_z = 13.0858, orientation = 3.88255 WHERE id1 = 28690 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+
+-- Remove innkeeper
+DELETE FROM <world>.creature WHERE id1 = 500032 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 */

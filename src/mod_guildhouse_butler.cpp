@@ -14,7 +14,7 @@
 #include "Transport.h"
 #include "CreatureAI.h"
 
-int cost, GuildHouseInnKeeper, GuildHouseBank, GuildHouseMailBox, GuildHouseAuctioneer, GuildHouseTrainer, GuildHouseVendor, GuildHouseObject, GuildHousePortal, GuildHouseSpirit, GuildHouseProf, GuildHouseBuyRank;
+int cost, GuildHouseBank, GuildHouseMailBox, GuildHouseAuctioneer, GuildHouseTrainer, GuildHouseVendor, GuildHouseObject, GuildHousePortal, GuildHouseSpirit, GuildHouseProf, GuildHouseBuyRank;
 
 class GuildHouseSpawner : public CreatureScript
 {
@@ -58,7 +58,6 @@ public:
         }
 
         ClearGossipMenuFor(player);
-        AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Innkeeper", GOSSIP_SENDER_MAIN, 500032, "Add an Innkeeper?", GuildHouseInnKeeper, false);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Mailbox", GOSSIP_SENDER_MAIN, 184137, "Spawn a Mailbox?", GuildHouseMailBox, false);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Stable Master", GOSSIP_SENDER_MAIN, 28690, "Spawn a Stable Master?", GuildHouseVendor, false);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Class Trainer", GOSSIP_SENDER_MAIN, 2);
@@ -173,10 +172,6 @@ public:
             break;
         case 30605: // Banker
             cost = GuildHouseBank;
-            SpawnNPC(action, player);
-            break;
-        case 500032: // Innkeeper
-            cost = GuildHouseInnKeeper;
             SpawnNPC(action, player);
             break;
         case 26327: // Paladin
@@ -413,7 +408,6 @@ public:
 
     void OnBeforeConfigLoad(bool /*reload*/) override
     {
-        GuildHouseInnKeeper = sConfigMgr->GetOption<int32>("GuildHouseInnKeeper", 1000000);
         GuildHouseBank = sConfigMgr->GetOption<int32>("GuildHouseBank", 1000000);
         GuildHouseMailBox = sConfigMgr->GetOption<int32>("GuildHouseMailbox", 500000);
         GuildHouseAuctioneer = sConfigMgr->GetOption<int32>("GuildHouseAuctioneer", 500000);

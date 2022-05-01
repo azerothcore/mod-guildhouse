@@ -14,13 +14,6 @@ CostGuildHouse = 10000000
 #
 GuildHouseMailbox = 500000
 
-# GuildHouseInnKeeper
-#
-# The amount of money to buy a Innkeeper for your guild house
-# default = 1000000 (100g)
-#
-GuildHouseInnKeeper = 1000000
-
 # GuildHouseBank
 #
 # The amount of money to buy a bank for your guild house
