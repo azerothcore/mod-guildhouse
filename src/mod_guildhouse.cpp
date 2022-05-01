@@ -247,8 +247,8 @@ public:
             LOG_INFO("modules", "GUILDHOUSE: GuildId: '{}' has purchased a guildhouse", player->GetGuildId());
 
             // Spawn starter portals and the guild house butler automatically as part of purchase.
-            SpawnStarterPortal(500000);  // Stormwind
-			SpawnStarterPortal(500004);  // Orgrimmar
+            SpawnStarterPortal(player, 500000);  // Stormwind
+			SpawnStarterPortal(player, 500004);  // Orgrimmar
             SpawnButlerNPC(player);
             CloseGossipMenuFor(player);
         }
@@ -320,7 +320,7 @@ public:
         return true;
     }
 
-    void SpawnStarterPortal(uint32 entry)
+    void SpawnStarterPortal(Player *player, uint32 entry)
     {
 
         float posX;
