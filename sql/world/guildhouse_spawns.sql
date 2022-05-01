@@ -72,7 +72,7 @@ INSERT INTO `guild_house_spawns` (`entry`, `posX`, `posY`, `posZ`, `orientation`
 -- Updates existing creatures to the new creatures.
 -- Replace <world> and <characters> with your database names!
 
--- The following only needs to be ran if you used this module before 4-23-2022.
+-- The following only needs to be ran if you used this module before 5-1-2022.
 
 -- First Aid trainer
 UPDATE <world>.creature SET id1 = 28706 WHERE id1 = 19184 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
@@ -81,7 +81,7 @@ UPDATE <world>.creature SET id1 = 28706 WHERE id1 = 19184 AND EXISTS (SELECT * F
 UPDATE <world>.creature SET id1 = 28742 WHERE id1 = 2834 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Enchanting trainers
-UPDATE <world>.creature SET id1 = 28693 WHERE id1 IN (18773,18753) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+UPDATE <world>.creature SET id1 = 28693, position_x = 16228.5, position_y = 16292.3, position_z = 13.1780, orientation = 1.82008 WHERE id1 IN (18773,18753,28693) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Jewelcrafting trainers
 UPDATE <world>.creature SET id1 = 28701 WHERE id1 IN (18774,18751) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
@@ -99,13 +99,13 @@ UPDATE <world>.creature SET id1 = 28694, position_x = 16252.3, position_y = 1630
 UPDATE <world>.creature SET id1 = 28698, position_x = 16256.8, position_y = 16296.5, position_z = 13.176, orientation = 3.06334 WHERE id1 IN (8128,28698) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Alchemy trainer
-UPDATE <world>.creature SET id1 = 28703, position_x = 16220.5, position_y = 16302.3, position_z = 13.176, orientation = 6.14647 WHERE id1 IN (19052,28703) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+UPDATE <world>.creature SET id1 = 28703, position_x = 16222.9, position_y = 16304.7, position_z = 13.1821, orientation = 4.56585 WHERE id1 IN (19052,28703) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Skinning trainer
 UPDATE <world>.creature SET id1 = 28696 WHERE id1 = 19180 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Leatherworking trainer
-UPDATE <world>.creature SET id1 = 28700 WHERE id1 = 19187 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+UPDATE <world>.creature SET id1 = 28700, position_x = 16231.0, position_y = 16294.3, position_z = 13.1759, orientation = 3.02255 WHERE id1 IN (19187,28700) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
 
 -- Tailoring trainer
 UPDATE <world>.creature SET id1 = 28699, position_x = 16220.2, position_y = 16299.6, position_z = 13.178, orientation = 6.22894 WHERE id1 IN (2627,28699) AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
