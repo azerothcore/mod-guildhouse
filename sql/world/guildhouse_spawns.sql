@@ -135,5 +135,6 @@ UPDATE <world>.creature SET position_x = 16226.8, position_y = 16269.4, position
 
 -- Remove innkeeper
 DELETE FROM <world>.creature WHERE id1 = 500032 AND EXISTS (SELECT * FROM <characters>.guild_house where <characters>.guild_house.phase = <world>.creature.phaseMask);
+DELETE FROM <world>.creature_template WHERE entry = 500032
 
 */
