@@ -201,29 +201,27 @@ public:
         case 33587: // Cooking
         case 28742: // Fishing
         case 28706: // First Aid
-            cost = GuildHouseProf;
+			cost = 0;
 
 			// Check if we need multiple trainers, a few require this otherwise
 			// you can't learn it soley in the guild house (Master is needed)
 			if (action == 28693)
 			{
 				// Enchanting
-				cost = cost / 2;
 				SpawnNPC(19540, player);
 			}
 			else if (action == 28700)
 			{
 				// Leatherworking
-				cost = cost / 2;
 				SpawnNPC(19187, player);
 			}
 			else if (action == 28703)
 			{
 				// Alchemy
-				cost = cost / 2;
 				SpawnNPC(19052, player);
 			}
 			
+            cost = GuildHouseProf;
 			SpawnNPC(action, player);
 			
             break;
