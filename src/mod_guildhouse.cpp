@@ -246,8 +246,9 @@ public:
             player->GetGuild()->BroadcastToGuild(player->GetSession(), false, "In chat, type `.guildhouse teleport` or `.gh tele` to meet me there!", LANG_UNIVERSAL);
             LOG_INFO("modules", "GUILDHOUSE: GuildId: '{}' has purchased a guildhouse", player->GetGuildId());
 
-            // Spawn a portal and the guild house butler automatically as part of purchase.
-            SpawnStarterPortal(player);
+            // Spawn starter portals and the guild house butler automatically as part of purchase.
+            SpawnStarterPortal(500000);  // Stormwind
+			SpawnStarterPortal(500004);  // Orgrimmar
             SpawnButlerNPC(player);
             CloseGossipMenuFor(player);
         }
@@ -319,28 +320,16 @@ public:
         return true;
     }
 
-    void SpawnStarterPortal(Player *player)
+    void SpawnStarterPortal(unint32 entry)
     {
 
-        uint32 entry = 0;
         float posX;
         float posY;
         float posZ;
         float ori;
 
         Map *map = sMapMgr->FindMap(1, 0);
-
-        if (player->GetTeamId() == TEAM_ALLIANCE)
-        {
-            // Portal to Stormwind
-            entry = 500000;
-        }
-        else
-        {
-            // Portal to Orgrimmar
-            entry = 500004;
-        }
-
+		
         if (entry == 0)
         {
             LOG_INFO("modules", "Error with SpawnStarterPortal in GuildHouse Module!");
