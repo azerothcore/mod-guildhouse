@@ -26,6 +26,7 @@ INSERT INTO `guild_house_spawns` (`entry`, `posX`, `posY`, `posZ`, `orientation`
 	(28697, 16219.8, 16296.9, 13.1746, 6.24465, 'Engineering Trainer (Grand Master)'),
 	(28701, 16222.4, 16293, 13.1813, 1.51263, 'Jewelcrafting Trainer (Grand Master)'),
 	(28693, 16228.5, 16292.3, 13.1780, 1.82008, 'Enchanting Trainer (Grand Master)'),
+	(19540, 16227.1, 16292.4, 13.1770, 1.45487, 'Enchanting Trainer (Master)'),
 	(28702, 16231.6, 16301, 13.1757, 3.07372, 'Inscription Trainer (Grand Master)'),
 	(28700, 16231.2, 16295, 13.1761, 3.06574, 'Leatherworking Trainer (Grand Master)'),
 	(28696, 16228.9, 16304.7, 13.1819, 4.64831, 'Skinning Trainer (Grand Master)'),
