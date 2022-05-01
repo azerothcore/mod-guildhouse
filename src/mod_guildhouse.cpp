@@ -320,7 +320,7 @@ public:
         return true;
     }
 
-    void SpawnStarterPortal(unint32 entry)
+    void SpawnStarterPortal(uint32 entry)
     {
 
         float posX;
