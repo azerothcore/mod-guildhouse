@@ -95,7 +95,7 @@ public:
             {
                 Field *fields = GameobjResult->Fetch();
                 uint32 lowguid = fields[0].Get<int32>();
-                if (GameObjectData const *go_data = sObjectMgr->GetGOData(lowguid))
+                if (GameObjectData const *go_data = sObjectMgr->GetGameObjectData(lowguid))
                 {
                     if (GameObject *gobject = map->GetGameObject(ObjectGuid::Create<HighGuid::GameObject>(go_data->id, lowguid)))
                     {
@@ -299,7 +299,7 @@ public:
             {
                 Field *fields = GameobjResult->Fetch();
                 uint32 lowguid = fields[0].Get<uint32>();
-                if (GameObjectData const *go_data = sObjectMgr->GetGOData(lowguid))
+                if (GameObjectData const *go_data = sObjectMgr->GetGameObjectData(lowguid))
                 {
                     if (GameObject *gobject = map->GetGameObject(ObjectGuid::Create<HighGuid::GameObject>(go_data->id, lowguid)))
                     {
@@ -401,7 +401,7 @@ public:
         }
 
         // TODO: is it really necessary to add both the real and DB table guid here ?
-        sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGOData(guidLow));
+        sObjectMgr->AddGameobjectToGrid(guidLow, sObjectMgr->GetGameObjectData(guidLow));
         CloseGossipMenuFor(player);
     }
 
