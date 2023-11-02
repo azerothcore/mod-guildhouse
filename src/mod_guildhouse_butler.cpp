@@ -13,6 +13,7 @@
 #include "GameObject.h"
 #include "Transport.h"
 #include "CreatureAI.h"
+#include "guildhouse.h"
 
 int cost, GuildHouseInnKeeper, GuildHouseBank, GuildHouseMailBox, GuildHouseAuctioneer, GuildHouseTrainer, GuildHouseVendor, GuildHouseObject, GuildHousePortal, GuildHouseSpirit, GuildHouseProf, GuildHouseBuyRank;
 
@@ -58,7 +59,7 @@ public:
         }
 
         ClearGossipMenuFor(player);
-        AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Innkeeper", GOSSIP_SENDER_MAIN, 500032, "Add an Innkeeper?", GuildHouseInnKeeper, false);
+        AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Innkeeper", GOSSIP_SENDER_MAIN, GetCreatureEntry(2), "Add an Innkeeper?", GuildHouseInnKeeper, false);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Mailbox", GOSSIP_SENDER_MAIN, 184137, "Spawn a Mailbox?", GuildHouseMailBox, false);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Stable Master", GOSSIP_SENDER_MAIN, 28690, "Spawn a Stable Master?", GuildHouseVendor, false);
         AddGossipItemFor(player, GOSSIP_ICON_TALK, "Spawn Class Trainer", GOSSIP_SENDER_MAIN, 2);
@@ -115,21 +116,21 @@ public:
             if (player->GetTeamId() == TEAM_ALLIANCE)
             {
                 // ALLIANCE players get these options
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Ironforge", GOSSIP_SENDER_MAIN, 500003, "Add Ironforge Portal?", GuildHousePortal, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Darnassus", GOSSIP_SENDER_MAIN, 500001, "Add Darnassus Portal?", GuildHousePortal, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Exodar", GOSSIP_SENDER_MAIN, 500002, "Add Exodar Portal?", GuildHousePortal, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Ironforge", GOSSIP_SENDER_MAIN, GetGameObjectEntry(3), "Add Ironforge Portal?", GuildHousePortal, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Darnassus", GOSSIP_SENDER_MAIN, GetGameObjectEntry(1), "Add Darnassus Portal?", GuildHousePortal, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Exodar", GOSSIP_SENDER_MAIN, GetGameObjectEntry(2), "Add Exodar Portal?", GuildHousePortal, false);
             }
             else
             {
                 // HORDE players get these options
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Undercity", GOSSIP_SENDER_MAIN, 500007, "Add Undercity Portal?", GuildHousePortal, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Thunderbluff", GOSSIP_SENDER_MAIN, 500006, "Add Thunderbuff Portal?", GuildHousePortal, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Silvermoon", GOSSIP_SENDER_MAIN, 500005, "Add Silvermoon Portal?", GuildHousePortal, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Undercity", GOSSIP_SENDER_MAIN, GetGameObjectEntry(7), "Add Undercity Portal?", GuildHousePortal, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Thunderbluff", GOSSIP_SENDER_MAIN, GetGameObjectEntry(6), "Add Thunderbuff Portal?", GuildHousePortal, false);
+                AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Silvermoon", GOSSIP_SENDER_MAIN, GetGameObjectEntry(5), "Add Silvermoon Portal?", GuildHousePortal, false);
             }
 
             // These two portals work for either Team
-            AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Shattrath", GOSSIP_SENDER_MAIN, 500008, "Add Shattrath Portal?", GuildHousePortal, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Dalaran", GOSSIP_SENDER_MAIN, 500009, "Add Dalaran Portal?", GuildHousePortal, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Shattrath", GOSSIP_SENDER_MAIN, GetGameObjectEntry(8), "Add Shattrath Portal?", GuildHousePortal, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Dalaran", GOSSIP_SENDER_MAIN, GetGameObjectEntry(9), "Add Dalaran Portal?", GuildHousePortal, false);
 
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
@@ -191,7 +192,7 @@ public:
             cost = GuildHouseBank;
             SpawnNPC(action, player);
             break;
-        case 500032: // Innkeeper
+        case GetCreatureEntry(2): // Innkeeper
             cost = GuildHouseInnKeeper;
             SpawnNPC(action, player);
             break;
@@ -256,14 +257,14 @@ public:
             cost = GuildHouseObject;
             SpawnObject(action, player);
             break;
-        case 500001: // Darnassus Portal
-        case 500002: // Exodar Portal
-        case 500003: // Ironforge Portal
-        case 500005: // Silvermoon Portal
-        case 500006: // Thunder Bluff Portal
-        case 500007: // Undercity Portal
-        case 500008: // Shattrath Portal
-        case 500009: // Dalaran Portal
+        case GetGameObjectEntry(1): // Darnassus Portal
+        case GetGameObjectEntry(2): // Exodar Portal
+        case GetGameObjectEntry(3): // Ironforge Portal
+        case GetGameObjectEntry(5): // Silvermoon Portal
+        case GetGameObjectEntry(6): // Thunder Bluff Portal
+        case GetGameObjectEntry(7): // Undercity Portal
+        case GetGameObjectEntry(8): // Shattrath Portal
+        case GetGameObjectEntry(9): // Dalaran Portal
             cost = GuildHousePortal;
             SpawnObject(action, player);
             break;
