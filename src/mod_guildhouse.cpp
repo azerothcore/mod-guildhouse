@@ -539,9 +539,9 @@ public:
     uint32 GetNormalPhase(Player *player) const
     {
         if (player->IsGameMaster())
-		{
-			return PHASEMASK_ANYWHERE;
-		}
+        {
+            return PHASEMASK_ANYWHERE;
+        }
 
         uint32 phase = player->GetPhaseByAuras();
         if (!phase)
