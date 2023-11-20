@@ -248,7 +248,7 @@ public:
 
             // Spawn starter portals and the guild house butler automatically as part of purchase.
             SpawnStarterPortal(player, 500000);  // Stormwind
-			SpawnStarterPortal(player, 500004);  // Orgrimmar
+            SpawnStarterPortal(player, 500004);  // Orgrimmar
             SpawnButlerNPC(player);
             CloseGossipMenuFor(player);
         }
