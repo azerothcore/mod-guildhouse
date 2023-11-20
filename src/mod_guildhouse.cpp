@@ -545,9 +545,9 @@ public:
 
         uint32 phase = player->GetPhaseByAuras();
         if (!phase)
-		{
-			return PHASEMASK_NORMAL;
-		}
+        {
+            return PHASEMASK_NORMAL;
+        }
         else
 		{
 			return phase;
