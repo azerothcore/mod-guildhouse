@@ -246,8 +246,9 @@ public:
             player->GetGuild()->BroadcastToGuild(player->GetSession(), false, "In chat, type `.guildhouse teleport` or `.gh tele` to meet me there!", LANG_UNIVERSAL);
             LOG_INFO("modules", "GUILDHOUSE: GuildId: '{}' has purchased a guildhouse", player->GetGuildId());
 
-            // Spawn a portal and the guild house butler automatically as part of purchase.
-            SpawnStarterPortal(player);
+            // Spawn starter portals and the guild house butler automatically as part of purchase.
+            SpawnStarterPortal(player, 500000);  // Stormwind
+            SpawnStarterPortal(player, 500004);  // Orgrimmar
             SpawnButlerNPC(player);
             CloseGossipMenuFor(player);
         }
@@ -319,28 +320,16 @@ public:
         return true;
     }
 
-    void SpawnStarterPortal(Player *player)
+    void SpawnStarterPortal(Player *player, uint32 entry)
     {
 
-        uint32 entry = 0;
         float posX;
         float posY;
         float posZ;
         float ori;
 
         Map *map = sMapMgr->FindMap(1, 0);
-
-        if (player->GetTeamId() == TEAM_ALLIANCE)
-        {
-            // Portal to Stormwind
-            entry = 500000;
-        }
-        else
-        {
-            // Portal to Orgrimmar
-            entry = 500004;
-        }
-
+		
         if (entry == 0)
         {
             LOG_INFO("modules", "Error with SpawnStarterPortal in GuildHouse Module!");
@@ -519,9 +508,13 @@ public:
     void OnUpdateZone(Player *player, uint32 newZone, uint32 /*newArea*/)
     {
         if (newZone == 876)
+        {
             CheckPlayer(player);
+        }
         else
+        {
             player->SetPhaseMask(GetNormalPhase(player), true);
+        }
     }
 
     bool OnBeforeTeleport(Player *player, uint32 mapid, float x, float y, float z, float orientation, uint32 options, Unit *target)
@@ -546,13 +539,19 @@ public:
     uint32 GetNormalPhase(Player *player) const
     {
         if (player->IsGameMaster())
+        {
             return PHASEMASK_ANYWHERE;
+        }
 
         uint32 phase = player->GetPhaseByAuras();
         if (!phase)
+        {
             return PHASEMASK_NORMAL;
+        }
         else
+        {
             return phase;
+        }
     }
 
     void CheckPlayer(Player *player)
@@ -595,15 +594,21 @@ public:
             player->SetPhaseMask(guildData->phase, true);
         }
         else
-            player->SetPhaseMask(GetNormalPhase(player), true);
+		{
+			player->SetPhaseMask(GetNormalPhase(player), true);
+		}
     }
 
     void teleportToDefault(Player *player)
     {
         if (player->GetTeamId() == TEAM_ALLIANCE)
-            player->TeleportTo(0, -8833.379883f, 628.627991f, 94.006599f, 1.0f);
+		{
+			player->TeleportTo(0, -8833.379883f, 628.627991f, 94.006599f, 1.0f);
+		}
         else
-            player->TeleportTo(1, 1486.048340f, -4415.140625f, 24.187496f, 0.13f);
+		{
+			player->TeleportTo(1, 1486.048340f, -4415.140625f, 24.187496f, 0.13f);
+		}
     }
 };
 
@@ -696,7 +701,9 @@ public:
         Player *player = handler->GetSession()->GetPlayer();
 
         if (!player)
-            return false;
+		{
+			return false;
+		}
 
         if (player->IsInCombat())
         {
@@ -744,9 +751,13 @@ public:
     void OnBeforeWorldObjectSetPhaseMask(WorldObject const *worldObject, uint32 & /*oldPhaseMask*/, uint32 & /*newPhaseMask*/, bool &useCombinedPhases, bool & /*update*/) override
     {
         if (worldObject->GetZoneId() == 876)
-            useCombinedPhases = false;
+		{
+			useCombinedPhases = false;
+		}
         else
-            useCombinedPhases = true;
+		{
+			useCombinedPhases = true;
+		}
     }
 };
 
