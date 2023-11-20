@@ -224,7 +224,7 @@ public:
             }
             
             cost = GuildHouseProf;
-			SpawnNPC(action, player);
+            SpawnNPC(action, player);
 			
             break;
         case 28692: // Trade Supplies
