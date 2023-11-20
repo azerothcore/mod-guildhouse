@@ -549,9 +549,9 @@ public:
             return PHASEMASK_NORMAL;
         }
         else
-		{
-			return phase;
-		}
+        {
+            return phase;
+        }
     }
 
     void CheckPlayer(Player *player)
