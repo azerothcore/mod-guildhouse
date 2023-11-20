@@ -508,9 +508,9 @@ public:
     void OnUpdateZone(Player *player, uint32 newZone, uint32 /*newArea*/)
     {
         if (newZone == 876)
-		{
-			CheckPlayer(player);
-		}
+        {
+            CheckPlayer(player);
+        }
         else
 		{
 			player->SetPhaseMask(GetNormalPhase(player), true);
