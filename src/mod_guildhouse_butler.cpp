@@ -256,11 +256,11 @@ public:
             cost = GuildHouseObject;
             SpawnObject(action, player);
             break;
-		case 500000: // Stormwind Portal
+        case 500000: // Stormwind Portal
         case 500001: // Darnassus Portal
         case 500002: // Exodar Portal
         case 500003: // Ironforge Portal
-		case 500004: // Orgrimmar Portal
+        case 500004: // Orgrimmar Portal
         case 500005: // Silvermoon Portal
         case 500006: // Thunder Bluff Portal
         case 500007: // Undercity Portal
