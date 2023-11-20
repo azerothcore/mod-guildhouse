@@ -267,12 +267,12 @@ public:
         case 500008: // Shattrath Portal
         case 500009: // Dalaran Portal
             cost = GuildHousePortal;
-			
-			if (action == 500000 || action == 500004)
-			{
-				cost = 0;
-			}
-			
+            
+            if (action == 500000 || action == 500004)
+            {
+                cost = 0;
+            }
+            
             SpawnObject(action, player);
             break;
         }
