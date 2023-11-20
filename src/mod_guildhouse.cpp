@@ -512,9 +512,9 @@ public:
             CheckPlayer(player);
         }
         else
-		{
-			player->SetPhaseMask(GetNormalPhase(player), true);
-		}
+        {
+            player->SetPhaseMask(GetNormalPhase(player), true);
+        }
     }
 
     bool OnBeforeTeleport(Player *player, uint32 mapid, float x, float y, float z, float orientation, uint32 options, Unit *target)
