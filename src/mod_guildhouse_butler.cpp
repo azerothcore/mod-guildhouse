@@ -24,27 +24,26 @@ public:
 
     struct GuildHouseSpawnerAI : public ScriptedAI
     {
-        GuildHouseSpawnerAI(Creature *creature) : ScriptedAI(creature) {}
+        GuildHouseSpawnerAI(Creature* creature) : ScriptedAI(creature) {}
 
-        void UpdateAI(uint32 /* diff */) override
+        void UpdateAI(uint32 /*diff*/) override
         {
             me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
         }
     };
 
-    CreatureAI *
-    GetAI(Creature *creature) const override
+    CreatureAI* GetAI(Creature *creature) const override
     {
         return new GuildHouseSpawnerAI(creature);
     }
 
-    bool OnGossipHello(Player *player, Creature *creature) override
+    bool OnGossipHello(Player* player, Creature* creature) override
     {
-
         if (player->GetGuild())
         {
-            Guild *guild = sGuildMgr->GetGuildById(player->GetGuildId());
-            Guild::Member const *memberMe = guild->GetMember(player->GetGUID());
+            Guild* guild = sGuildMgr->GetGuildById(player->GetGuildId());
+            Guild::Member const* memberMe = guild->GetMember(player->GetGUID());
+
             if (!memberMe->IsRankNotLower(GuildHouseBuyRank))
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("You are not authorized to make Guild House purchases.");
@@ -74,7 +73,7 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player *player, Creature *m_creature, uint32, uint32 action) override
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
     {
 
         switch (action)
@@ -92,7 +91,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Warlock", GOSSIP_SENDER_MAIN, 26331, "Spawn Warlock Trainer?", GuildHouseTrainer, false);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Warrior", GOSSIP_SENDER_MAIN, 26332, "Spawn Warrior Trainer?", GuildHouseTrainer, false);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
-            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 3: // Vendors
             ClearGossipMenuFor(player);
@@ -103,7 +102,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Ammo & Repair Vendor", GOSSIP_SENDER_MAIN, 29493, "Spawn Ammo & Repair Vendor?", GuildHouseVendor, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Poisons Vendor", GOSSIP_SENDER_MAIN, 2622, "Spawn Poisons Vendor?", GuildHouseVendor, false);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
-            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 4: // Objects & Portals
             ClearGossipMenuFor(player);
@@ -132,7 +131,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TAXI, "Portal: Dalaran", GOSSIP_SENDER_MAIN, 500009, "Add Dalaran Portal?", GuildHousePortal, false);
 
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
-            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 6: // Auctioneer
         {
@@ -172,7 +171,7 @@ public:
             }
 
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
-            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 8: // Secondary Profession Trainers
             ClearGossipMenuFor(player);
@@ -180,10 +179,10 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Fishing Trainer", GOSSIP_SENDER_MAIN, 2834, "Spawn Fishing Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Cooking Trainer", GOSSIP_SENDER_MAIN, 19185, "Spawn Cooking Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
-            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, m_creature->GetGUID());
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 9: // Go back!
-            OnGossipHello(player, m_creature);
+            OnGossipHello(player, creature);
             break;
         case 10: // PVP toggle
             break;
@@ -271,12 +270,12 @@ public:
         return true;
     }
 
-    uint32 GetGuildPhase(Player *player)
+    uint32 GetGuildPhase(Player* player)
     {
         return player->GetGuildId() + 10;
     }
 
-    void SpawnNPC(uint32 entry, Player *player)
+    void SpawnNPC(uint32 entry, Player* player)
     {
         if (player->FindNearestCreature(entry, VISIBILITY_RANGE, true))
         {
@@ -290,14 +289,14 @@ public:
         float posZ;
         float ori;
 
-        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = {}", entry);
+        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry`={}", entry);
 
         if (!result)
             return;
 
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             posX = fields[0].Get<float>();
             posY = fields[1].Get<float>();
             posZ = fields[2].Get<float>();
@@ -305,7 +304,7 @@ public:
 
         } while (result->NextRow());
 
-        Creature *creature = new Creature();
+        Creature* creature = new Creature();
 
         if (!creature->Create(player->GetMap()->GenerateLowGuid<HighGuid::Unit>(), player->GetMap(), GetGuildPhase(player), entry, 0, posX, posY, posZ, ori))
         {
@@ -329,7 +328,7 @@ public:
         CloseGossipMenuFor(player);
     }
 
-    void SpawnObject(uint32 entry, Player *player)
+    void SpawnObject(uint32 entry, Player* player)
     {
         if (player->FindNearestGameObject(entry, VISIBLE_RANGE))
         {
@@ -343,14 +342,14 @@ public:
         float posZ;
         float ori;
 
-        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry` = {}", entry);
+        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry`={}", entry);
 
         if (!result)
             return;
 
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             posX = fields[0].Get<float>();
             posY = fields[1].Get<float>();
             posZ = fields[2].Get<float>();
@@ -362,7 +361,7 @@ public:
         if (!objectId)
             return;
 
-        const GameObjectTemplate *objectInfo = sObjectMgr->GetGameObjectTemplate(objectId);
+        const GameObjectTemplate* objectInfo = sObjectMgr->GetGameObjectTemplate(objectId);
 
         if (!objectInfo)
             return;
@@ -370,7 +369,7 @@ public:
         if (objectInfo->displayId && !sGameObjectDisplayInfoStore.LookupEntry(objectInfo->displayId))
             return;
 
-        GameObject *object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
+        GameObject* object = sObjectMgr->IsGameObjectStaticTransport(objectInfo->entry) ? new StaticTransport() : new GameObject();
         ObjectGuid::LowType guidLow = player->GetMap()->GenerateLowGuid<HighGuid::GameObject>();
 
         if (!object->Create(guidLow, objectInfo->entry, player->GetMap(), GetGuildPhase(player), posX, posY, posZ, ori, G3D::Quat(), 0, GO_STATE_READY))
