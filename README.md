@@ -2,7 +2,7 @@
 
 - Latest build status with azerothcore:
 
-[![Build Status](https://travis-ci.org/azerothcore/mod-guildhouse.svg)](https://travis-ci.org/azerothcore/mod-guildhouse)
+[![Build Status](https://github.com/azerothcore/mod-guildhouse/actions/workflows/core-build.yml/badge.svg)](https://github.com/azerothcore/mod-guildhouse)
 
 # Guild House Module
 
