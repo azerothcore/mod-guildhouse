@@ -6,9 +6,8 @@
 
 # Guild House Module
 
-## Important notes
-
-You have to use at least AzerothCore commit [77f1363](https://github.com/azerothcore/azerothcore-wotlk/commit/77f13636b75f9b25fc1290e297cd002e7df3c89b).
+> [!IMPORTANT]
+> You have to use at least AzerothCore commit [77f1363](https://github.com/azerothcore/azerothcore-wotlk/commit/77f13636b75f9b25fc1290e297cd002e7df3c89b).
 
 ## Description
 
