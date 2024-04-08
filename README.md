@@ -1,28 +1,31 @@
 # ![logo](https://raw.githubusercontent.com/azerothcore/azerothcore.github.io/master/images/logo-github.png) AzerothCore
-- Latest build status with azerothcore: [![Build Status](https://travis-ci.org/azerothcore/mod-guildhouse.svg?branch=master)](https://travis-ci.org/azerothcore/mod-guildhouse)
+
+- Latest build status with azerothcore:
+
+[![Build Status](https://github.com/azerothcore/mod-guildhouse/actions/workflows/core-build.yml/badge.svg)](https://github.com/azerothcore/mod-guildhouse)
+
 # Guild House Module
 
-
-## Important notes
-
-You have to use at least AzerothCore commit [77f1363](https://github.com/azerothcore/azerothcore-wotlk/commit/77f13636b75f9b25fc1290e297cd002e7df3c89b).
+> [!IMPORTANT]
+> You have to use at least AzerothCore commit [77f1363](https://github.com/azerothcore/azerothcore-wotlk/commit/77f13636b75f9b25fc1290e297cd002e7df3c89b).
 
 ## Description
 
 This is a phased guild house system for AzerothCore, it allows players from the same guild to visit their guild house.
+
 All guilds will get their own phasing system and then the guild master can purchase NPC creatures and other stuff to complete the Guild House.
 
 ### Purchasables
 
-* Class Trainers (all available in Wrath)
-* Primary Profession Trainers (all available in Wrath)
-* Secondary Profession Trainers (all available in Wrath)
-* Vendors: Reagents Vendor, Food & Drink, Trade Goods, Ammo & Repair Vendor, and Poisons Vendor
-* Portals to Neutral, Horde and Alliance cities
-* Spirit Healer
-* Guild Bank and Personal Bank access
-* Auctioneer/Neutral Auctioneer
-* Stable Master
+- Class Trainers (all available in Wrath)
+- Primary Profession Trainers (all available in Wrath)
+- Secondary Profession Trainers (all available in Wrath)
+- Vendors: Reagents Vendor, Food & Drink, Trade Goods, Ammo & Repair Vendor, and Poisons Vendor
+- Portals to Neutral, Horde and Alliance cities
+- Spirit Healer
+- Guild Bank and Personal Bank access
+- Auctioneer/Neutral Auctioneer
+- Stable Master
 
 ## How to use ingame
 
@@ -36,8 +39,7 @@ All guilds will get their own phasing system and then the guild master can purch
 
 ```
 1) Place the module under the `modules` directory of your AzerothCore source.
-2) Import the SQL files manually to the right Database (auth, world or characters)
-3) Re-run cmake and launch a clean build of AzerothCore.
+2) Re-run cmake and launch a clean build of AzerothCore.
 ```
 
 ## Edit module configuration (optional)
@@ -46,10 +48,10 @@ If you need to change the module configuration, go to your server configuration 
 
 ## Credits
 
-* [Talamortis](https://github.com/talamortis) (Original author of the module)
-* [Rochet2](https://github.com/Rochet2/): Thanks for the help with the phasing situation & General support
-* [rbedfordpro](https://github.com/rbedfordpro) & [WiZZy](https://github.com/wizzymore)
-* [Nelnamara - Porkserver](https://github.com/Porkserver) & [SoulSeekkor](https://github.com/SoulSeekkor) 2022 rework, crash fixes and new additions
-* [Bogir](https://github.com/Bogir) For being amazing and forever helpful
+- [Talamortis](https://github.com/talamortis) (Original author of the module)
+- [Rochet2](https://github.com/Rochet2/): Thanks for the help with the phasing situation & General support
+- [rbedfordpro](https://github.com/rbedfordpro) & [WiZZy](https://github.com/wizzymore)
+- [Nelnamara - Porkserver](https://github.com/Porkserver) & [SoulSeekkor](https://github.com/SoulSeekkor) 2022 rework, crash fixes and new additions
+- [Bogir](https://github.com/Bogir) For being amazing and forever helpful
 
 AzerothCore: [repository](https://github.com/azerothcore) - [website](http://azerothcore.org/) - [discord chat community](https://discord.gg/64FH6Y8)
