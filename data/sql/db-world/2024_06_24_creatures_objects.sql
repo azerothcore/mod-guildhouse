@@ -14,7 +14,7 @@ INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entr
 
 	SET @C_TEMPLATE_MODEL = 500030;
 
-DELETE FROM `creature_template` WHERE `entry` IN (
+DELETE FROM `creature_template_model` WHERE `entry` IN (
 	@C_TEMPLATE_MODEL + 0,
 	@C_TEMPLATE_MODEL + 1,
 	@C_TEMPLATE_MODEL + 2
