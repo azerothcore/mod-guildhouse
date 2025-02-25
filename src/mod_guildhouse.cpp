@@ -507,12 +507,12 @@ class GuildHousePlayerScript : public PlayerScript
 public:
     GuildHousePlayerScript() : PlayerScript("GuildHousePlayerScript") {}
 
-    void OnLogin(Player* player)
+    void OnPlayerLogin(Player* player)
     {
         CheckPlayer(player);
     }
 
-    void OnUpdateZone(Player* player, uint32 newZone, uint32 /*newArea*/)
+    void OnPlayerUpdateZone(Player* player, uint32 newZone, uint32 /*newArea*/)
     {
         if (newZone == 876)
             CheckPlayer(player);
@@ -520,7 +520,7 @@ public:
             player->SetPhaseMask(GetNormalPhase(player), true);
     }
 
-    bool OnBeforeTeleport(Player* player, uint32 mapid, float x, float y, float z, float orientation, uint32 options, Unit* target)
+    bool OnPlayerBeforeTeleport(Player* player, uint32 mapid, float x, float y, float z, float orientation, uint32 options, Unit* target)
     {
         (void)mapid;
         (void)x;
