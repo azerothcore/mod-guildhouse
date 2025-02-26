@@ -19,9 +19,9 @@ DELETE FROM `creature_template_model` WHERE `CreatureID` IN (
 );
 
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES
-    (@C_TEMPLATE + 0, 0, 25901, 1, 0, 0),
-    (@C_TEMPLATE + 1, 0, 25901, 1, 0, 0),
-    (@C_TEMPLATE + 2, 0, 18234, 1, 0, 0);
+    (@C_TEMPLATE + 0, 0, 25901, 1, 1, 0),
+    (@C_TEMPLATE + 1, 0, 25901, 1, 1, 0),
+    (@C_TEMPLATE + 2, 0, 18234, 1, 1, 0);
 
 -- !!! NOTE: set these before running the queries in order to avoid conflicts !!!
 SET @GO_TEMPLATE = 500000;
