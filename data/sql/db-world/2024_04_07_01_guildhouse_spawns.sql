@@ -65,4 +65,6 @@ REPLACE INTO `guild_house_spawns` (`id`, `entry`, `posX`, `posY`, `posZ`, `orien
   (52, 29493, 16229.1, 16286.4, 13.176, 3.03831, 'Ammo & Repair Vendor'),
   (53, 28690, 16226.97, 16267.9, 13.15, 4.6533, 'Stable Master'),
   (54, 9858, 16238.2, 16291.8, 22.9306, 1.55386, 'Neutral Auctioneer'),
-  (55, 2622, 16242.8, 16302.1, 13.176, 4.55570, 'Poisons Vendor');
+  (55, 2622, 16242.8, 16302.1, 13.176, 4.55570, 'Poisons Vendor'),
+  (56, 500033, 16230.0, 16290.0, 13.176, 4.5, 'Tabard Vendor (Neutral)'),
+  (57, 500034, 16235.0, 16295.0, 13.176, 4.5, 'Neutral Trainer');
