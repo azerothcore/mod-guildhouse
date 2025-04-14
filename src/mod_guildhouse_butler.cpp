@@ -289,7 +289,30 @@ public:
         float posZ;
         float ori;
 
-        QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry`={}", entry);
+        //QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry`={}", entry);
+        float basePosX = 16232.9f; // Base X coordinate for the portals
+        float basePosY = 16264.1f; // Base Y coordinate for the first portal
+        float basePosZ = 13.5557f; // Z coordinate (same for all portals)
+        float spacing = 3.0f;      // Spacing between each portal
+        float ori = 0.0f;          // Orientation (default)
+        
+        // Determine the offset based on the portal entry ID
+        uint32 portalIndex = 0;
+        switch (entry)
+        {
+            case 500000: portalIndex = 0; break; // Stormwind
+            case 500004: portalIndex = 1; break; // Orgrimmar
+            case 500008: portalIndex = 2; break; // Shattrath
+            case 500009: portalIndex = 3; break; // Dalaran
+            default:
+                ChatHandler(player->GetSession()).PSendSysMessage("Invalid portal entry ID!");
+                return;
+        }
+        
+        // Calculate positions dynamically
+        float posX = basePosX;
+        float posY = basePosY + (portalIndex * spacing);
+        float posZ = basePosZ;
 
         if (!result)
             return;
