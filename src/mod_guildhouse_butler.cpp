@@ -317,7 +317,7 @@ public:
         float basePosY = 16264.1f; // Base Y coordinate for the first portal
         float basePosZ = 13.5557f; // Z coordinate (same for all portals)
         float spacing = 3.0f;      // Spacing between each portal
-        float ori = 0.0f;          // Orientation (default)
+        ori = 0.0f;                // Orientation (default)
 
         uint32 portalIndex = 0;
         switch (entry)
@@ -339,9 +339,9 @@ public:
             return;
         }
 
-        float posX = basePosX;
-        float posY = basePosY + (portalIndex * spacing);
-        float posZ = basePosZ;
+        posX = basePosX;
+        posY = basePosY + (portalIndex * spacing);
+        posZ = basePosZ;
 
         Creature *creature = new Creature();
         if (!creature->Create(player->GetMap()->GenerateLowGuid<HighGuid::Unit>(), player->GetMap(), GetGuildPhase(player), entry, 0, posX, posY, posZ, ori))
