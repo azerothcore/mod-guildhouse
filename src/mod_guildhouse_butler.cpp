@@ -15,17 +15,17 @@
 #include "CreatureAI.h"
 
 int cost, GuildHouseInnKeeper, GuildHouseBank, GuildHouseMailBox, GuildHouseAuctioneer, GuildHouseTrainer, GuildHouseVendor, GuildHouseObject, GuildHousePortal, GuildHouseSpirit, GuildHouseProf, GuildHouseBuyRank;
-int GuildHouseRefundPercent = 50; // default
-uint32 GuildHouseMarkerEntry;     // read from config
-uint32 GuildHousePhaseBase;       // read from config
+int GuildHouseRefundPercent = 50;  // default
+uint32 GuildHouseMarkerEntry;      // read from config
+extern uint32 GuildHousePhaseBase; // declared here, defined in mod_guildhouse.cpp
 
 // Essential NPCs (for submenu and "Buy All"/"Sell All" if needed)
 std::set<uint32> essentialNpcEntries = {
     6930,  // Innkeeper
     28690, // Stable Master
-    9858,  // Neutral Auctioneer
-    8719,  // Alliance Auctioneer
-    9856,  // Horde Auctioneer
+    9858,  // Auctioneer Kresky
+    8719,  // Auctioneer Fitch
+    9856,  // Auctioneer Grimful
     6491   // Spirit Healer
 };
 
