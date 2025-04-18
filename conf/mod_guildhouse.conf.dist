@@ -89,7 +89,6 @@ GuildHouseSpirit = 100000
 #
 GuildHouseBuyRank = 4
 
-
 # GuildHouseSellRank
 #
 # Minimum GuildRank able to sell the guild house
@@ -101,3 +100,10 @@ GuildHouseBuyRank = 4
 # GR_INITIATE     = 4
 #
 GuildHouseSellRank = 0
+
+# GuildHouseRefundPercent
+#
+# The percentage of the original cost refunded when removing an item (0-100)
+# default = 50
+#
+GuildHouseRefundPercent = 50
