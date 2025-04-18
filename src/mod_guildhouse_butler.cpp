@@ -7,7 +7,7 @@
 #include "Creature.h"
 #include "Guild.h"
 #include "GuildMgr.h"
-#include "Define.h"
+#include "Define.h" // This header defines uint32 and other types
 #include "GossipDef.h"
 #include "DataMap.h"
 #include "GameObject.h"
@@ -273,6 +273,126 @@ public:
             break;
         }
 
+        // Buy All Essential NPCs
+        case 10021:
+        {
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalCost = 0;
+            std::vector<uint32> toSpawn;
+
+            for (auto entry : essentialNpcEntries)
+            {
+                bool spawned = false;
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    Creature *c = pair.second;
+                    if (c && c->GetEntry() == entry && c->GetPhaseMask() == guildPhase)
+                    {
+                        spawned = true;
+                        break;
+                    }
+                }
+                if (!spawned)
+                {
+                    toSpawn.push_back(entry);
+                    int npcCost = 0;
+                    if (entry == 6930)
+                        npcCost = GuildHouseInnKeeper;
+                    else if (entry == 28690)
+                        npcCost = GuildHouseVendor;
+                    else if (entry == 6491)
+                        npcCost = GuildHouseSpirit;
+                    else
+                        npcCost = GuildHouseAuctioneer;
+                    totalCost += npcCost;
+                }
+            }
+
+            if (totalCost == 0)
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("All essential NPCs are already spawned.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
+                return false;
+            }
+
+            if (!player->HasEnoughMoney(totalCost))
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("Your guild does not have enough gold in the bank.");
+                CloseGossipMenuFor(player);
+                return false;
+            }
+
+            player->ModifyMoney(-totalCost);
+
+            for (uint32 entry : toSpawn)
+            {
+                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, 'creature')", player->GetGuildId(), entry);
+                SpawnNPC(entry, player, true);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All missing essential NPCs purchased and spawned for %u g.", totalCost / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
+            break;
+        }
+
+        // Sell All Essential NPCs
+        case 20021:
+        {
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalRefund = 0;
+            std::vector<Creature *> toRemove;
+
+            for (auto entry : essentialNpcEntries)
+            {
+                // Collect all matching creatures for this entry in the guild phase
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    Creature *c = pair.second;
+                    if (c && c->GetEntry() == entry && c->GetPhaseMask() == guildPhase)
+                    {
+                        toRemove.push_back(c);
+                        int npcCost = 0;
+                        if (entry == 6930)
+                            npcCost = GuildHouseInnKeeper;
+                        else if (entry == 28690)
+                            npcCost = GuildHouseVendor;
+                        else if (entry == 6491)
+                            npcCost = GuildHouseSpirit;
+                        else
+                            npcCost = GuildHouseAuctioneer;
+                        totalRefund += npcCost * GuildHouseRefundPercent / 100;
+                        // Do not break; remove all of this type
+                    }
+                }
+            }
+
+            if (toRemove.empty())
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("No essential NPCs found to remove.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
+                return false;
+            }
+
+            player->ModifyMoney(totalRefund);
+
+            for (Creature *c : toRemove)
+            {
+                if (!c)
+                    continue;
+                if (c->IsInWorld())
+                {
+                    c->DespawnOrUnsummon();
+                    c->RemoveAllAuras();
+                }
+                c->DeleteFromDB();
+                WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={} AND `type`='creature'", player->GetGuildId(), c->GetEntry());
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All essential NPCs removed and %u g refunded.", totalRefund / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
+            break;
+        }
+
         // Objects submenu
         case 10006:
         {
@@ -280,6 +400,9 @@ public:
             std::set<uint32> objectEntries = {1685, 4087, 180715, 2728, 184137};
             uint32 guildPhase = GetGuildPhase(player);
             int notSpawned = 0;
+            int totalCostAll = 0;
+            int totalRefundAll = 0;
+
             for (auto entry : objectEntries)
             {
                 std::string label;
@@ -315,6 +438,7 @@ public:
                     }
                 }
                 int costValue = (entry == 184137 ? GuildHouseMailBox : GuildHouseObject);
+                totalCostAll += costValue;
                 if (!objectSpawned)
                 {
                     notSpawned++;
@@ -323,28 +447,144 @@ public:
                 }
                 else
                 {
+                    int refundValue = costValue * GuildHouseRefundPercent / 100;
+                    totalRefundAll += refundValue;
                     AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove " + label + " (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN,
                                      700000 + entry, "Remove the " + label + " and get a refund?",
-                                     costValue * GuildHouseRefundPercent / 100, false);
+                                     refundValue, false);
                 }
             }
             if (notSpawned > 0)
             {
-                int totalCost = 0;
+                int buyAllCost = 0;
                 for (auto entry : objectEntries)
-                    totalCost += (entry == 184137 ? GuildHouseMailBox : GuildHouseObject);
+                {
+                    bool spawned = false;
+                    for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+                    {
+                        if (pair.second && pair.second->GetEntry() == entry && pair.second->GetPhaseMask() == guildPhase)
+                        {
+                            spawned = true;
+                            break;
+                        }
+                    }
+                    if (!spawned)
+                    {
+                        buyAllCost += (entry == 184137 ? GuildHouseMailBox : GuildHouseObject);
+                    }
+                }
                 AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Buy All Objects", GOSSIP_SENDER_MAIN,
-                                 10015, "Buy and spawn all objects?", totalCost, false);
+                                 10015, "Buy and spawn all missing objects?", buyAllCost, false);
             }
             else
             {
-                int totalRefund = 0;
-                for (auto entry : objectEntries)
-                    totalRefund += (entry == 184137 ? GuildHouseMailBox : GuildHouseObject) * GuildHouseRefundPercent / 100;
                 AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Sell All Objects", GOSSIP_SENDER_MAIN,
-                                 20015, "Remove all objects and get a refund?", totalRefund, false);
+                                 20015, "Remove all objects and get a refund?", totalRefundAll, false);
             }
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Back", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+            break;
+        }
+
+        // Buy All Objects
+        case 10015:
+        {
+            std::set<uint32> objectEntries = {1685, 4087, 180715, 2728, 184137};
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalCost = 0;
+            std::vector<uint32> toSpawn;
+
+            for (auto entry : objectEntries)
+            {
+                bool objectSpawned = false;
+                for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+                {
+                    GameObject *go = pair.second;
+                    if (go && go->GetEntry() == entry && go->GetPhaseMask() == guildPhase)
+                    {
+                        objectSpawned = true;
+                        break;
+                    }
+                }
+                if (!objectSpawned)
+                {
+                    toSpawn.push_back(entry);
+                    totalCost += (entry == 184137 ? GuildHouseMailBox : GuildHouseObject);
+                }
+            }
+
+            if (totalCost == 0)
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("All objects are already spawned.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10006);
+                return false;
+            }
+
+            if (!player->HasEnoughMoney(totalCost))
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("Your guild does not have enough gold in the bank.");
+                CloseGossipMenuFor(player);
+                return false;
+            }
+
+            player->ModifyMoney(-totalCost);
+
+            for (uint32 entry : toSpawn)
+            {
+                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, 'gameobject')", player->GetGuildId(), entry);
+                SpawnObject(entry, player, creature, true);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All missing objects purchased and spawned for %u g.", totalCost / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10006);
+            break;
+        }
+
+        // Sell All Objects
+        case 20015:
+        {
+            std::set<uint32> objectEntries = {1685, 4087, 180715, 2728, 184137};
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalRefund = 0;
+            std::vector<GameObject *> toRemove;
+
+            for (auto entry : objectEntries)
+            {
+                for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+                {
+                    GameObject *go = pair.second;
+                    if (go && go->GetEntry() == entry && go->GetPhaseMask() == guildPhase)
+                    {
+                        toRemove.push_back(go);
+                        totalRefund += (entry == 184137 ? GuildHouseMailBox : GuildHouseObject) * GuildHouseRefundPercent / 100;
+                        break;
+                    }
+                }
+            }
+
+            if (toRemove.empty())
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("No objects found to remove.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10006);
+                return false;
+            }
+
+            player->ModifyMoney(totalRefund);
+
+            for (GameObject *go : toRemove)
+            {
+                uint32 entry = go->GetEntry();
+                uint32 spawnId = go->GetSpawnId();
+                if (go->IsInWorld())
+                    go->RemoveFromWorld();
+                if (sObjectMgr->GetGameObjectData(spawnId))
+                    go->DeleteFromDB();
+                WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={} AND `type`='gameobject'",
+                                      player->GetGuildId(), entry);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All objects removed and %u g refunded.", totalRefund / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10006);
             break;
         }
 
@@ -354,7 +594,6 @@ public:
             uint32 guildPhase = GetGuildPhase(player);
             Map *map = player->GetMap();
 
-            // wrap removal in a transaction
             auto trans = WorldDatabase.BeginTransaction();
 
             for (auto const &creaturePair : map->GetCreatureBySpawnIdStore())
@@ -383,7 +622,6 @@ public:
             }
             WorldDatabase.CommitTransaction(trans);
 
-            // respawn purchases
             QueryResult result = WorldDatabase.Query("SELECT `entry`, `type` FROM `guild_house_purchases` WHERE `guild`={}", player->GetGuildId());
             if (result)
             {
@@ -428,6 +666,9 @@ public:
                     {29195, "Death Knight Trainer", GuildHouseTrainer}};
                 uint32 guildPhase = GetGuildPhase(player);
                 int notSpawned = 0;
+                int totalCostAll = 0;
+                int totalRefundAll = 0;
+
                 for (auto const &t : trainers)
                 {
                     bool spawned = false;
@@ -440,20 +681,168 @@ public:
                             break;
                         }
                     }
+                    totalCostAll += t.cost;
                     if (!spawned)
                         notSpawned++;
                     if (!spawned)
                         AddGossipItemFor(player, GOSSIP_ICON_TRAINER, std::string("Spawn ") + t.label, GOSSIP_SENDER_MAIN, t.entry, std::string("Spawn a ") + t.label + "?", t.cost, false);
                     else
-                        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, std::string("Remove ") + t.label + " (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 7000000 + t.entry, std::string("Remove the ") + t.label + " and get a refund?", t.cost * GuildHouseRefundPercent / 100, false);
+                    {
+                        int refundValue = t.cost * GuildHouseRefundPercent / 100;
+                        totalRefundAll += refundValue;
+                        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, std::string("Remove ") + t.label + " (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 7000000 + t.entry, std::string("Remove the ") + t.label + " and get a refund?", refundValue, false);
+                    }
                 }
                 if (notSpawned > 0)
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Buy All Class Trainers", GOSSIP_SENDER_MAIN, 10012, "Buy and spawn all class trainers?", GuildHouseTrainer * 10, false);
+                {
+                    int buyAllCost = 0;
+                    for (auto const &t : trainers)
+                    {
+                        bool spawned = false;
+                        for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                        {
+                            if (pair.second && pair.second->GetEntry() == t.entry && pair.second->GetPhaseMask() == guildPhase)
+                            {
+                                spawned = true;
+                                break;
+                            }
+                        }
+                        if (!spawned)
+                        {
+                            buyAllCost += t.cost;
+                        }
+                    }
+                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Buy All Class Trainers", GOSSIP_SENDER_MAIN, 10012, "Buy and spawn all missing class trainers?", buyAllCost, false);
+                }
                 else
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Sell All Class Trainers", GOSSIP_SENDER_MAIN, 20012, "Remove all class trainers and get a refund?", GuildHouseTrainer * 10 * GuildHouseRefundPercent / 100, false);
+                {
+                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Sell All Class Trainers", GOSSIP_SENDER_MAIN, 20012, "Remove all class trainers and get a refund?", totalRefundAll, false);
+                }
             }
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Back", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+            break;
+        }
+
+        // Buy All Class Trainers
+        case 10012:
+        {
+            std::set<uint32> classTrainerEntries = {
+                26327, // Paladin Trainer
+                26324, // Druid Trainer
+                26325, // Hunter Trainer
+                26326, // Mage Trainer
+                26328, // Priest Trainer
+                26329, // Rogue Trainer
+                26330, // Shaman Trainer
+                26331, // Warlock Trainer
+                26332, // Warrior Trainer
+                29195  // Death Knight Trainer
+            };
+
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalCost = 0;
+            std::vector<uint32> toSpawn;
+
+            for (uint32 entry : classTrainerEntries)
+            {
+                bool spawned = false;
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    Creature *c = pair.second;
+                    if (c && c->GetEntry() == entry && c->GetPhaseMask() == guildPhase)
+                    {
+                        spawned = true;
+                        break;
+                    }
+                }
+                if (!spawned)
+                {
+                    toSpawn.push_back(entry);
+                    totalCost += GuildHouseTrainer;
+                }
+            }
+
+            if (totalCost == 0)
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("All class trainers are already spawned.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 2);
+                return false;
+            }
+
+            if (!player->HasEnoughMoney(totalCost))
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("Your guild does not have enough gold in the bank.");
+                CloseGossipMenuFor(player);
+                return false;
+            }
+
+            player->ModifyMoney(-totalCost);
+
+            for (uint32 entry : toSpawn)
+            {
+                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, 'creature')", player->GetGuildId(), entry);
+                SpawnNPC(entry, player, true);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All missing class trainers have been purchased and spawned for %u g!", totalCost / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 2);
+            break;
+        }
+
+        // Sell All Class Trainers
+        case 20012:
+        {
+            std::set<uint32> classTrainerEntries = {
+                26327, // Paladin Trainer
+                26324, // Druid Trainer
+                26325, // Hunter Trainer
+                26326, // Mage Trainer
+                26328, // Priest Trainer
+                26329, // Rogue Trainer
+                26330, // Shaman Trainer
+                26331, // Warlock Trainer
+                26332, // Warrior Trainer
+                29195  // Death Knight Trainer
+            };
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalRefund = 0;
+            std::vector<Creature *> toRemove;
+
+            for (auto entry : classTrainerEntries)
+            {
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    Creature *c = pair.second;
+                    if (c && c->GetEntry() == entry && c->GetPhaseMask() == guildPhase)
+                    {
+                        toRemove.push_back(c);
+                        totalRefund += GuildHouseTrainer * GuildHouseRefundPercent / 100;
+                        break;
+                    }
+                }
+            }
+
+            if (toRemove.empty())
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("No class trainers found to remove.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 2);
+                return false;
+            }
+
+            player->ModifyMoney(totalRefund);
+
+            for (Creature *c : toRemove)
+            {
+                uint32 entry = c->GetEntry();
+                if (c->IsInWorld())
+                    c->DespawnOrUnsummon();
+                c->DeleteFromDB();
+                WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={} AND `type`='creature'", player->GetGuildId(), entry);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All class trainers removed and %u g refunded.", totalRefund / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 2);
             break;
         }
 
@@ -482,6 +871,9 @@ public:
                     {19185, "Cooking Trainer", GuildHouseProf}};
                 uint32 guildPhase = GetGuildPhase(player);
                 int notSpawned = 0;
+                int totalCostAll = 0;
+                int totalRefundAll = 0;
+
                 for (auto const &t : profs)
                 {
                     bool spawned = false;
@@ -494,132 +886,70 @@ public:
                             break;
                         }
                     }
+                    totalCostAll += t.cost;
                     if (!spawned)
                         notSpawned++;
                     if (!spawned)
                         AddGossipItemFor(player, GOSSIP_ICON_TRAINER, std::string("Spawn ") + t.label, GOSSIP_SENDER_MAIN, t.entry, std::string("Spawn a ") + t.label + "?", t.cost, false);
                     else
-                        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, std::string("Remove ") + t.label + " (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 7000000 + t.entry, std::string("Remove the ") + t.label + " and get a refund?", t.cost * GuildHouseRefundPercent / 100, false);
+                    {
+                        int refundValue = t.cost * GuildHouseRefundPercent / 100;
+                        totalRefundAll += refundValue;
+                        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, std::string("Remove ") + t.label + " (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 7000000 + t.entry, std::string("Remove the ") + t.label + " and get a refund?", refundValue, false);
+                    }
                 }
                 if (notSpawned > 0)
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Buy All Profession Trainers", GOSSIP_SENDER_MAIN, 10013, "Buy and spawn all profession trainers?", GuildHouseProf * 11, false); // Adjust cost as needed
+                {
+                    int buyAllCost = 0;
+                    for (auto const &t : profs)
+                    {
+                        bool spawned = false;
+                        for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                        {
+                            if (pair.second && pair.second->GetEntry() == t.entry && pair.second->GetPhaseMask() == guildPhase)
+                            {
+                                spawned = true;
+                                break;
+                            }
+                        }
+                        if (!spawned)
+                        {
+                            buyAllCost += t.cost;
+                        }
+                    }
+                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Buy All Profession Trainers", GOSSIP_SENDER_MAIN, 10013, "Buy and spawn all missing profession trainers?", buyAllCost, false);
+                }
                 else
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Sell All Profession Trainers", GOSSIP_SENDER_MAIN, 20013, "Remove all profession trainers and get a refund?", GuildHouseProf * 11 * GuildHouseRefundPercent / 100, false);
+                {
+                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Sell All Profession Trainers", GOSSIP_SENDER_MAIN, 20013, "Remove all profession trainers and get a refund?", totalRefundAll, false);
+                }
             }
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Back", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         }
 
-        // Vendor submenu
-        case 3:
+        // Buy All Profession Trainers
+        case 10013:
         {
-            ClearGossipMenuFor(player);
+            std::set<uint32> profTrainerEntries = {
+                2836,  // Blacksmithing Trainer
+                8128,  // Mining Trainer
+                8736,  // Engineering Trainer
+                19187, // Leatherworking Trainer
+                19180, // Skinning Trainer
+                19052, // Alchemy Trainer
+                908,   // Herbalism Trainer
+                2627,  // Tailoring Trainer
+                19184, // First Aid Trainer
+                2834,  // Fishing Trainer
+                19185  // Cooking Trainer
+            };
             uint32 guildPhase = GetGuildPhase(player);
-            // Trade Supplies
-            {
-                bool spawned = false;
-                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
-                {
-                    Creature *c = pair.second;
-                    if (c && c->GetEntry() == 28692 && c->GetPhaseMask() == guildPhase)
-                    {
-                        spawned = true;
-                        break;
-                    }
-                }
-                if (!spawned)
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Spawn Trade Supplies", GOSSIP_SENDER_MAIN, 28692, "Spawn a Trade Supplies Vendor?", GuildHouseVendor, false);
-                else
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove Trade Supplies (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 7028692, "Remove the Trade Supplies Vendor and get a refund?", GuildHouseVendor * GuildHouseRefundPercent / 100, false);
-            }
-            // Tabard Vendor
-            {
-                bool spawned = false;
-                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
-                {
-                    Creature *c = pair.second;
-                    if (c && c->GetEntry() == 28776 && c->GetPhaseMask() == guildPhase)
-                    {
-                        spawned = true;
-                        break;
-                    }
-                }
-                if (!spawned)
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Spawn Tabard Vendor", GOSSIP_SENDER_MAIN, 28776, "Spawn a Tabard Vendor?", GuildHouseVendor, false);
-                else
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove Tabard Vendor (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 7028776, "Remove the Tabard Vendor and get a refund?", GuildHouseVendor * GuildHouseRefundPercent / 100, false);
-            }
-            // Food & Drink Vendor
-            {
-                bool spawned = false;
-                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
-                {
-                    Creature *c = pair.second;
-                    if (c && c->GetEntry() == 4255 && c->GetPhaseMask() == guildPhase)
-                    {
-                        spawned = true;
-                        break;
-                    }
-                }
-                if (!spawned)
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Spawn Food & Drink Vendor", GOSSIP_SENDER_MAIN, 4255, "Spawn a Food & Drink Vendor?", GuildHouseVendor, false);
-                else
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove Food & Drink Vendor (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 704255, "Remove the Food & Drink Vendor and get a refund?", GuildHouseVendor * GuildHouseRefundPercent / 100, false);
-            }
-            // Reagent Vendor
-            {
-                bool spawned = false;
-                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
-                {
-                    Creature *c = pair.second;
-                    if (c && c->GetEntry() == 29636 && c->GetPhaseMask() == guildPhase)
-                    {
-                        spawned = true;
-                        break;
-                    }
-                }
-                if (!spawned)
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Spawn Reagent Vendor", GOSSIP_SENDER_MAIN, 29636, "Spawn a Reagent Vendor?", GuildHouseVendor, false);
-                else
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove Reagent Vendor (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 7029636, "Remove the Reagent Vendor and get a refund?", GuildHouseVendor * GuildHouseRefundPercent / 100, false);
-            }
-            // Ammo & Repair Vendor
-            {
-                bool spawned = false;
-                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
-                {
-                    Creature *c = pair.second;
-                    if (c && c->GetEntry() == 29493 && c->GetPhaseMask() == guildPhase)
-                    {
-                        spawned = true;
-                        break;
-                    }
-                }
-                if (!spawned)
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Spawn Ammo & Repair Vendor", GOSSIP_SENDER_MAIN, 29493, "Spawn an Ammo & Repair Vendor?", GuildHouseVendor, false);
-                else
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove Ammo & Repair Vendor (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 7029493, "Remove the Ammo & Repair Vendor and get a refund?", GuildHouseVendor * GuildHouseRefundPercent / 100, false);
-            }
-            // Poisons Vendor
-            {
-                bool spawned = false;
-                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
-                {
-                    Creature *c = pair.second;
-                    if (c && c->GetEntry() == 2622 && c->GetPhaseMask() == guildPhase)
-                    {
-                        spawned = true;
-                        break;
-                    }
-                }
-                if (!spawned)
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Spawn Poisons Vendor", GOSSIP_SENDER_MAIN, 2622, "Spawn a Poisons Vendor?", GuildHouseVendor, false);
-                else
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove Poisons Vendor (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 702622, "Remove the Poisons Vendor and get a refund?", GuildHouseVendor * GuildHouseRefundPercent / 100, false);
-            }
-            int notSpawned = 0;
-            for (auto entry : {28692, 28776, 4255, 29636, 29493, 2622})
+            int totalCost = 0;
+            std::vector<uint32> toSpawn;
+
+            for (auto entry : profTrainerEntries)
             {
                 bool spawned = false;
                 for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
@@ -632,14 +962,262 @@ public:
                     }
                 }
                 if (!spawned)
-                    notSpawned++;
+                {
+                    toSpawn.push_back(entry);
+                    totalCost += GuildHouseProf;
+                }
             }
+
+            if (totalCost == 0)
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("All profession trainers are already spawned.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 5);
+                return false;
+            }
+
+            if (!player->HasEnoughMoney(totalCost))
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("Your guild does not have enough gold in the bank.");
+                CloseGossipMenuFor(player);
+                return false;
+            }
+
+            player->ModifyMoney(-totalCost);
+
+            for (uint32 entry : toSpawn)
+            {
+                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, 'creature')", player->GetGuildId(), entry);
+                SpawnNPC(entry, player, true);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All missing profession trainers purchased and spawned for %u g.", totalCost / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 5);
+            break;
+        }
+
+        // Sell All Profession Trainers
+        case 20013:
+        {
+            std::set<uint32> profTrainerEntries = {
+                2836,  // Blacksmithing Trainer
+                8128,  // Mining Trainer
+                8736,  // Engineering Trainer
+                19187, // Leatherworking Trainer
+                19180, // Skinning Trainer
+                19052, // Alchemy Trainer
+                908,   // Herbalism Trainer
+                2627,  // Tailoring Trainer
+                19184, // First Aid Trainer
+                2834,  // Fishing Trainer
+                19185  // Cooking Trainer
+            };
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalRefund = 0;
+            std::vector<Creature *> toRemove;
+
+            for (auto entry : profTrainerEntries)
+            {
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    Creature *c = pair.second;
+                    if (c && c->GetEntry() == entry && c->GetPhaseMask() == guildPhase)
+                    {
+                        toRemove.push_back(c);
+                        totalRefund += GuildHouseProf * GuildHouseRefundPercent / 100;
+                        break;
+                    }
+                }
+            }
+
+            if (toRemove.empty())
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("No profession trainers found to remove.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 5);
+                return false;
+            }
+
+            player->ModifyMoney(totalRefund);
+
+            for (Creature *c : toRemove)
+            {
+                uint32 entry = c->GetEntry();
+                if (c->IsInWorld())
+                    c->DespawnOrUnsummon();
+                c->DeleteFromDB();
+                WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={} AND `type`='creature'", player->GetGuildId(), entry);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All profession trainers removed and %u g refunded.", totalRefund / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 5);
+            break;
+        }
+
+        // Vendor submenu
+        case 3:
+        {
+            ClearGossipMenuFor(player);
+            uint32 guildPhase = GetGuildPhase(player);
+            std::set<uint32> vendorEntries = {28692, 28776, 4255, 29636, 29493, 2622};
+            int notSpawned = 0;
+            int totalCostAll = 0;
+            int totalRefundAll = 0;
+
+            std::map<uint32, std::string> vendorLabels = {
+                {28692, "Trade Supplies"}, {28776, "Tabard Vendor"}, {4255, "Food & Drink Vendor"}, {29636, "Reagent Vendor"}, {29493, "Ammo & Repair Vendor"}, {2622, "Poisons Vendor"}};
+
+            for (auto entry : vendorEntries)
+            {
+                std::string label = vendorLabels.count(entry) ? vendorLabels[entry] : "Vendor";
+                bool spawned = false;
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    Creature *c = pair.second;
+                    if (c && c->GetEntry() == entry && c->GetPhaseMask() == guildPhase)
+                    {
+                        spawned = true;
+                        break;
+                    }
+                }
+                totalCostAll += GuildHouseVendor;
+                if (!spawned)
+                {
+                    notSpawned++;
+                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Spawn " + label, GOSSIP_SENDER_MAIN, entry, "Spawn a " + label + "?", GuildHouseVendor, false);
+                }
+                else
+                {
+                    int refundValue = GuildHouseVendor * GuildHouseRefundPercent / 100;
+                    totalRefundAll += refundValue;
+                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove " + label + " (Refund " + std::to_string(GuildHouseRefundPercent) + "%)", GOSSIP_SENDER_MAIN, 7000000 + entry, "Remove the " + label + " and get a refund?", refundValue, false);
+                }
+            }
+
             if (notSpawned > 0)
-                AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Buy All Vendors", GOSSIP_SENDER_MAIN, 10003, "Buy and spawn all vendors?", GuildHouseVendor * 6, false); // Adjust cost as needed
+            {
+                int buyAllCost = 0;
+                for (auto entry : vendorEntries)
+                {
+                    bool spawned = false;
+                    for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                    {
+                        if (pair.second && pair.second->GetEntry() == entry && pair.second->GetPhaseMask() == guildPhase)
+                        {
+                            spawned = true;
+                            break;
+                        }
+                    }
+                    if (!spawned)
+                    {
+                        buyAllCost += GuildHouseVendor;
+                    }
+                }
+                AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Buy All Vendors", GOSSIP_SENDER_MAIN, 10003, "Buy and spawn all missing vendors?", buyAllCost, false);
+            }
             else
-                AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Sell All Vendors", GOSSIP_SENDER_MAIN, 20003, "Remove all vendors and get a refund?", GuildHouseVendor * 6 * GuildHouseRefundPercent / 100, false);
+            {
+                AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Sell All Vendors", GOSSIP_SENDER_MAIN, 20003, "Remove all vendors and get a refund?", totalRefundAll, false);
+            }
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Back", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+            break;
+        }
+
+        // Buy All Vendors
+        case 10003:
+        {
+            std::set<uint32> vendorEntries = {28692, 28776, 4255, 29636, 29493, 2622};
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalCost = 0;
+            std::vector<uint32> toSpawn;
+
+            for (auto entry : vendorEntries)
+            {
+                bool spawned = false;
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    Creature *c = pair.second;
+                    if (c && c->GetEntry() == entry && c->GetPhaseMask() == guildPhase)
+                    {
+                        spawned = true;
+                        break;
+                    }
+                }
+                if (!spawned)
+                {
+                    toSpawn.push_back(entry);
+                    totalCost += GuildHouseVendor;
+                }
+            }
+
+            if (totalCost == 0)
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("All vendors are already spawned.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 3);
+                return false;
+            }
+
+            if (!player->HasEnoughMoney(totalCost))
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("Your guild does not have enough gold in the bank.");
+                CloseGossipMenuFor(player);
+                return false;
+            }
+
+            player->ModifyMoney(-totalCost);
+
+            for (uint32 entry : toSpawn)
+            {
+                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, 'creature')", player->GetGuildId(), entry);
+                SpawnNPC(entry, player, true);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All missing vendors purchased and spawned for %u g.", totalCost / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 3);
+            break;
+        }
+
+        // Sell All Vendors
+        case 20003:
+        {
+            std::set<uint32> vendorEntries = {28692, 28776, 4255, 29636, 29493, 2622};
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalRefund = 0;
+            std::vector<Creature *> toRemove;
+
+            for (auto entry : vendorEntries)
+            {
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    Creature *c = pair.second;
+                    if (c && c->GetEntry() == entry && c->GetPhaseMask() == guildPhase)
+                    {
+                        toRemove.push_back(c);
+                        totalRefund += GuildHouseVendor * GuildHouseRefundPercent / 100;
+                        break;
+                    }
+                }
+            }
+
+            if (toRemove.empty())
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("No vendors found to remove.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 3);
+                return false;
+            }
+
+            player->ModifyMoney(totalRefund);
+
+            for (Creature *c : toRemove)
+            {
+                uint32 entry = c->GetEntry();
+                if (c->IsInWorld())
+                    c->DespawnOrUnsummon();
+                c->DeleteFromDB();
+                WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={} AND `type`='creature'", player->GetGuildId(), entry);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All vendors removed and %u g refunded.", totalRefund / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 3);
             break;
         }
 
@@ -648,16 +1226,20 @@ public:
         {
             ClearGossipMenuFor(player);
             std::set<uint32> portalEntries = {
-                500000, // Stormwind Portal
+                500000, // Stormwind Portal (starter)
                 500001, // Darnassus Portal
                 500003, // Ironforge Portal
-                500004, // Orgrimmar Portal
+                500004, // Orgrimmar Portal (starter)
                 500005, // Silvermoon Portal
                 500008, // Shattrath Portal
                 500009  // Dalaran Portal
             };
+            std::set<uint32> starterPortals = {500000, 500004};
             uint32 guildPhase = GetGuildPhase(player);
             int notSpawned = 0;
+            int totalCostAll = 0;
+            int totalRefundAll = 0;
+
             for (auto entry : portalEntries)
             {
                 std::string label;
@@ -698,6 +1280,7 @@ public:
                         break;
                     }
                 }
+                totalCostAll += GuildHousePortal;
                 if (!spawned)
                 {
                     notSpawned++;
@@ -705,18 +1288,165 @@ public:
                 }
                 else
                 {
-                    AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove " + label + " (Refund " + std::to_string(GuildHouseRefundPercent) + "%)",
-                                     GOSSIP_SENDER_MAIN, 700000 + entry, "Remove the " + label + " and get a refund?",
-                                     GuildHousePortal * GuildHouseRefundPercent / 100, false);
+                    if (starterPortals.find(entry) == starterPortals.end())
+                    {
+                        int refundValue = GuildHousePortal * GuildHouseRefundPercent / 100;
+                        totalRefundAll += refundValue;
+                        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Remove " + label + " (Refund " + std::to_string(GuildHouseRefundPercent) + "%)",
+                                         GOSSIP_SENDER_MAIN, 700000 + entry, "Remove the " + label + " and get a refund?",
+                                         refundValue, false);
+                    }
                 }
             }
             if (notSpawned > 0)
-                AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Buy All Portals", GOSSIP_SENDER_MAIN, 10014, "Buy and spawn all portals?", GuildHousePortal * portalEntries.size(), false);
+            {
+                int buyAllCost = 0;
+                for (auto entry : portalEntries)
+                {
+                    bool spawned = false;
+                    for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+                    {
+                        if (pair.second && pair.second->GetEntry() == entry && pair.second->GetPhaseMask() == guildPhase)
+                        {
+                            spawned = true;
+                            break;
+                        }
+                    }
+                    if (!spawned)
+                    {
+                        buyAllCost += GuildHousePortal;
+                    }
+                }
+                AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Buy All Portals", GOSSIP_SENDER_MAIN, 10014, "Buy and spawn all missing portals?", buyAllCost, false);
+            }
             else
-                AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Sell All Portals", GOSSIP_SENDER_MAIN, 20014, "Remove all portals and get a refund?", GuildHousePortal * portalEntries.size() * GuildHouseRefundPercent / 100, false);
+            {
+                AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Sell All Portals", GOSSIP_SENDER_MAIN, 20014, "Remove all non-starter portals and get a refund?", totalRefundAll, false);
+            }
 
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Back", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+            break;
+        }
+
+        // Buy All Portals
+        case 10014:
+        {
+            std::set<uint32> portalEntries = {
+                500000, // Stormwind Portal (starter)
+                500001, // Darnassus Portal
+                500003, // Ironforge Portal
+                500004, // Orgrimmar Portal (starter)
+                500005, // Silvermoon Portal
+                500008, // Shattrath Portal
+                500009  // Dalaran Portal
+            };
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalCost = 0;
+            std::vector<uint32> toSpawn;
+
+            for (auto entry : portalEntries)
+            {
+                bool spawned = false;
+                for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+                {
+                    GameObject *go = pair.second;
+                    if (go && go->GetEntry() == entry && go->GetPhaseMask() == guildPhase)
+                    {
+                        spawned = true;
+                        break;
+                    }
+                }
+                if (!spawned)
+                {
+                    toSpawn.push_back(entry);
+                    totalCost += GuildHousePortal;
+                }
+            }
+
+            if (totalCost == 0)
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("All portals are already spawned.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10005);
+                return false;
+            }
+
+            if (!player->HasEnoughMoney(totalCost))
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("Your guild does not have enough gold in the bank.");
+                CloseGossipMenuFor(player);
+                return false;
+            }
+
+            player->ModifyMoney(-totalCost);
+
+            for (uint32 entry : toSpawn)
+            {
+                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, 'gameobject')", player->GetGuildId(), entry);
+                SpawnObject(entry, player, creature, true);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All missing portals purchased and spawned for %u g.", totalCost / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10005);
+            break;
+        }
+
+        // Sell All Portals
+        case 20014:
+        {
+            std::set<uint32> portalEntries = {
+                500000, // Stormwind Portal (starter)
+                500001, // Darnassus Portal
+                500003, // Ironforge Portal
+                500004, // Orgrimmar Portal (starter)
+                500005, // Silvermoon Portal
+                500008, // Shattrath Portal
+                500009  // Dalaran Portal
+            };
+            std::set<uint32> starterPortals = {500000, 500004};
+            uint32 guildPhase = GetGuildPhase(player);
+            int totalRefund = 0;
+            std::vector<GameObject *> toRemove;
+
+            for (auto entry : portalEntries)
+            {
+                if (starterPortals.count(entry))
+                    continue;
+
+                for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+                {
+                    GameObject *go = pair.second;
+                    if (go && go->GetEntry() == entry && go->GetPhaseMask() == guildPhase)
+                    {
+                        toRemove.push_back(go);
+                        totalRefund += GuildHousePortal * GuildHouseRefundPercent / 100;
+                        break;
+                    }
+                }
+            }
+
+            if (toRemove.empty())
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("No non-starter portals found to remove.");
+                OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10005);
+                return false;
+            }
+
+            player->ModifyMoney(totalRefund);
+
+            for (GameObject *go : toRemove)
+            {
+                uint32 entry = go->GetEntry();
+                uint32 spawnId = go->GetSpawnId();
+                if (go->IsInWorld())
+                    go->RemoveFromWorld();
+                if (sObjectMgr->GetGameObjectData(spawnId))
+                    go->DeleteFromDB();
+                WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={} AND `type`='gameobject'", player->GetGuildId(), entry);
+            }
+
+            ChatHandler(player->GetSession()).PSendSysMessage("All non-starter portals removed and %u g refunded.", totalRefund / 10000);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10005);
             break;
         }
 
@@ -747,7 +1477,7 @@ public:
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("No Neutral Auctioneer found to remove.");
             }
-            OnGossipHello(player, creature);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
             break;
         }
 
@@ -778,7 +1508,7 @@ public:
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("No Alliance Auctioneer found to remove.");
             }
-            OnGossipHello(player, creature);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
             break;
         }
 
@@ -809,7 +1539,7 @@ public:
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("No Horde Auctioneer found to remove.");
             }
-            OnGossipHello(player, creature);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
             break;
         }
 
@@ -840,7 +1570,7 @@ public:
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("No Spirit Healer found to remove.");
             }
-            OnGossipHello(player, creature);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
             break;
         }
 
@@ -871,42 +1601,7 @@ public:
             {
                 ChatHandler(player->GetSession()).PSendSysMessage("No Tabard Vendor found to remove.");
             }
-            OnGossipHello(player, creature);
-            break;
-        }
-
-        // Sell All Objects
-        case 20015:
-        {
-            std::set<uint32> objectEntries = {1685, 4087, 180715, 2728, 184137};
-            uint32 guildPhase = GetGuildPhase(player);
-            int refund = 0;
-            for (auto entry : objectEntries)
-            {
-                GameObject *found = nullptr;
-                for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
-                {
-                    GameObject *object = pair.second;
-                    if (object && object->GetEntry() == entry && object->GetPhaseMask() == guildPhase)
-                    {
-                        found = object;
-                        break;
-                    }
-                }
-                if (found)
-                {
-                    if (found->IsInWorld())
-                        found->RemoveFromWorld();
-                    if (sObjectMgr->GetGameObjectData(found->GetSpawnId()))
-                        found->DeleteFromDB();
-                    WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={}",
-                                          player->GetGuildId(), entry);
-                    refund += (entry == 184137 ? GuildHouseMailBox : GuildHouseObject) * GuildHouseRefundPercent / 100;
-                }
-            }
-            player->ModifyMoney(refund);
-            ChatHandler(player->GetSession()).PSendSysMessage("All objects removed and %u g refunded.", refund / 10000);
-            OnGossipHello(player, creature);
+            OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 3);
             break;
         }
 
@@ -942,107 +1637,217 @@ public:
                 2836, 8128, 8736, 19187, 19180, 19052, 908, 2627, 19184, 2834, 19185};
             std::set<uint32> portalEntries = {
                 500000, 500001, 500003, 500004, 500005, 500008, 500009};
+            std::set<uint32> starterPortals = {500000, 500004};
             std::set<uint32> objectEntries = {
                 1685, 4087, 180715, 2728, 184137 // Mailbox included
             };
             int cost = 0;
+            uint32 guildPhase = GetGuildPhase(player);
 
-            if (essentialNpcSingleEntries.count(action))
+            if (action >= 7000000) // Removal action
             {
-                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, 'creature')", player->GetGuildId(), action);
-                SpawnNPC(action, player);
-                int npcCost = 0;
-                if (action == 6930)
-                    npcCost = GuildHouseInnKeeper;
-                else if (action == 28690)
-                    npcCost = GuildHouseVendor;
-                else if (action == 6491)
-                    npcCost = GuildHouseSpirit;
-                else // Auctioneers
-                    npcCost = GuildHouseAuctioneer;
-                player->ModifyMoney(-npcCost);
-                ChatHandler(player->GetSession()).PSendSysMessage("Essential NPC purchased and spawned.");
+                uint32 entryToRemove = action - 7000000;
+                int refund = 0;
+                bool found = false;
+
+                std::vector<Creature *> creaturesToRemove;
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    Creature *c = pair.second;
+                    if (c && c->GetEntry() == entryToRemove && c->GetPhaseMask() == guildPhase)
+                    {
+                        creaturesToRemove.push_back(c);
+                        found = true;
+                        if (essentialNpcEntries.count(entryToRemove))
+                        {
+                            if (entryToRemove == 6930)
+                                refund = GuildHouseInnKeeper * GuildHouseRefundPercent / 100;
+                            else if (entryToRemove == 28690)
+                                refund = GuildHouseVendor * GuildHouseRefundPercent / 100;
+                            else if (entryToRemove == 6491)
+                                refund = GuildHouseSpirit * GuildHouseRefundPercent / 100;
+                            else
+                                refund = GuildHouseAuctioneer * GuildHouseRefundPercent / 100;
+                        }
+                        else if (trainerEntries.count(entryToRemove))
+                        {
+                            refund = (professionTrainerEntries.count(entryToRemove) ? GuildHouseProf : GuildHouseTrainer) * GuildHouseRefundPercent / 100;
+                        }
+                        else if (vendorEntries.count(entryToRemove))
+                        {
+                            refund = GuildHouseVendor * GuildHouseRefundPercent / 100;
+                        }
+                        break;
+                    }
+                }
+
+                std::vector<GameObject *> objectsToRemove;
+                if (!found)
+                {
+                    for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+                    {
+                        GameObject *go = pair.second;
+                        if (go && go->GetEntry() == entryToRemove && go->GetPhaseMask() == guildPhase)
+                        {
+                            objectsToRemove.push_back(go);
+                            found = true;
+                            if (portalEntries.count(entryToRemove))
+                            {
+                                refund = GuildHousePortal * GuildHouseRefundPercent / 100;
+                            }
+                            else if (objectEntries.count(entryToRemove))
+                            {
+                                refund = (entryToRemove == 184137 ? GuildHouseMailBox : GuildHouseObject) * GuildHouseRefundPercent / 100;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if (found)
+                {
+                    player->ModifyMoney(refund);
+
+                    for (Creature *c : creaturesToRemove)
+                    {
+                        if (c->IsInWorld())
+                            c->DespawnOrUnsummon();
+                        c->DeleteFromDB();
+                        WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={} AND `type`='creature'", player->GetGuildId(), entryToRemove);
+                    }
+                    for (GameObject *go : objectsToRemove)
+                    {
+                        uint32 spawnId = go->GetSpawnId();
+                        if (go->IsInWorld())
+                            go->RemoveFromWorld();
+                        if (sObjectMgr->GetGameObjectData(spawnId))
+                            go->DeleteFromDB();
+                        WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={} AND `type`='gameobject'", player->GetGuildId(), entryToRemove);
+                    }
+                    ChatHandler(player->GetSession()).PSendSysMessage("Item removed and %u g refunded.", refund / 10000);
+                }
+                else
+                {
+                    ChatHandler(player->GetSession()).PSendSysMessage("Item not found or already removed.");
+                }
+                // Refresh appropriate menu based on removed item type
+                if (essentialNpcEntries.count(entryToRemove))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
+                else if (trainerEntries.count(entryToRemove))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, professionTrainerEntries.count(entryToRemove) ? 5 : 2);
+                else if (vendorEntries.count(entryToRemove))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 3);
+                else if (portalEntries.count(entryToRemove))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10005);
+                else if (objectEntries.count(entryToRemove))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10006);
+                else
+                    OnGossipHello(player, creature); // Fallback refresh
             }
-            else if (trainerEntries.count(action))
+            else // Spawn action
             {
-                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, 'creature')", player->GetGuildId(), action);
-                SpawnNPC(action, player);
-                cost = (professionTrainerEntries.count(action)) ? GuildHouseProf : GuildHouseTrainer;
+                bool alreadySpawned = false;
+                for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+                {
+                    if (pair.second && pair.second->GetEntry() == action && pair.second->GetPhaseMask() == guildPhase)
+                    {
+                        alreadySpawned = true;
+                        break;
+                    }
+                }
+                if (!alreadySpawned)
+                {
+                    for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+                    {
+                        if (pair.second && pair.second->GetEntry() == action && pair.second->GetPhaseMask() == guildPhase)
+                        {
+                            alreadySpawned = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (alreadySpawned)
+                {
+                    ChatHandler(player->GetSession()).PSendSysMessage("This item is already spawned.");
+                    OnGossipHello(player, creature);
+                    return false;
+                }
+
+                std::string type = "";
+                if (essentialNpcEntries.count(action))
+                {
+                    type = "creature";
+                    if (action == 6930)
+                        cost = GuildHouseInnKeeper;
+                    else if (action == 28690)
+                        cost = GuildHouseVendor;
+                    else if (action == 6491)
+                        cost = GuildHouseSpirit;
+                    else
+                        cost = GuildHouseAuctioneer;
+                }
+                else if (trainerEntries.count(action))
+                {
+                    type = "creature";
+                    cost = (professionTrainerEntries.count(action)) ? GuildHouseProf : GuildHouseTrainer;
+                }
+                else if (vendorEntries.count(action))
+                {
+                    type = "creature";
+                    cost = GuildHouseVendor;
+                }
+                else if (portalEntries.count(action))
+                {
+                    type = "gameobject";
+                    cost = GuildHousePortal;
+                }
+                else if (objectEntries.count(action))
+                {
+                    type = "gameobject";
+                    cost = (action == 184137 ? GuildHouseMailBox : GuildHouseObject);
+                }
+                else
+                {
+                    ChatHandler(player->GetSession()).PSendSysMessage("Unknown purchase action.");
+                    CloseGossipMenuFor(player);
+                    return false;
+                }
+
+                if (!player->HasEnoughMoney(cost))
+                {
+                    ChatHandler(player->GetSession()).PSendSysMessage("Your guild does not have enough gold in the bank.");
+                    CloseGossipMenuFor(player);
+                    return false;
+                }
+
                 player->ModifyMoney(-cost);
-                ChatHandler(player->GetSession()).PSendSysMessage("Trainer purchased and spawned.");
-            }
-            else if (vendorEntries.count(action))
-            {
-                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, 'creature')", player->GetGuildId(), action);
-                SpawnNPC(action, player);
-                player->ModifyMoney(-GuildHouseVendor);
-                ChatHandler(player->GetSession()).PSendSysMessage("Vendor purchased and spawned.");
-            }
-            else if (portalEntries.count(action))
-            {
-                // Remove portal with phase logic
-                uint32 guildPhase = GetGuildPhase(player);
-                GameObject *found = nullptr;
-                for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+
+                WorldDatabase.Execute("REPLACE INTO `guild_house_purchases` (`guild`, `entry`, `type`) VALUES ({}, {}, '{}')", player->GetGuildId(), action, type);
+
+                if (type == "creature")
                 {
-                    GameObject *object = pair.second;
-                    if (object && object->GetEntry() == action && object->GetPhaseMask() == guildPhase)
-                    {
-                        found = object;
-                        break;
-                    }
+                    SpawnNPC(action, player, true);
+                    ChatHandler(player->GetSession()).PSendSysMessage("NPC purchased and spawned for %u g.", cost / 10000);
                 }
-                if (!found)
+                else if (type == "gameobject")
                 {
-                    SpawnObject(action, player, creature);
-                    player->ModifyMoney(-GuildHousePortal);
-                    ChatHandler(player->GetSession()).PSendSysMessage("Portal purchased and spawned.");
+                    SpawnObject(action, player, creature, true);
+                    ChatHandler(player->GetSession()).PSendSysMessage("Object purchased and spawned for %u g.", cost / 10000);
                 }
+                // Refresh appropriate menu based on spawned item type
+                if (essentialNpcEntries.count(action))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10020);
+                else if (trainerEntries.count(action))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, professionTrainerEntries.count(action) ? 5 : 2);
+                else if (vendorEntries.count(action))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 3);
+                else if (portalEntries.count(action))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10005);
+                else if (objectEntries.count(action))
+                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, 10006);
                 else
-                {
-                    if (found->IsInWorld())
-                        found->RemoveFromWorld();
-                    if (sObjectMgr->GetGameObjectData(found->GetSpawnId()))
-                        found->DeleteFromDB();
-                    WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={}", player->GetGuildId(), action);
-                    player->ModifyMoney(GuildHousePortal * GuildHouseRefundPercent / 100);
-                    ChatHandler(player->GetSession()).PSendSysMessage("Portal removed and %u%% of the cost refunded.", GuildHouseRefundPercent);
-                }
-            }
-            else if (objectEntries.count(action))
-            {
-                // Remove object with phase logic
-                uint32 guildPhase = GetGuildPhase(player);
-                GameObject *found = nullptr;
-                for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
-                {
-                    GameObject *object = pair.second;
-                    if (object && object->GetEntry() == action && object->GetPhaseMask() == guildPhase)
-                    {
-                        found = object;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    SpawnObject(action, player, creature);
-                    player->ModifyMoney(-GuildHouseObject);
-                    ChatHandler(player->GetSession()).PSendSysMessage("Object purchased and spawned.");
-                }
-                else
-                {
-                    if (found->IsInWorld())
-                        found->RemoveFromWorld();
-                    if (sObjectMgr->GetGameObjectData(found->GetSpawnId()))
-                        found->DeleteFromDB();
-                    WorldDatabase.Execute("DELETE FROM `guild_house_purchases` WHERE `guild`={} AND `entry`={}", player->GetGuildId(), action);
-                    player->ModifyMoney(GuildHouseObject * GuildHouseRefundPercent / 100);
-                    ChatHandler(player->GetSession()).PSendSysMessage("Object removed and %u%% of the cost refunded.", GuildHouseRefundPercent);
-                }
-            }
-            else
-            {
-                ChatHandler(player->GetSession()).PSendSysMessage("Unknown purchase action.");
+                    OnGossipHello(player, creature); // Fallback refresh
             }
             break;
         }
@@ -1057,7 +1862,8 @@ public:
 
     void SpawnNPC(uint32 entry, Player *player, bool force = false)
     {
-        if (!player || !player->GetMap())
+        Map *map = player ? player->GetMap() : nullptr;
+        if (!map)
         {
             if (player && player->GetSession())
                 ChatHandler(player->GetSession()).PSendSysMessage("Error: Invalid player or map context.");
@@ -1068,7 +1874,7 @@ public:
 
         if (!force)
         {
-            for (auto const &pair : player->GetMap()->GetCreatureBySpawnIdStore())
+            for (auto const &pair : map->GetCreatureBySpawnIdStore())
             {
                 Creature *c = pair.second;
                 if (c && c->GetEntry() == entry && c->GetPhaseMask() == guildPhase)
@@ -1097,45 +1903,50 @@ public:
         posZ = fields[2].Get<float>();
         ori = fields[3].Get<float>();
 
-        // Create and save to DB
-        Creature *creature = new Creature();
-        if (!creature->Create(player->GetMap()->GenerateLowGuid<HighGuid::Unit>(), player->GetMap(), guildPhase, entry, 0, posX, posY, posZ, ori))
+        Creature *newCreature = new Creature();
+        uint32 lowguid = map->GenerateLowGuid<HighGuid::Unit>();
+
+        if (!newCreature->Create(lowguid, map, guildPhase, entry, 0, posX, posY, posZ, ori))
         {
-            delete creature;
+            delete newCreature;
             if (player && player->GetSession())
-                ChatHandler(player->GetSession()).PSendSysMessage("Failed to create NPC.");
+                ChatHandler(player->GetSession()).PSendSysMessage("Failed to create creature object.");
             return;
         }
-        creature->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), guildPhase);
-        uint32 db_guid = creature->GetSpawnId();
-        delete creature;
 
-        // Load from DB and add to world
-        Creature *loaded = new Creature();
-        if (!loaded->LoadCreatureFromDB(db_guid, player->GetMap()))
+        newCreature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), guildPhase);
+        uint32 db_guid = newCreature->GetSpawnId(); // Use GetSpawnId()
+        delete newCreature;
+
+        newCreature = new Creature();
+        if (!newCreature->LoadFromDB(db_guid, map, true))
         {
-            delete loaded;
+            delete newCreature;
             if (player && player->GetSession())
-                ChatHandler(player->GetSession()).PSendSysMessage("Failed to load NPC from DB.");
+                ChatHandler(player->GetSession()).PSendSysMessage("Failed to load creature from DB.");
             return;
         }
-        loaded->SetPhaseMask(guildPhase, true);
-        loaded->AddToWorld();
 
-        // Add this block to make the NPC glow for 5 seconds
-        loaded->CastSpell(loaded, 23108, true); // Blue Glow visual
-        loaded->m_Events.AddEvent(
-            new RemoveGlowAuraEvent(loaded, 23108),
-            loaded->m_Events.CalculateTime(5000));
+        if (!map->AddToMap(newCreature))
+        {
+            delete newCreature;
+            if (player && player->GetSession())
+                ChatHandler(player->GetSession()).PSendSysMessage("Failed to add creature to map.");
+            return;
+        }
 
-        // Refresh the gossip menu
-        OnGossipHello(player, loaded);
+        newCreature->CastSpell(newCreature, 23108, true);
+        newCreature->m_Events.AddEvent(
+            new RemoveGlowAuraEvent(newCreature, 23108),
+            newCreature->m_Events.CalculateTime(5000));
+
         return;
     }
 
     void SpawnObject(uint32 entry, Player *player, Creature *creature, bool force = false)
     {
-        if (!player || !player->GetMap())
+        Map *map = player ? player->GetMap() : nullptr;
+        if (!map)
         {
             if (player && player->GetSession())
                 ChatHandler(player->GetSession()).PSendSysMessage("Error: Invalid player or map context.");
@@ -1146,26 +1957,19 @@ public:
 
         if (!force)
         {
-            bool objectSpawned = false;
-            for (auto const &pair : player->GetMap()->GetGameObjectBySpawnIdStore())
+            for (auto const &pair : map->GetGameObjectBySpawnIdStore())
             {
                 GameObject *go = pair.second;
                 if (go && go->GetEntry() == entry && go->GetPhaseMask() == guildPhase)
                 {
-                    objectSpawned = true;
-                    break;
+                    if (player && player->GetSession())
+                        ChatHandler(player->GetSession()).PSendSysMessage("This object already exists!");
+                    return;
                 }
-            }
-            if (objectSpawned)
-            {
-                if (player && player->GetSession())
-                    ChatHandler(player->GetSession()).PSendSysMessage("This object already exists!");
-                return;
             }
         }
 
         float posX, posY, posZ, ori;
-
         QueryResult result = WorldDatabase.Query("SELECT `posX`, `posY`, `posZ`, `orientation` FROM `guild_house_spawns` WHERE `entry`={}", entry);
         if (!result)
         {
@@ -1181,19 +1985,22 @@ public:
         ori = fields[3].Get<float>();
 
         GameObject *newObject = new GameObject();
-        if (!newObject->Create(player->GetMap()->GenerateLowGuid<HighGuid::GameObject>(), entry, player->GetMap(), guildPhase, posX, posY, posZ, ori, G3D::Quat(), 0, GO_STATE_READY))
+        uint32 lowguid = map->GenerateLowGuid<HighGuid::GameObject>();
+
+        if (!newObject->Create(lowguid, entry, map, guildPhase, posX, posY, posZ, ori, G3D::Quat(), 0, GO_STATE_READY))
         {
             delete newObject;
             if (player && player->GetSession())
                 ChatHandler(player->GetSession()).PSendSysMessage("Failed to create object.");
             return;
         }
-        newObject->SaveToDB(player->GetMapId(), (1 << player->GetMap()->GetSpawnMode()), guildPhase);
-        uint32 db_guid = newObject->GetSpawnId();
+
+        newObject->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), guildPhase);
+        uint32 db_guid = newObject->GetSpawnId(); // Use GetSpawnId()
         delete newObject;
 
         newObject = new GameObject();
-        if (!newObject->LoadGameObjectFromDB(db_guid, player->GetMap(), true))
+        if (!newObject->LoadGameObjectFromDB(db_guid, map, true))
         {
             delete newObject;
             if (player && player->GetSession())
@@ -1201,19 +2008,14 @@ public:
             return;
         }
 
-        sObjectMgr->AddGameobjectToGrid(db_guid, sObjectMgr->GetGameObjectData(db_guid));
+        SpawnGlowMarker(posX, posY, posZ, ori, map, guildPhase);
 
-        // Spawn glow marker
-        SpawnGlowMarker(posX, posY, posZ, ori, player->GetMap(), guildPhase);
-
-        // Refresh the gossip menu
-        OnGossipHello(player, creature);
         return;
     }
 
     void SpawnGlowMarker(float x, float y, float z, float o, Map *map, uint32 phase)
     {
-        uint32 markerEntry = GuildHouseMarkerEntry; // use config value
+        uint32 markerEntry = GuildHouseMarkerEntry;
         Creature *marker = new Creature();
         if (!marker->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, phase, markerEntry, 0, x, y, z, o))
         {
@@ -1221,9 +2023,9 @@ public:
             return;
         }
         marker->SetPhaseMask(phase, true);
-        marker->SetVisible(false); // Make the marker invisible
+        marker->SetVisible(false);
         marker->AddToWorld();
-        marker->CastSpell(marker, 23108, true); // Blue Glow
+        marker->CastSpell(marker, 23108, true);
         marker->m_Events.AddEvent(
             new DespawnMarkerEvent(marker),
             marker->m_Events.CalculateTime(5000));
@@ -1250,7 +2052,6 @@ public:
         GuildHouseBuyRank = sConfigMgr->GetOption<int32>("GuildHouseBuyRank", 4);
         GuildHouseRefundPercent = sConfigMgr->GetOption<int32>("GuildHouseRefundPercent", 50);
 
-        // New options
         GuildHouseMarkerEntry = sConfigMgr->GetOption<uint32>("GuildHouseMarkerEntry", 999999);
         GuildHousePhaseBase = sConfigMgr->GetOption<uint32>("GuildHousePhaseBase", 10000);
 
