@@ -118,6 +118,9 @@ public:
         // Delete actual guild_house data from characters database
         CharacterDatabase.Query("DELETE FROM `guild_house` WHERE `guild`={}", guild->GetId());
 
+        // Ensure all purchases are cleared for this guild
+        WorldDatabase.Execute("DELETE FROM guild_house_purchases WHERE guild={}", guild->GetId());
+
         return true;
     }
 };
@@ -382,6 +385,9 @@ public:
 
         // Delete actual guild_house data from characters database
         CharacterDatabase.Query("DELETE FROM `guild_house` WHERE `guild`={}", player->GetGuildId());
+
+        // Ensure all purchases are cleared for this guild
+        WorldDatabase.Execute("DELETE FROM guild_house_purchases WHERE guild={}", player->GetGuildId());
 
         return true;
     }
