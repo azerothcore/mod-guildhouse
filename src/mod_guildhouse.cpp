@@ -601,6 +601,11 @@ public:
     void OnPlayerLogin(Player *player)
     {
         CheckPlayer(player);
+        if (sConfigMgr->GetOption<bool>("GuildHouseEnabled", true))
+        {
+            ChatHandler(player->GetSession()).SendSysMessage("This server is running the Guild House module.");
+            ChatHandler(player->GetSession()).SendSysMessage("Type `.guildhouse` or `.gh` to see the options.");
+        }
     }
 
     void OnPlayerUpdateZone(Player *player, uint32 newZone, uint32 /*newArea*/)

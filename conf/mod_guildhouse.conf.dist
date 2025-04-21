@@ -1,5 +1,12 @@
 [worldserver]
 
+# GuildHouseEnabled
+#
+# Whether the Guild House module is enabled
+# default = true
+#
+GuildHouseEnabled = true
+
 # CostGuildHouse
 #
 # The amount of money to buy a guild house
@@ -107,3 +114,17 @@ GuildHouseSellRank = 0
 # default = 50
 #
 GuildHouseRefundPercent = 50
+
+# GuildHouseMarkerEntry
+#
+# Entry ID for the marker creature used by the guild house module
+# default = 999999
+#
+GuildHouseMarkerEntry = 999999
+
+# GuildHousePhaseBase
+#
+# Base phase value for guild house phasing (each guild's phase = base + guild id)
+# default = 10000
+#
+GuildHousePhaseBase = 10000
