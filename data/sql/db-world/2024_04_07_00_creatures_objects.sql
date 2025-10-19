@@ -12,6 +12,17 @@ INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entr
 	(@C_TEMPLATE + 1, 0, 0, 0, 0, 0, 'Xrispins', 'Guild House Butler',   '',   0, 35, 35, 0, 35, 0, 1, 1.14286, 1, 1, 20, 1, 0, 0, 1, 2000, 2000, 1, 1, 1, 33536, 2048, 0, 0, 0, 0, 0, 0, 7, 4096, 0, 0, 0, 0, 0, 0, 0, '', 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 'GuildHouseSpawner', 12340),
 	(@C_TEMPLATE + 2, 0, 0, 0, 0, 0, 'Innkeeper Monica', NULL, NULL, 0, 1,   2, 0, 35, 65536, 0.8, 0.28571, 1, 1, 20, 1, 0, 0, 4.6, 2000, 1900, 1, 1, 1, 0, 2048, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, '', 1, 1, 1, 1, 1, 1, 0, 70, 1, 0, 0, 2, 'npc_innkeeper', 12340);
 
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (
+	@C_TEMPLATE + 0,
+	@C_TEMPLATE + 1,
+	@C_TEMPLATE + 2
+);
+
+INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES
+    (@C_TEMPLATE + 0, 0, 25901, 1, 1, 0),
+    (@C_TEMPLATE + 1, 0, 25901, 1, 1, 0),
+    (@C_TEMPLATE + 2, 0, 18234, 1, 1, 0);
+
 -- !!! NOTE: set these before running the queries in order to avoid conflicts !!!
 SET @GO_TEMPLATE = 500000;
 
