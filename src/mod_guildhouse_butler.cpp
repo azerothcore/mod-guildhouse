@@ -97,7 +97,7 @@ public:
             ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Trade Supplies", GOSSIP_SENDER_MAIN, 28692, "Spawn Trade Supplies?", GuildHouseVendor, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Tabard Vendor", GOSSIP_SENDER_MAIN, 28776, "Spawn Tabard Vendor?", GuildHouseVendor, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TALK, "Food & Drink Vendor", GOSSIP_SENDER_MAIN, 4255, "Spawn Food & Drink Vendor?", GuildHouseVendor, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TALK, "Food & Drink Vendor", GOSSIP_SENDER_MAIN, 19572, "Spawn Food & Drink Vendor?", GuildHouseVendor, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Reagent Vendor", GOSSIP_SENDER_MAIN, 29636, "Spawn Reagent Vendor?", GuildHouseVendor, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Ammo & Repair Vendor", GOSSIP_SENDER_MAIN, 29493, "Spawn Ammo & Repair Vendor?", GuildHouseVendor, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Poisons Vendor", GOSSIP_SENDER_MAIN, 2622, "Spawn Poisons Vendor?", GuildHouseVendor, false);
@@ -229,7 +229,7 @@ public:
             break;
         case 28692: // Trade Supplies
         case 28776: // Tabard Vendor
-        case 4255:  // Food & Drink Vendor
+        case 19572:  // Food & Drink Vendor
         case 29636: // Reagent Vendor
         case 29493: // Ammo & Repair Vendor
         case 28690: // Stable Master
