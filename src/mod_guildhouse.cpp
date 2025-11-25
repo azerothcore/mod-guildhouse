@@ -488,14 +488,12 @@ public:
         Map* map = sMapMgr->FindMap(1, 0);
         Creature *creature = new Creature();
 
-        //if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, player->GetPhaseMaskForSpawn(), entry, 0, posX, posY, posZ, ori))
         // Spawn butler directly in the guild house phase, not in the player's current phase
         if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, guildPhase, entry, 0, posX, posY, posZ, ori))
         {
             delete creature;
             return;
         }
-        //creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), GetGuildPhase(player));
         // Ensure creature phase mask is correctly set before saving
         creature->SetPhaseMask(guildPhase, true);
         creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), guildPhase);
