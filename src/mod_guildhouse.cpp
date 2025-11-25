@@ -85,7 +85,8 @@ public:
 
     void OnCreate(Guild* /*guild*/, Player* leader, const std::string& /*name*/)
     {
-        ChatHandler(leader->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_YOU_NOW_OWN_A_GUILD, leader).c_str());
+        ChatHandler(leader->GetSession()).SendSysMessage(
+            GetGuildHouseLocaleText(GUILDHOUSE_TEXT_YOU_NOW_OWN_A_GUILD, leader).c_str());
     }
 
     uint32 GetGuildPhase(Guild* guild)
@@ -191,7 +192,8 @@ public:
     {
         if (!player->GetGuild())
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_NOT_IN_GUILD, player).c_str());
+            ChatHandler(player->GetSession()).SendSysMessage(
+			    GetGuildHouseLocaleText(GUILDHOUSE_TEXT_NOT_IN_GUILD, player).c_str());
             CloseGossipMenuFor(player);
             return false;
         }
@@ -262,15 +264,16 @@ public:
             QueryResult has_gh = CharacterDatabase.Query("SELECT id, `guild` FROM `guild_house` WHERE guild={}", player->GetGuildId());
             if (!has_gh)
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_HAS_NO_HOUSE, player).c_str());
-                CloseGossipMenuFor(player);
+                ChatHandler(player->GetSession()).SendSysMessage(
+                    GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_HAS_NO_HOUSE, player).c_str());
                 return false;
             }
 
             // calculate total gold returned: 1) cost of guild house and cost of each purchase made
             if (RemoveGuildHouse(player))
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_SOLD_SUCCESS, player).c_str());
+                ChatHandler(player->GetSession()).SendSysMessage(
+                    GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_SOLD_SUCCESS, player).c_str());
                 player->GetGuild()->BroadcastToGuild(player->GetSession(), false, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_BROADCAST_HOUSE_SOLD, player).c_str(), LANG_UNIVERSAL);
                 player->ModifyMoney(+(sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000) / 2));
                 LOG_INFO("modules", "GUILDHOUSE: Successfully returned money and sold Guild House");
@@ -278,7 +281,8 @@ public:
             }
             else
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_SOLD_ERROR, player).c_str());
+                ChatHandler(player->GetSession()).SendSysMessage(
+                    GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_SOLD_ERROR, player).c_str());
                 CloseGossipMenuFor(player);
             }
             break;
@@ -296,7 +300,8 @@ public:
             CharacterDatabase.Query("INSERT INTO `guild_house` (guild, phase, map, positionX, positionY, positionZ, orientation) VALUES ({}, {}, {}, {}, {}, {}, {})", player->GetGuildId(), GetGuildPhase(player), map, posX, posY, posZ, ori);
             player->ModifyMoney(-(sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000)));
             // Msg to purchaser and Msg Guild as purchaser
-            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_PURCHASED_SUCCESS, player).c_str());
+            ChatHandler(player->GetSession()).SendSysMessage(
+                GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_PURCHASED_SUCCESS, player).c_str());
             player->GetGuild()->BroadcastToGuild(player->GetSession(), false, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_BROADCAST_HOUSE_PURCHASED, player).c_str(), LANG_UNIVERSAL);
             player->GetGuild()->BroadcastToGuild(player->GetSession(), false, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_BROADCAST_USE_TELEPORT, player).c_str(), LANG_UNIVERSAL);
             LOG_INFO("modules", "GUILDHOUSE: GuildId: '{}' has purchased a guildhouse", player->GetGuildId());
@@ -509,8 +514,9 @@ public:
 
         if (result)
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_ALREADY_HAS_HOUSE, player).c_str());
-            CloseGossipMenuFor(player);
+            ChatHandler(player->GetSession()).SendSysMessage(
+                GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_ALREADY_HAS_HOUSE, player).c_str());
+			CloseGossipMenuFor(player);
             return false;
         }
 
@@ -545,7 +551,8 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TABARD, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GOSSIP_TELEPORT_TO_HOUSE, player), GOSSIP_SENDER_MAIN, 1);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GOSSIP_CLOSE, player), GOSSIP_SENDER_MAIN, 5);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
-            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_HAS_NO_HOUSE, player).c_str());
+            ChatHandler(player->GetSession()).SendSysMessage(
+                GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_HAS_NO_HOUSE, player).c_str());
             return;
         }
         do

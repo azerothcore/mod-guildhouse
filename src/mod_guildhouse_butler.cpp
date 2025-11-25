@@ -47,14 +47,14 @@ public:
 
             if (!memberMe->IsRankNotLower(GuildHouseBuyRank))
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("%s",
+                ChatHandler(player->GetSession()).SendSysMessage(
                     GetGuildHouseLocaleText(GUILDHOUSE_TEXT_NOT_AUTHORIZED_PURCHASE, player).c_str());
                 return false;
             }
         }
         else
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("%s",
+            ChatHandler(player->GetSession()).SendSysMessage(
                 GetGuildHouseLocaleText(GUILDHOUSE_TEXT_NOT_IN_GUILD, player).c_str());
             return false;
         }
@@ -586,7 +586,8 @@ public:
     {
         if (player->FindNearestGameObject(entry, VISIBLE_RANGE))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_OBJECT_ALREADY_EXISTS, player).c_str());
+            ChatHandler(player->GetSession()).SendSysMessage(
+			    GetGuildHouseLocaleText(GUILDHOUSE_TEXT_OBJECT_ALREADY_EXISTS, player).c_str());
             CloseGossipMenuFor(player);
             return;
         }
