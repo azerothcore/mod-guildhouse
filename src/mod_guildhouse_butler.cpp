@@ -47,13 +47,13 @@ public:
 
             if (!memberMe->IsRankNotLower(GuildHouseBuyRank))
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("You are not authorized to make Guild House purchases.");
+                ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_NOT_AUTHORIZED_PURCHASE, player).c_str());
                 return false;
             }
         }
         else
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("You are not in a guild!");
+            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_NOT_IN_GUILD, player).c_str());
             return false;
         }
 
@@ -333,7 +333,7 @@ public:
     {
         if (player->FindNearestGameObject(entry, VISIBLE_RANGE))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("You already have this object!");
+            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_OBJECT_ALREADY_EXISTS, player).c_str());
             CloseGossipMenuFor(player);
             return;
         }
