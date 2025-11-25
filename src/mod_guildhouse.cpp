@@ -515,7 +515,11 @@ public:
         }
 
         ClearGossipMenuFor(player);
-        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "GM Island", GOSSIP_SENDER_MAIN, 100, "Buy Guild House on GM Island?", sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000), false);
+        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG,
+            GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GOSSIP_GM_ISLAND, player),
+            GOSSIP_SENDER_MAIN, 100,
+            GetGuildHouseLocaleText(GUILDHOUSE_TEXT_CONFIRM_BUY_GM_ISLAND, player),
+            sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000), false);
         // Removing this tease for now, as right now the phasing code is specific go GM Island, so it's not a simple thing to add new areas yet.
         // AddGossipItemFor(player, GOSSIP_ICON_CHAT, " ----- More to Come ----", GOSSIP_SENDER_MAIN, 4);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());

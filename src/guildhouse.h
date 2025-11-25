@@ -169,7 +169,11 @@ enum GuildHouseLocaleString : uint32
      // Secondary profession trainer confirmations
      GUILDHOUSE_TEXT_CONFIRM_SPAWN_PROF_FIRSTAID    = 410,
      GUILDHOUSE_TEXT_CONFIRM_SPAWN_PROF_FISHING     = 411,
-     GUILDHOUSE_TEXT_CONFIRM_SPAWN_PROF_COOKING     = 412
+     GUILDHOUSE_TEXT_CONFIRM_SPAWN_PROF_COOKING     = 412,
+
+     // Guild house buy menu
+     GUILDHOUSE_TEXT_GOSSIP_GM_ISLAND               = 413,
+     GUILDHOUSE_TEXT_CONFIRM_BUY_GM_ISLAND          = 414
 };
 
 class Player;

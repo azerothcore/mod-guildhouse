@@ -766,4 +766,26 @@ INSERT INTO `mod_guildhouse_locale` (`Id`, `Locale`, `Text`) VALUES
 (351, 'zhTW', '新增通往達拉然的傳送門？'),
 (351, 'esES', '¿Añadir un portal a Dalaran?'),
 (351, 'esMX', '¿Añadir un portal a Dalaran?'),
-(351, 'ruRU', 'Добавить портал в Даларан?');
+(351, 'ruRU', 'Добавить портал в Даларан?'),
+
+-- 413 : label "GM Island"
+(413, 'enUS', 'GM Island'),
+(413, 'koKR', 'GM 섬'),
+(413, 'frFR', 'GM Island'),
+(413, 'deDE', 'GM-Insel'),
+(413, 'zhCN', 'GM岛'),
+(413, 'zhTW', 'GM 島'),
+(413, 'esES', 'GM Island'),
+(413, 'esMX', 'GM Island'),
+(413, 'ruRU', 'Остров GM'),
+
+-- 414 : confirmation "Buy Guild House on GM Island?"
+(414, 'enUS', 'Buy Guild House on GM Island?'),
+(414, 'koKR', 'GM 섬에 길드 하우스를 구매하시겠습니까?'),
+(414, 'frFR', 'Acheter une maison de guilde sur GM Island ?'),
+(414, 'deDE', 'Gildenhaus auf GM Island kaufen?'),
+(414, 'zhCN', '在GM岛购买公会大厅？'),
+(414, 'zhTW', '在 GM 島購買公會會館？'),
+(414, 'esES', '¿Comprar una casa de hermandad en GM Island?'),
+(414, 'esMX', '¿Comprar una casa de hermandad en GM Island?'),
+(414, 'ruRU', 'Купить дом гильдии на острове GM?');
