@@ -1050,7 +1050,7 @@ INSERT INTO `mod_guildhouse_locale` (`Id`, `Locale`, `Text`) VALUES
 (412, 'zhTW', '召喚烹飪訓練師？'),
 (412, 'esES', '¿Invocar instructor de cocina?'),
 (412, 'esMX', '¿Invocar instructor de cocina?'),
-(412, 'ruRU', 'Призвать учителя кулинарии?');
+(412, 'ruRU', 'Призвать учителя кулинарии?'),
 
 -- 413 : label "GM Island"
 (413, 'enUS', 'GM Island'),
