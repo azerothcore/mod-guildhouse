@@ -107,7 +107,7 @@ public:
             break;
         case 4: // Objects & Portals
             ClearGossipMenuFor(player);
-            AddGossipItemFor(player, GOSSIP_ICON_TALK, "Forge", GOSSIP_SENDER_MAIN, 1685, "Add a forge?", GuildHouseObject, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TALK, "Forge", GOSSIP_SENDER_MAIN, 1685, "Add a Forge?", GuildHouseObject, false);
             AddGossipItemFor(player, GOSSIP_ICON_TALK, "Anvil", GOSSIP_SENDER_MAIN, 4087, "Add an Anvil?", GuildHouseObject, false);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Guild Vault", GOSSIP_SENDER_MAIN, 187293, "Add Guild Vault?", GuildHouseObject, false);
             AddGossipItemFor(player, GOSSIP_ICON_INTERACT_1, "Barber Chair", GOSSIP_SENDER_MAIN, 191028, "Add a Barber Chair?", GuildHouseObject, false);
@@ -147,38 +147,26 @@ public:
             break;
         case 7: // Spawn Profession Trainers
             ClearGossipMenuFor(player);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Alchemy Trainer", GOSSIP_SENDER_MAIN, 19052, "Spawn Alchemy Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Blacksmithing Trainer", GOSSIP_SENDER_MAIN, 2836, "Spawn Blacksmithing Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Engineering Trainer", GOSSIP_SENDER_MAIN, 8736, "Spawn Engineering Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Tailoring Trainer", GOSSIP_SENDER_MAIN, 2627, "Spawn Tailoring Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Leatherworking Trainer", GOSSIP_SENDER_MAIN, 19187, "Spawn Leatherworking Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Skinning Trainer", GOSSIP_SENDER_MAIN, 19180, "Spawn Skinning Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mining Trainer", GOSSIP_SENDER_MAIN, 8128, "Spawn Mining Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Herbalism Trainer", GOSSIP_SENDER_MAIN, 908, "Spawn Herbalism Trainer?", GuildHouseProf, false);
-
-            if (player->GetTeamId() == TEAM_ALLIANCE)
-            {
-                // ALLIANCE players get these options
-                AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 18773, "Spawn Enchanting Trainer?", GuildHouseProf, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 18774, "Spawn Jewelcrafting Trainer?", GuildHouseProf, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 30721, "Spawn Inscription Trainer?", GuildHouseProf, false);
-            }
-            else
-            {
-                // HORDE players get these options
-                AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 18753, "Spawn Enchanting Trainer?", GuildHouseProf, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 18751, "Spawn Jewelcrafting Trainer?", GuildHouseProf, false);
-                AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 30722, "Spawn Inscription Trainer?", GuildHouseProf, false);
-            }
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Alchemy Trainer", GOSSIP_SENDER_MAIN, 28703, "Spawn Alchemy Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Blacksmithing Trainer", GOSSIP_SENDER_MAIN, 28694, "Spawn Blacksmithing Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Engineering Trainer", GOSSIP_SENDER_MAIN, 28697, "Spawn Engineering Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Tailoring Trainer", GOSSIP_SENDER_MAIN, 28699, "Spawn Tailoring Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Leatherworking Trainer", GOSSIP_SENDER_MAIN, 28700, "Spawn Leatherworking Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Skinning Trainer", GOSSIP_SENDER_MAIN, 28696, "Spawn Skinning Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Mining Trainer", GOSSIP_SENDER_MAIN, 28698, "Spawn Mining Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Herbalism Trainer", GOSSIP_SENDER_MAIN, 28704, "Spawn Herbalism Trainer?", GuildHouseProf, false);
+			AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Enchanting Trainer", GOSSIP_SENDER_MAIN, 28693, "Spawn Enchanting Trainer?", GuildHouseProf, false);
+			AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Jewelcrafing Trainer", GOSSIP_SENDER_MAIN, 28701, "Spawn Jewelcrafting Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, "Inscription Trainer", GOSSIP_SENDER_MAIN, 28702, "Spawn Inscription Trainer?", GuildHouseProf, false);
 
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 8: // Secondary Profession Trainers
             ClearGossipMenuFor(player);
-            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "First Aid Trainer", GOSSIP_SENDER_MAIN, 19184, "Spawn First Aid Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Fishing Trainer", GOSSIP_SENDER_MAIN, 2834, "Spawn Fishing Trainer?", GuildHouseProf, false);
-            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Cooking Trainer", GOSSIP_SENDER_MAIN, 19185, "Spawn Cooking Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "First Aid Trainer", GOSSIP_SENDER_MAIN, 28706, "Spawn First Aid Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Fishing Trainer", GOSSIP_SENDER_MAIN, 28742, "Spawn Fishing Trainer?", GuildHouseProf, false);
+            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Cooking Trainer", GOSSIP_SENDER_MAIN, 33587, "Spawn Cooking Trainer?", GuildHouseProf, false);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Go Back!", GOSSIP_SENDER_MAIN, 9);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
@@ -208,23 +196,22 @@ public:
             cost = GuildHouseTrainer;
             SpawnNPC(action, player);
             break;
-        case 2836:  // Blacksmithing
-        case 8128:  // Mining
-        case 8736:  // Engineering
-        case 18774: // Jewelcrafting (Alliance)
-        case 18751: // Jewelcrafting (Horde)
-        case 18773: // Enchanting (Alliance)
-        case 18753: // Enchanting (Horde)
-        case 30721: // Inscription (Alliance)
-        case 30722: // Inscription (Horde)
-        case 19187: // Leatherworking
-        case 19180: // Skinning
-        case 19052: // Alchemy
-        case 908:   // Herbalism
-        case 2627:  // Tailoring
-        case 19185: // Cooking
-        case 2834:  // Fishing
-        case 19184: // First Aid
+        case 28694:  // Blacksmithing
+        case 28698:  // Mining
+        case 28697:  // Engineering
+        case 28701: // Jewelcrafting
+        case 28693: // Enchanting
+        case 18753: // <unused>
+        case 28702: // Inscription
+        case 30722: // <unused>
+        case 28700: // Leatherworking
+        case 28696: // Skinning
+        case 28703: // Alchemy
+        case 28704:   // Herbalism
+        case 28699:  // Tailoring
+        case 33587: // Cooking
+        case 28742:  // Fishing
+        case 28706: // First Aid
             cost = GuildHouseProf;
             SpawnNPC(action, player);
             break;
