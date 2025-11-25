@@ -127,6 +127,10 @@ public:
 
     bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
     {
+        // Always reset the gossip menu before handling a new action
+        // so that sub-menus replace the previous list instead of
+        // stacking entries on top of it.
+        ClearGossipMenuFor(player);
 
         switch (action)
         {
@@ -197,7 +201,6 @@ public:
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 3: // Vendors
-            ClearGossipMenuFor(player);
         AddGossipItemFor(player, GOSSIP_ICON_TALK,
             GetGuildHouseLocaleText(GUILDHOUSE_TEXT_VENDOR_TRADE_SUPPLIES, player),
             GOSSIP_SENDER_MAIN, 28692,
@@ -240,7 +243,6 @@ public:
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 4: // Objects & Portals
-            ClearGossipMenuFor(player);
         AddGossipItemFor(player, GOSSIP_ICON_TALK,
             GetGuildHouseLocaleText(GUILDHOUSE_TEXT_OBJECT_FORGE, player),
             GOSSIP_SENDER_MAIN, 1685,
@@ -338,7 +340,6 @@ public:
             SpawnNPC(action, player);
             break;
         case 7: // Spawn Profession Trainers
-            ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_TRAINER,
                 GetGuildHouseLocaleText(GUILDHOUSE_TEXT_PROF_TRAINER_ALCH, player),
                 GOSSIP_SENDER_MAIN, 28703,
@@ -412,7 +413,6 @@ public:
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
             break;
         case 8: // Secondary Profession Trainers
-            ClearGossipMenuFor(player);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG,
                 GetGuildHouseLocaleText(GUILDHOUSE_TEXT_PROF_TRAINER_FIRSTAID, player),
                 GOSSIP_SENDER_MAIN, 28706,
