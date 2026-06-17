@@ -17,52 +17,54 @@
 #include "WorldSession.h"
 #include "DatabaseEnv.h"
 #include "guildhouse.h"
+#include <array>
+#include <unordered_map>
 
 namespace
 {
-    // returns locale code used by the DB
-    char const* GetGuildHouseLocaleCode(LocaleConstant locale)
-    {
-        switch (locale)
-        {
-            case LOCALE_koKR: return "koKR";
-            case LOCALE_frFR: return "frFR";
-            case LOCALE_deDE: return "deDE";
-            case LOCALE_zhCN: return "zhCN";
-            case LOCALE_zhTW: return "zhTW";
-            case LOCALE_esES: return "esES";
-            case LOCALE_esMX: return "esMX";
-            case LOCALE_ruRU: return "ruRU";
-            case LOCALE_enUS:
-            default:          return "enUS";
-        }
-    }
+    // id -> text per LocaleConstant, preloaded once so UI strings don't hit the
+    // database on the world thread for every message.
+    std::unordered_map<uint32, std::array<std::string, TOTAL_LOCALES>> _guildHouseLocaleTexts;
 } // namespace
+
+void LoadGuildHouseLocales()
+{
+    _guildHouseLocaleTexts.clear();
+
+    QueryResult result = WorldDatabase.Query("SELECT `Id`, `Locale`, `Text` FROM `mod_guildhouse_locale`");
+    if (!result)
+    {
+        LOG_WARN("modules", "GUILDHOUSE: `mod_guildhouse_locale` is empty or missing; localized texts unavailable.");
+        return;
+    }
+
+    uint32 count = 0;
+    do
+    {
+        Field* fields = result->Fetch();
+        uint32 id = fields[0].Get<uint32>();
+        LocaleConstant locale = GetLocaleByName(fields[1].Get<std::string>());
+        _guildHouseLocaleTexts[id][locale] = fields[2].Get<std::string>();
+        ++count;
+    } while (result->NextRow());
+
+    LOG_INFO("modules", "GUILDHOUSE: Loaded {} localized text entries.", count);
+}
 
 std::string GetGuildHouseLocaleText(uint32 id, Player* player)
 {
     if (!player || !player->GetSession())
         return {};
 
-    LocaleConstant locale = player->GetSession()->GetSessionDbLocaleIndex();
-    char const* localeCode = GetGuildHouseLocaleCode(locale);
-
-    QueryResult result = WorldDatabase.Query(
-        "SELECT `Text` FROM `mod_guildhouse_locale` WHERE `Id` = {} AND `Locale` = '{}'",
-        id, localeCode);
-
-    if (!result && locale != LOCALE_enUS)
-        result = WorldDatabase.Query(
-            "SELECT `Text` FROM `mod_guildhouse_locale` WHERE `Id` = {} AND `Locale` = 'enUS'",
-            id);
-
-    if (!result)
+    auto it = _guildHouseLocaleTexts.find(id);
+    if (it == _guildHouseLocaleTexts.end())
         return {};
 
-    if (Field* fields = result->Fetch())
-        return fields[0].Get<std::string>();
+    LocaleConstant locale = player->GetSession()->GetSessionDbLocaleIndex();
+    if (locale < TOTAL_LOCALES && !it->second[locale].empty())
+        return it->second[locale];
 
-    return {};
+    return it->second[LOCALE_enUS]; // fall back to English
 }
 
 class GuildData : public DataMap::Base
@@ -85,8 +87,7 @@ public:
 
     void OnCreate(Guild* /*guild*/, Player* leader, const std::string& /*name*/)
     {
-        ChatHandler(leader->GetSession()).SendSysMessage(
-            GetGuildHouseLocaleText(GUILDHOUSE_TEXT_YOU_NOW_OWN_A_GUILD, leader).c_str());
+        ChatHandler(leader->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_YOU_NOW_OWN_A_GUILD, leader).c_str());
     }
 
     uint32 GetGuildPhase(Guild* guild)
@@ -128,7 +129,7 @@ public:
                 uint32 lowguid = fields[0].Get<int32>();
                 if (CreatureData const* cr_data = sObjectMgr->GetCreatureData(lowguid))
                 {
-                    if (Creature* creature = map->GetCreature(ObjectGuid::Create<HighGuid::Unit>(cr_data->id1, lowguid)))
+                    if (Creature* creature = map->GetCreature(ObjectGuid::Create<HighGuid::Unit>(cr_data->id, lowguid)))
                     {
                         creature->CombatStop();
                         creature->DeleteFromDB();
@@ -192,8 +193,7 @@ public:
     {
         if (!player->GetGuild())
         {
-            ChatHandler(player->GetSession()).SendSysMessage(
-			    GetGuildHouseLocaleText(GUILDHOUSE_TEXT_NOT_IN_GUILD, player).c_str());
+            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_NOT_IN_GUILD, player).c_str());
             CloseGossipMenuFor(player);
             return false;
         }
@@ -264,16 +264,15 @@ public:
             QueryResult has_gh = CharacterDatabase.Query("SELECT id, `guild` FROM `guild_house` WHERE guild={}", player->GetGuildId());
             if (!has_gh)
             {
-                ChatHandler(player->GetSession()).SendSysMessage(
-                    GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_HAS_NO_HOUSE, player).c_str());
+                ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_HAS_NO_HOUSE, player).c_str());
+                CloseGossipMenuFor(player);
                 return false;
             }
 
             // calculate total gold returned: 1) cost of guild house and cost of each purchase made
             if (RemoveGuildHouse(player))
             {
-                ChatHandler(player->GetSession()).SendSysMessage(
-                    GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_SOLD_SUCCESS, player).c_str());
+                ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_SOLD_SUCCESS, player).c_str());
                 player->GetGuild()->BroadcastToGuild(player->GetSession(), false, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_BROADCAST_HOUSE_SOLD, player).c_str(), LANG_UNIVERSAL);
                 player->ModifyMoney(+(sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000) / 2));
                 LOG_INFO("modules", "GUILDHOUSE: Successfully returned money and sold Guild House");
@@ -281,8 +280,7 @@ public:
             }
             else
             {
-                ChatHandler(player->GetSession()).SendSysMessage(
-                    GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_SOLD_ERROR, player).c_str());
+                ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_SOLD_ERROR, player).c_str());
                 CloseGossipMenuFor(player);
             }
             break;
@@ -300,8 +298,7 @@ public:
             CharacterDatabase.Query("INSERT INTO `guild_house` (guild, phase, map, positionX, positionY, positionZ, orientation) VALUES ({}, {}, {}, {}, {}, {}, {})", player->GetGuildId(), GetGuildPhase(player), map, posX, posY, posZ, ori);
             player->ModifyMoney(-(sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000)));
             // Msg to purchaser and Msg Guild as purchaser
-            ChatHandler(player->GetSession()).SendSysMessage(
-                GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_PURCHASED_SUCCESS, player).c_str());
+            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_HOUSE_PURCHASED_SUCCESS, player).c_str());
             player->GetGuild()->BroadcastToGuild(player->GetSession(), false, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_BROADCAST_HOUSE_PURCHASED, player).c_str(), LANG_UNIVERSAL);
             player->GetGuild()->BroadcastToGuild(player->GetSession(), false, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_BROADCAST_USE_TELEPORT, player).c_str(), LANG_UNIVERSAL);
             LOG_INFO("modules", "GUILDHOUSE: GuildId: '{}' has purchased a guildhouse", player->GetGuildId());
@@ -341,7 +338,7 @@ public:
                 uint32 lowguid = fields[0].Get<uint32>();
                 if (CreatureData const* cr_data = sObjectMgr->GetCreatureData(lowguid))
                 {
-                    if (Creature* creature = map->GetCreature(ObjectGuid::Create<HighGuid::Unit>(cr_data->id1, lowguid)))
+                    if (Creature* creature = map->GetCreature(ObjectGuid::Create<HighGuid::Unit>(cr_data->id, lowguid)))
                     {
                         creature->CombatStop();
                         creature->DeleteFromDB();
@@ -479,7 +476,6 @@ public:
     void SpawnButlerNPC(Player* player)
     {
         uint32 entry = GetCreatureEntry(1);
-        uint32 guildPhase = GetGuildPhase(player);
         float posX = 16202.185547f;
         float posY = 16255.916992f;
         float posZ = 21.160221f;
@@ -488,15 +484,12 @@ public:
         Map* map = sMapMgr->FindMap(1, 0);
         Creature *creature = new Creature();
 
-        // Spawn butler directly in the guild house phase, not in the player's current phase
-        if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, guildPhase, entry, 0, posX, posY, posZ, ori))
+        if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, player->GetPhaseMaskForSpawn(), entry, 0, posX, posY, posZ, ori))
         {
             delete creature;
             return;
         }
-        // Ensure creature phase mask is correctly set before saving
-        creature->SetPhaseMask(guildPhase, true);
-        creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), guildPhase);
+        creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), GetGuildPhase(player));
         uint32 lowguid = creature->GetSpawnId();
 
         creature->CleanupsBeforeDelete();
@@ -518,18 +511,13 @@ public:
 
         if (result)
         {
-            ChatHandler(player->GetSession()).SendSysMessage(
-                GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_ALREADY_HAS_HOUSE, player).c_str());
-			CloseGossipMenuFor(player);
+            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_ALREADY_HAS_HOUSE, player).c_str());
+            CloseGossipMenuFor(player);
             return false;
         }
 
         ClearGossipMenuFor(player);
-        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG,
-            GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GOSSIP_GM_ISLAND, player),
-            GOSSIP_SENDER_MAIN, 100,
-            GetGuildHouseLocaleText(GUILDHOUSE_TEXT_CONFIRM_BUY_GM_ISLAND, player),
-            sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000), false);
+        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GOSSIP_GM_ISLAND, player), GOSSIP_SENDER_MAIN, 100, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_CONFIRM_BUY_GM_ISLAND, player), sConfigMgr->GetOption<int32>("CostGuildHouse", 10000000), false);
         // Removing this tease for now, as right now the phasing code is specific go GM Island, so it's not a simple thing to add new areas yet.
         // AddGossipItemFor(player, GOSSIP_ICON_CHAT, " ----- More to Come ----", GOSSIP_SENDER_MAIN, 4);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
@@ -555,8 +543,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_TABARD, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GOSSIP_TELEPORT_TO_HOUSE, player), GOSSIP_SENDER_MAIN, 1);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GOSSIP_CLOSE, player), GOSSIP_SENDER_MAIN, 5);
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
-            ChatHandler(player->GetSession()).SendSysMessage(
-                GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_HAS_NO_HOUSE, player).c_str());
+            ChatHandler(player->GetSession()).PSendSysMessage("%s", GetGuildHouseLocaleText(GUILDHOUSE_TEXT_GUILD_HAS_NO_HOUSE, player).c_str());
             return;
         }
         do
@@ -822,6 +809,17 @@ public:
     }
 };
 
+class GuildHouseWorld : public WorldScript
+{
+public:
+    GuildHouseWorld() : WorldScript("GuildHouseWorld") {}
+
+    void OnStartup() override
+    {
+        LoadGuildHouseLocales();
+    }
+};
+
 void AddGuildHouseScripts()
 {
     new GuildHelper();
@@ -829,4 +827,5 @@ void AddGuildHouseScripts()
     new GuildHousePlayerScript();
     new GuildHouseCommand();
     new GuildHouseGlobal();
+    new GuildHouseWorld();
 }
