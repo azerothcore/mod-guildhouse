@@ -68,7 +68,7 @@ INSERT INTO `mod_guildhouse_locale` (`Id`, `Locale`, `Text`) VALUES
 (6, 'deDE', 'Du hast erfolgreich ein Gildenhaus gekauft.'),
 (6, 'zhCN', '你已成功购买公会大厅。'),
 (6, 'zhTW', '你已成功購買公會會館。'),
-(6, 'esES', 'Has comprado una casa de hermandad con succès.'),
+(6, 'esES', 'Has comprado una casa de hermandad con éxito.'),
 (6, 'esMX', 'Has comprado con éxito una casa de hermandad.'),
 (6, 'ruRU', 'Вы успешно приобрели дом гильдии.'),
 

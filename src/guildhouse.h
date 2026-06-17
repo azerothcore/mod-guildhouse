@@ -49,4 +49,4 @@ class Player;
 // Returns localized text for the given id and player locale
 std::string GetGuildHouseLocaleText(uint32 id, Player* player);
 
- #endif // MOD_GUILDHOUSE_H
+#endif // MOD_GUILDHOUSE_H
