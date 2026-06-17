@@ -127,7 +127,7 @@ public:
                 uint32 lowguid = fields[0].Get<int32>();
                 if (CreatureData const* cr_data = sObjectMgr->GetCreatureData(lowguid))
                 {
-                    if (Creature* creature = map->GetCreature(ObjectGuid::Create<HighGuid::Unit>(cr_data->id1, lowguid)))
+                    if (Creature* creature = map->GetCreature(ObjectGuid::Create<HighGuid::Unit>(cr_data->id, lowguid)))
                     {
                         creature->CombatStop();
                         creature->DeleteFromDB();
@@ -336,7 +336,7 @@ public:
                 uint32 lowguid = fields[0].Get<uint32>();
                 if (CreatureData const* cr_data = sObjectMgr->GetCreatureData(lowguid))
                 {
-                    if (Creature* creature = map->GetCreature(ObjectGuid::Create<HighGuid::Unit>(cr_data->id1, lowguid)))
+                    if (Creature* creature = map->GetCreature(ObjectGuid::Create<HighGuid::Unit>(cr_data->id, lowguid)))
                     {
                         creature->CombatStop();
                         creature->DeleteFromDB();
