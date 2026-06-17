@@ -46,6 +46,9 @@ enum GuildHouseLocaleString : uint32
 
 class Player;
 
+// Preloads localized texts from mod_guildhouse_locale into memory
+void LoadGuildHouseLocales();
+
 // Returns localized text for the given id and player locale
 std::string GetGuildHouseLocaleText(uint32 id, Player* player);
 

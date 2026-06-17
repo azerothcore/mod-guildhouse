@@ -17,52 +17,54 @@
 #include "WorldSession.h"
 #include "DatabaseEnv.h"
 #include "guildhouse.h"
+#include <array>
+#include <unordered_map>
 
 namespace
 {
-    // returns locale code used by the DB
-    char const* GetGuildHouseLocaleCode(LocaleConstant locale)
-    {
-        switch (locale)
-        {
-            case LOCALE_koKR: return "koKR";
-            case LOCALE_frFR: return "frFR";
-            case LOCALE_deDE: return "deDE";
-            case LOCALE_zhCN: return "zhCN";
-            case LOCALE_zhTW: return "zhTW";
-            case LOCALE_esES: return "esES";
-            case LOCALE_esMX: return "esMX";
-            case LOCALE_ruRU: return "ruRU";
-            case LOCALE_enUS:
-            default:          return "enUS";
-        }
-    }
+    // id -> text per LocaleConstant, preloaded once so UI strings don't hit the
+    // database on the world thread for every message.
+    std::unordered_map<uint32, std::array<std::string, TOTAL_LOCALES>> _guildHouseLocaleTexts;
 } // namespace
+
+void LoadGuildHouseLocales()
+{
+    _guildHouseLocaleTexts.clear();
+
+    QueryResult result = WorldDatabase.Query("SELECT `Id`, `Locale`, `Text` FROM `mod_guildhouse_locale`");
+    if (!result)
+    {
+        LOG_WARN("modules", "GUILDHOUSE: `mod_guildhouse_locale` is empty or missing; localized texts unavailable.");
+        return;
+    }
+
+    uint32 count = 0;
+    do
+    {
+        Field* fields = result->Fetch();
+        uint32 id = fields[0].Get<uint32>();
+        LocaleConstant locale = GetLocaleByName(fields[1].Get<std::string>());
+        _guildHouseLocaleTexts[id][locale] = fields[2].Get<std::string>();
+        ++count;
+    } while (result->NextRow());
+
+    LOG_INFO("modules", "GUILDHOUSE: Loaded {} localized text entries.", count);
+}
 
 std::string GetGuildHouseLocaleText(uint32 id, Player* player)
 {
     if (!player || !player->GetSession())
         return {};
 
-    LocaleConstant locale = player->GetSession()->GetSessionDbLocaleIndex();
-    char const* localeCode = GetGuildHouseLocaleCode(locale);
-
-    QueryResult result = WorldDatabase.Query(
-        "SELECT `Text` FROM `mod_guildhouse_locale` WHERE `Id` = {} AND `Locale` = '{}'",
-        id, localeCode);
-
-    if (!result && locale != LOCALE_enUS)
-        result = WorldDatabase.Query(
-            "SELECT `Text` FROM `mod_guildhouse_locale` WHERE `Id` = {} AND `Locale` = 'enUS'",
-            id);
-
-    if (!result)
+    auto it = _guildHouseLocaleTexts.find(id);
+    if (it == _guildHouseLocaleTexts.end())
         return {};
 
-    if (Field* fields = result->Fetch())
-        return fields[0].Get<std::string>();
+    LocaleConstant locale = player->GetSession()->GetSessionDbLocaleIndex();
+    if (locale < TOTAL_LOCALES && !it->second[locale].empty())
+        return it->second[locale];
 
-    return {};
+    return it->second[LOCALE_enUS]; // fall back to English
 }
 
 class GuildData : public DataMap::Base
@@ -807,6 +809,17 @@ public:
     }
 };
 
+class GuildHouseWorld : public WorldScript
+{
+public:
+    GuildHouseWorld() : WorldScript("GuildHouseWorld") {}
+
+    void OnStartup() override
+    {
+        LoadGuildHouseLocales();
+    }
+};
+
 void AddGuildHouseScripts()
 {
     new GuildHelper();
@@ -814,4 +827,5 @@ void AddGuildHouseScripts()
     new GuildHousePlayerScript();
     new GuildHouseCommand();
     new GuildHouseGlobal();
+    new GuildHouseWorld();
 }
